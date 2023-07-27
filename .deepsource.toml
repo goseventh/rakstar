@@ -5,7 +5,7 @@ name = "go"
 enabled = true
 
   [analyzers.meta]
-  import_paths = ["github.com/rakstar/rakstar"]
+  import_paths = ["github.com/goseventh/rakstar"]
 
 [[transformers]]
 name = "gofmt"
