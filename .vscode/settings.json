@@ -6,11 +6,7 @@
 		"amx.h": "c"
 	},
 	"go.toolsEnvVars": {
-<<<<<<< HEAD
 		"GOARCH": "386",
 		"CGO_ENABLED": "1"
-=======
-		"GOARCH": "386"
->>>>>>> bb8a885a85a45e6fe08b326fe86a1ca2f0f472f8
 	}
 }
