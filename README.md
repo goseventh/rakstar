@@ -1,10 +1,16 @@
 <p align="center">
-<img width="130px" src="assets/images/logo.png"/>
+<img width="250px" src="assets/images/logo.png"/>
+</br>
 </br>
 <span>
-Um <b>framework</b> golang opinativo para escrever gamemodes <b>samp</b>.
+O desenvolvimento de <b>servidores SA-MP</b> não precisa ser <b>complicado</b>, precisa ser do jeito <b>GoSeventh</b>.
 </span>
 </p>
+
+</br>
+
+## 💡 Sobre
+Um framework <b>moderno</b> e <b>optinativo</b> feito em <b>go</b>, para escrever gamemodes <b>sa-mp</b>.
 
 ## 🚧 Desenvolvimento
 
@@ -12,4 +18,4 @@ Este é um framework em desenvolvimento, e está sujeito a mudanças consideráv
 
 ## 👏 Créditos
 
-[`sampgo`](https://github.com/sampgo/sampgo): um sdk para escrever gamemodes sa-mp em go.
+[`sampgo`](https://github.com/sampgo/sampgo): um sdk go para escrever gamemodes sa-mp.
