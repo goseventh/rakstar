@@ -119,11 +119,14 @@ func onPlayerConnect(playerid C.int) bool {
 	if !ok {
 		return false
 	}
-
+	SendClientMessage(int(playerid), -1,
+	 "{ffff}[{ff5ef2}RAKSTAR{ffff}]{db34eb}desenvolvimento de servidores samp modernos com o estilo GoSeventh",
+	)
 	fn, ok := evt.Handler.(func(Player) bool)
 	if !ok {
 		return false
 	}
+
 	return fn(Player{ID: int(playerid)})
 }
 
