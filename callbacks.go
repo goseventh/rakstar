@@ -3,7 +3,7 @@ package rakstar
 /*
 #cgo windows CFLAGS: -I./lib -I./lib/amx -Wno-attributes -Wno-implicit-function-declaration
 #cgo windows CFLAGS: -DHAVE_INTTYPES_H -DHAVE_MALLOC_H -DHAVE_STDINT_H -DWIN32
-#cgo windows LDFLAGS: -Wl,--subsystem,windows,--kill-at
+#cgo windows LDFLAGS: -Wl,--subsystem,windows
 
 #cgo linux CFLAGS: -I./lib -I./lib/amx -Wno-attributes -Wno-implicit-function-declaration
 #cgo linux CFLAGS: -DHAVE_INTTYPES_H -DHAVE_MALLOC_H -DHAVE_STDINT_H -DLINUX -D_GNU_SOURCE
@@ -120,10 +120,10 @@ func onPlayerConnect(playerid C.int) bool {
 		return false
 	}
 	SendClientMessage(int(playerid), -1,
-	 "{ffffff}[{ff5ef2}RAKSTAR{ffffff}]{db34eb}desenvolvimento de servidores samp modernos com o estilo GoSeventh",
+		"{ffffff}[{ff5ef2}RAKSTAR{ffffff}]{db34eb}desenvolvimento de servidores samp modernos com o estilo GoSeventh",
 	)
 	SendClientMessage(int(playerid), -1,
-	 "{ffffff}[{ff5ef2}RAKSTAR{ffffff}]{ffac12}github.com/goseventh/rakstar",
+		"{ffffff}[{ff5ef2}RAKSTAR{ffffff}]{ffac12}github.com/goseventh/rakstar",
 	)
 	fn, ok := evt.Handler.(func(Player) bool)
 	if !ok {
