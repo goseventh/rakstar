@@ -1,0 +1,8 @@
+EXPORTS
+	Supports
+	Load
+	Unload
+	ProcessTick
+    goLogprintf
+    constToNonConst
+    nonConstToConst
