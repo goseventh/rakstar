@@ -2,9 +2,12 @@
 <img width="130px" src="assets/images/logo.png"/>
 </br>
 <span>
-Um <b>framework</b> golang opinativo para escrever gamemodes <b>samp</b>.
+O desenvolvimento de <b>servidores SA-MP</b> não precisa ser <b>complicado</b>, precisa ser do jeito <b>GoSeventh</b>.
 </span>
 </p>
+
+## 💡 Sobre
+Um <b>framework moderno</b> optinativo feito em <b>Go</b> para escrever gamemodes <b>SA-MP</b>
 
 ## 🚧 Desenvolvimento
 
