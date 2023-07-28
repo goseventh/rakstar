@@ -6,8 +6,7 @@ const (
 	MapiconGlobal           int = 1
 	MapiconLocalCheckpoint  int = 2
 	MapiconGlobalCheckpoint int = 3
-	CameraCut               int = 2
-	CameraMove              int = 1
+
 	SpectateModeNormal      int = 1
 	SpectateModeFixed       int = 2
 	SpectateModeSide        int = 3
