@@ -1,4 +1,4 @@
-package textdraw
+package player
 
 import (
 	"fmt"
