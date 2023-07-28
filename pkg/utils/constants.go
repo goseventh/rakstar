@@ -27,23 +27,7 @@ const (
 	FightStyleKneehead               int = 7
 	FightStyleGrabkick               int = 15
 	FightStyleElbow                  int = 16
-	WeaponskillPistol                int = 0
-	WeaponskillPistolSilenced        int = 1
-	WeaponskillDesertEagle           int = 2
-	WeaponskillShotgun               int = 3
-	WeaponskillSawnoffShotgun        int = 4
-	WeaponskillSpas12Shotgun         int = 5
-	WeaponskillMicroUzi              int = 6
-	WeaponskillMp5                   int = 7
-	WeaponskillAk47                  int = 8
-	WeaponskillM4                    int = 9
-	WeaponskillSniperrifle           int = 10
-	WeaponstateUnknown               int = -1
-	WeaponstateNoBullets             int = 0
-	WeaponstateLastBullet            int = 1
-	WeaponstateMoreBullets           int = 2
-	WeaponstateReloading             int = 3
-
+	
 
 	
 	
