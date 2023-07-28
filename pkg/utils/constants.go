@@ -16,10 +16,7 @@ const (
 
 	MaxPickups                int = 4096
 
-	ServerVartypeNone         int = 0
-	ServerVartypeInt          int = 1
-	ServerVartypeString       int = 2
-	ServerVartypeFloat        int = 3
+	
 
 
 	//Weapon
