@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/goseventh/rakstar/internal/player"
+	"github.com/goseventh/rakstar/internal/utils/common"
 	"github.com/goseventh/rakstar/pkg/chat"
 )
 
@@ -22,6 +23,7 @@ func HandlePlayerCommandText(player player.Player, cmdtext string) bool {
 		if command == nil {
 			chat.Builder().
 				Message("Nenhum comando correspondente foi encontrado!").
+				Color(common.ErrorColorStr).
 				Tag("servidor").
 				PlayerID(player.ID).
 				Send()
@@ -37,6 +39,7 @@ func HandlePlayerCommandText(player player.Player, cmdtext string) bool {
 							command.Name,
 						),
 				).
+				Color(common.ErrorColorStr).
 				Tag("advertência").
 				PlayerID(player.ID)
 
