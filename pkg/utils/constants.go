@@ -4,9 +4,8 @@ const (
 	MaxChatbubbleLength     int = 144
 
 
-	SpectateModeNormal      int = 1
-	SpectateModeFixed       int = 2
-	SpectateModeSide        int = 3
+
+
 	CarmodtypeSpoiler       int = 0
 	CarmodtypeHood          int = 1
 	CarmodtypeRoof          int = 2
