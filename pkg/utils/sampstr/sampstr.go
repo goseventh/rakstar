@@ -1,4 +1,4 @@
-package rakstar
+package sampstr
 
 import "golang.org/x/text/encoding/charmap"
 

@@ -1,4 +1,4 @@
-package rakstar
+package vehicle
 
 import (
 	"fmt"

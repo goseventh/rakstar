@@ -1,4 +1,4 @@
-package rakstar
+package vehicleModel
 
 const (
 	firstInvalidVehicleModel = iota + 399

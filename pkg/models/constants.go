@@ -1,4 +1,4 @@
-package rakstar
+package models
 
 const (
 	SpecialActionNone                int = 0

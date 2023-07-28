@@ -1,4 +1,4 @@
-package rakstar
+package common
 
 const (
 	ErrorColor   = 0xeb3434 << 8

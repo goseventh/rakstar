@@ -1,1 +1,1 @@
-package rakstar
+package common
