@@ -1,4 +1,4 @@
-package keysConsts
+package keysConst
 
 const (
 	KeyAction          int = 1

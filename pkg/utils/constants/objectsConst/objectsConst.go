@@ -1,4 +1,4 @@
-package objectsConsts
+package objectsCons
 const (
 	MaxObjects                       int = 1000
 	InvalidObjectId                  int = 0xFFFF

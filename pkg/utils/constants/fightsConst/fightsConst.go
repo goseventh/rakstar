@@ -1,4 +1,4 @@
-package fightsConsts
+package fightsConst
 
 const (
 	FightStyleNormal   int = 4
