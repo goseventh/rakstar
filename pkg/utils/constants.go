@@ -18,9 +18,7 @@ const (
 
 	ClickSourceScoreboard int = 0
 
-	EditResponseCancel int = 0
-	EditResponseFinal  int = 1
-	EditResponseUpdate int = 2
+
 
 	BulletHitTypeNone   int = 0
 	BulletHitTypePlayer int = 1
