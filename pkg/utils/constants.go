@@ -3,10 +3,6 @@ package models
 const (
 	MaxChatbubbleLength     int = 144
 
-
-
-
-
 	InvalidActorId int = 0xFFFF
 	NoTeam         int = 255
 
@@ -26,13 +22,7 @@ const (
 
 	//Weapon
 
-	BodyPartTorso         int = 3
-	BodyPartGroin         int = 4
-	BodyPartLeftArm       int = 5
-	BodyPartRightArm      int = 6
-	BodyPartLeftLeg       int = 7
-	BodyPartRightLeg      int = 8
-	BodyPartHead          int = 9
+
 	ClickSourceScoreboard int = 0
 	EditResponseCancel    int = 0
 	EditResponseFinal     int = 1
