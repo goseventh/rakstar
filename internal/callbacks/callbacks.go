@@ -1,4 +1,4 @@
-package callbacks
+package rakstar
 
 /*
 #cgo windows CFLAGS: -I./lib -I./lib/amx -Wno-attributes -Wno-implicit-function-declaration

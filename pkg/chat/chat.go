@@ -3,10 +3,11 @@ package chat
 import (
 	"fmt"
 	"strings"
+	"github.com/goseventh/rakstar/internal/player"
 )
 
 type SendPlayerMessageRequest struct {
-	Player          *Player
+	Player          *player.Player
 	Message         string
 	Color           string
 	Local           bool
