@@ -48,7 +48,7 @@ func (chat *ChatBuilder) Range(r float32) *ChatBuilder {
 	return chat
 }
 
-func (chat *ChatBuilder) Send(r float32) *ChatBuilder {
+func (chat *ChatBuilder) Send() *ChatBuilder {
 	if chat.requestMsg.Message == "" {
 		return chat
 	}
