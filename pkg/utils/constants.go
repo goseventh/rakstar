@@ -2,10 +2,7 @@ package models
 
 const (
 	MaxChatbubbleLength     int = 144
-	MapiconLocal            int = 0
-	MapiconGlobal           int = 1
-	MapiconLocalCheckpoint  int = 2
-	MapiconGlobalCheckpoint int = 3
+
 
 	SpectateModeNormal      int = 1
 	SpectateModeFixed       int = 2
