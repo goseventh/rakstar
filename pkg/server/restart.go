@@ -8,27 +8,32 @@ import (
 	"github.com/goseventh/rakstar/pkg/chat"
 )
 
-type RestartBuild struct {
+type ServerBuild struct {
 	msgRestart string
 	msgLoop    string
 	tag        string
+	playerID int
+	message string
+	wait time.Duration
 }
 
-func Builder() *RestartBuild {
-	return new(RestartBuild)
+func Builder() *ServerBuild {
+	b := new(ServerBuild)
+	b.playerID = -1
+	return b
 }
 
-func (rb *RestartBuild) Message(msg string) *RestartBuild {
+func (rb *ServerBuild) Message(msg string) *ServerBuild {
 	rb.msgRestart = msg
 	return rb
 }
 
-func (rb *RestartBuild) MessageLoop(msg string) *RestartBuild {
+func (rb *ServerBuild) MessageLoop(msg string) *ServerBuild {
 	rb.msgLoop = msg
 	return rb
 }
 
-func (rb *RestartBuild) RestartNow() *RestartBuild {
+func (rb *ServerBuild) RestartNow() *ServerBuild {
 	if rb.msgRestart == "" {
 		rb.msgRestart = "ordem manual para reiniciar servidor em momentos..."
 	}
