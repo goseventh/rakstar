@@ -8,10 +8,9 @@ const (
 
 	MaxGangZones              int = 1024
 	
-	MaxMenus                  int = 128
+	
 	Max3dtextGlobal           int = 1024
 	MaxPickups                int = 4096
-	InvalidMenu               int = 0xFF
 	InvalidGangZone           int = -1
 	Invalid3dtextId           int = 0xFFFF
 	ServerVartypeNone         int = 0
