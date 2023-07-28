@@ -1,8 +1,9 @@
-package rakstar
+package chat
 
 import (
 	"fmt"
 	"strings"
+	
 )
 
 type SendPlayerMessageRequest struct {
