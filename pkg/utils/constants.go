@@ -25,20 +25,17 @@ const (
 	NoTeam         int = 255
 
 	MaxGangZones              int = 1024
-	MaxTextDraws              int = 2048
+	
 	MaxMenus                  int = 128
 	Max3dtextGlobal           int = 1024
 	MaxPickups                int = 4096
 	InvalidMenu               int = 0xFF
-	InvalidTextDraw           int = 0xFFFF
 	InvalidGangZone           int = -1
 	Invalid3dtextId           int = 0xFFFF
 	ServerVartypeNone         int = 0
 	ServerVartypeInt          int = 1
 	ServerVartypeString       int = 2
 	ServerVartypeFloat        int = 3
-	TextDrawFontSpriteDraw    int = 4
-	TextDrawFontModelPreview  int = 5
 
 
 	//Weapon
