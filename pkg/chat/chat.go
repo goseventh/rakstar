@@ -4,7 +4,10 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/goseventh/rakstar/internal/natives"
 	"github.com/goseventh/rakstar/internal/player"
+	"github.com/goseventh/rakstar/internal/utils/constants/playerConst"
+	"github.com/goseventh/rakstar/internal/utils/sampstr"
 )
 
 type SendPlayerMessageRequest struct {
@@ -38,6 +41,11 @@ func (chat *ChatBuilder) Message(msg string) *ChatBuilder {
 	return chat
 }
 
+func (chat *ChatBuilder) Color(color string) *ChatBuilder {
+	chat.requestMsg.Color = color
+	return chat
+}
+
 func (chat *ChatBuilder) Tag(tag string) *ChatBuilder {
 	chat.requestMsg.Tag = tag
 	return chat
@@ -53,7 +61,7 @@ func (chat *ChatBuilder) Send() *ChatBuilder {
 		return chat
 	}
 
-	if *chat.requestMsg.Player == nil {
+	if chat.requestMsg.Player == nil {
 		return chat
 	}
 
@@ -75,12 +83,12 @@ func (chat *ChatBuilder) Send() *ChatBuilder {
 		)
 
 	if !chat.requestMsg.DisableEncoding {
-		chat.requestMsg.Message = Encode(chat.requestMsg.Message)
+		chat.requestMsg.Message = sampstr.Encode(chat.requestMsg.Message)
 	}
 
 	switch chat.requestMsg.Range {
 	case Global:
-		SendClientMessageToAll(-1, chat.requestMsg.Message)
+		natives.SendClientMessageToAll(-1, chat.requestMsg.Message)
 	case Local:
 		chat.requestMsg.Range = 15
 		err := sendRange(chat)
@@ -107,17 +115,18 @@ func (chat *ChatBuilder) Send() *ChatBuilder {
 func sendRange(chat *ChatBuilder) error {
 	x, y, z, err := chat.requestMsg.Player.GetPos()
 
-	for playerID := 0; playerID < MaxPlayers; playerID++ {
-		if !IsPlayerConnected(playerID) {
+	for playerID := 0; playerID < playerConst.MaxPlayers; playerID++ {
+		if !natives.IsPlayerConnected(playerID) {
 			continue
 		}
 
-		if !IsPlayerInRangeOfPoint(playerID, chat.requestMsg.Range, x, y, z) {
-			continue chat
+		if !natives.IsPlayerInRangeOfPoint(playerID, chat.requestMsg.Range, x, y, z) {
+			continue
 		}
 
-		SendClientMessage(playerID, -1, chat.requestMsg.Message)
+		natives.SendClientMessage(playerID, -1, chat.requestMsg.Message)
 	}
+	return err
 }
 
 func Active() {
@@ -127,5 +136,5 @@ func Active() {
 func Disable() {}
 
 func Flush() {
-	SendClientMessageToAll(-1, " ")
+	natives.SendClientMessageToAll(-1, " ")
 }
