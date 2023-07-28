@@ -1,6 +1,11 @@
 package textDraw
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/goseventh/rakstar/internal/player"
+	"github.com/goseventh/rakstar/internal/player"
+)
 
 const (
 	FontSanAndreas = iota
@@ -11,12 +16,12 @@ const (
 )
 
 type PlayerTextDraw struct {
-	player   *Player
+	player   *player.Player
 	textDraw int
 	align    int
 }
 
-func (p *Player) NewTextDraw(x, y float32, text string) (PlayerTextDraw, error) {
+func (p *player.Player) NewTextDraw(x, y float32, text string) (PlayerTextDraw, error) {
 	td := PlayerTextDraw{player: p, textDraw: CreatePlayerTextDraw(p.ID, x, y, text)}
 	if td.textDraw == InvalidTextDraw {
 		return td, fmt.Errorf("invalid playertextdraw")
