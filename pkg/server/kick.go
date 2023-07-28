@@ -8,6 +8,8 @@ import (
 	"github.com/goseventh/rakstar/pkg/chat"
 )
 
+
+
 func (rb *ServerBuild) Player(playerid int) *ServerBuild {
 	rb.playerID = playerid
 	return rb
