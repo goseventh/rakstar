@@ -3,6 +3,7 @@ package chat
 import (
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/goseventh/rakstar/internal/natives"
 	"github.com/goseventh/rakstar/internal/player"
@@ -28,6 +29,13 @@ var isChatEnable = true
 
 func Builder() *ChatBuilder {
 	return new(ChatBuilder)
+}
+func (chat *ChatBuilder) Wait(wait ...time.Duration) *ChatBuilder {
+	if wait[0].Seconds() < 1 {
+		wait[0] = time.Second
+	}
+	time.Sleep(wait[0])
+	return chat
 }
 
 func (chat *ChatBuilder) PlayerID(playerid int) *ChatBuilder {

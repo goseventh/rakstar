@@ -14,7 +14,6 @@ type ServerBuild struct {
 	tag        string
 	playerID int
 	message string
-	wait time.Duration
 }
 
 func Builder() *ServerBuild {

@@ -13,8 +13,11 @@ func (rb *ServerBuild) Player(playerid int) *ServerBuild {
 	return rb
 }
 
-func (rb *ServerBuild) Wait(wait time.Duration) *ServerBuild {
-	rb.wait = wait
+func (rb *ServerBuild) Wait(wait... time.Duration) *ServerBuild {
+	if wait[0].Seconds() < 1 {
+		wait[0] = time.Second
+	}
+	time.Sleep(wait[0])
 	return rb
 }
 
@@ -28,15 +31,7 @@ func (rb *ServerBuild) Expulse() *ServerBuild {
 		Tag("servidor").
 		Message(rb.message)
 
-	if rb.wait.Seconds() < 1 {
-		natives.Kick(rb.playerID)
-		return rb
-	}
-
-	time.AfterFunc(rb.wait, func() {
-		natives.Kick(rb.playerID)
-
-	})
+	natives.Kick(rb.playerID)
 
 	return rb
 }
