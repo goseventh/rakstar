@@ -25,7 +25,7 @@ type SendMessageRequest struct {
 
 var isChatEnable = true
 
-func CreateMessage(sendPlayerMessageRequest *SendPlayerMessageRequest) {
+func CreateLocalMsg(sendPlayerMessageRequest *SendPlayerMessageRequest) {
 	var message string
 	var tag string = ""
 
@@ -88,7 +88,7 @@ func CreateMessage(sendPlayerMessageRequest *SendPlayerMessageRequest) {
 	SendClientMessageToAll(-1, message)
 }
 
-func SendMessage(sendMessageRequest *SendMessageRequest) {
+func CreateMsg(sendMessageRequest *SendMessageRequest) {
 	var message string
 	var tag string = ""
 
