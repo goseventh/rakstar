@@ -3,6 +3,7 @@ package chat
 import (
 	"fmt"
 	"strings"
+
 	"github.com/goseventh/rakstar/internal/player"
 )
 
@@ -27,7 +28,8 @@ func Builder() *ChatBuilder {
 }
 
 func (chat *ChatBuilder) PlayerID(playerid int) *ChatBuilder {
-	chat.requestMsg.Player = playerid
+	player := player.Player{ID: playerid}
+	chat.requestMsg.Player = &player
 	return chat
 }
 
