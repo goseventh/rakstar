@@ -2,6 +2,7 @@ package textdraw
 
 import (
 	"fmt"
+	"github.com/goseventh/rakstar/internal/natives"
 	
 )
 
@@ -13,7 +14,7 @@ type Player struct {
 // GetName returns the players name.
 func (p *Player) GetName() string {
 	var name string
-	GetPlayerName(p.ID, &name, MaxPlayerName)
+	natives.GetPlayerName(p.ID, &name, MaxPlayerName)
 	return name
 }
 

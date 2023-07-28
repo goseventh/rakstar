@@ -43,11 +43,13 @@ const (
 	WeaponstateLastBullet            int = 1
 	WeaponstateMoreBullets           int = 2
 	WeaponstateReloading             int = 3
-	MaxPlayerAttachedObjects         int = 10
-	PlayerVartypeNone                int = 0
-	PlayerVartypeInt                 int = 1
-	PlayerVartypeString              int = 2
-	PlayerVartypeFloat               int = 3
+
+
+	
+	
+	
+
+
 	MaxChatbubbleLength              int = 144
 	MapiconLocal                     int = 0
 	MapiconGlobal                    int = 1
@@ -58,9 +60,6 @@ const (
 	SpectateModeNormal               int = 1
 	SpectateModeFixed                int = 2
 	SpectateModeSide                 int = 3
-	PlayerRecordingTypeNone          int = 0
-	PlayerRecordingTypeDriver        int = 1
-	PlayerRecordingTypeOnfoot        int = 2
 	CarmodtypeSpoiler                int = 0
 	CarmodtypeHood                   int = 1
 	CarmodtypeRoof                   int = 2
@@ -87,12 +86,10 @@ const (
 	VehicleModelInfoWheelsmid        int = 7
 	VehicleModelInfoFrontBumperZ     int = 8
 	VehicleModelInfoRearBumperZ      int = 9
-	MaxPlayerName                    int = 24
 	MaxClientMessage                 int = 144
-	MaxPlayers                       int = 1000
 	MaxVehicles                      int = 2000
 	MaxActors                        int = 1000
-	InvalidPlayerId                  int = 0xFFFF
+
 	InvalidVehicleId                 int = 0xFFFF
 	InvalidActorId                   int = 0xFFFF
 	NoTeam                           int = 255
@@ -100,10 +97,8 @@ const (
 	InvalidObjectId                  int = 0xFFFF
 	MaxGangZones                     int = 1024
 	MaxTextDraws                     int = 2048
-	MaxPlayerTextDraws               int = 256
 	MaxMenus                         int = 128
 	Max3dtextGlobal                  int = 1024
-	Max3dtextPlayer                  int = 1024
 	MaxPickups                       int = 4096
 	InvalidMenu                      int = 0xFF
 	InvalidTextDraw                  int = 0xFFFF
@@ -121,19 +116,6 @@ const (
 	DialogStylePassword              int = 3
 	DialogStyleTablist               int = 4
 	DialogStyleTablistHeaders        int = 5
-	PlayerStateNone                  int = 0
-	PlayerStateOnfoot                int = 1
-	PlayerStateDriver                int = 2
-	PlayerStatePassenger             int = 3
-	PlayerStateExitVehicle           int = 4
-	PlayerStateEnterVehicleDriver    int = 5
-	PlayerStateEnterVehiclePassenger int = 6
-	PlayerStateWasted                int = 7
-	PlayerStateSpawned               int = 8
-	PlayerStateSpectating            int = 9
-	PlayerMarkersModeOff             int = 0
-	PlayerMarkersModeGlobal          int = 1
-	PlayerMarkersModeStreamed        int = 2
 	WeaponFist                       int = 0
 	WeaponBrassknuckle               int = 1
 	WeaponGolfclub                   int = 2
