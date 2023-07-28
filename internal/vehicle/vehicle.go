@@ -6,7 +6,7 @@ import (
 
 	"github.com/goseventh/rakstar/internal/player"
 	"github.com/goseventh/rakstar/internal/utils/constants/vehiclesConst"
-	"github.com/goseventh/rakstar/natives"
+	"github.com/goseventh/rakstar/internal/natives"
 )
 
 const (
