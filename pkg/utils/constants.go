@@ -116,53 +116,11 @@ const (
 	DialogStylePassword              int = 3
 	DialogStyleTablist               int = 4
 	DialogStyleTablistHeaders        int = 5
-	WeaponFist                       int = 0
-	WeaponBrassknuckle               int = 1
-	WeaponGolfclub                   int = 2
-	WeaponNitestick                  int = 3
-	WeaponKnife                      int = 4
-	WeaponBat                        int = 5
-	WeaponShovel                     int = 6
-	WeaponPoolstick                  int = 7
-	WeaponKatana                     int = 8
-	WeaponChainsaw                   int = 9
-	WeaponDildo                      int = 10
-	WeaponDildo2                     int = 11
-	WeaponVibrator                   int = 12
-	WeaponVibrator2                  int = 13
-	WeaponFlower                     int = 14
-	WeaponCane                       int = 15
-	WeaponGrenade                    int = 16
-	WeaponTeargas                    int = 17
-	WeaponMoltov                     int = 18
-	WeaponColt45                     int = 22
-	WeaponSilenced                   int = 23
-	WeaponDeagle                     int = 24
-	WeaponShotgun                    int = 25
-	WeaponSawedoff                   int = 26
-	WeaponShotgspa                   int = 27
-	WeaponUzi                        int = 28
-	WeaponMp5                        int = 29
-	WeaponAk47                       int = 30
-	WeaponM4                         int = 31
-	WeaponTec9                       int = 32
-	WeaponRifle                      int = 33
-	WeaponSniper                     int = 34
-	WeaponRocketlauncher             int = 35
-	WeaponHeatseeker                 int = 36
-	WeaponFlamethrower               int = 37
-	WeaponMinigun                    int = 38
-	WeaponSatchel                    int = 39
-	WeaponBomb                       int = 40
-	WeaponSpraycan                   int = 41
-	WeaponFireextinguisher           int = 42
-	WeaponCamera                     int = 43
-	WeaponNightvision                int = 44
-	WeaponInfrared                   int = 45
-	WeaponParachute                  int = 46
-	WeaponVehicle                    int = 49
-	WeaponDrown                      int = 53
-	WeaponCollision                  int = 54
+
+	#Weapon
+	
+
+
 	VehicleLandstalker               int = 400
 	VehicleBravura                   int = 401
 	VehicleBuffalo                   int = 402
