@@ -1,6 +1,5 @@
 package command
 
-import "github.com/goseventh/rakstar/internal/command"
 
 func (cb *commandBuilder) Command(cmd string) *commandBuilder {
 	cb.cmd = cmd
@@ -12,16 +11,16 @@ func (cb *commandBuilder) Alias(cmd string) *commandBuilder {
 	return cb
 }
 
-func (cb *commandBuilder) Handler(handler command.CommandHandler) *commandBuilder {
+func (cb *commandBuilder) Handler(handler CommandHandler) *commandBuilder {
 	cb.handler = handler
 	return cb
 }
 
 func (cb *commandBuilder) Create() {
-	command.RegisterCommand(&command.Command{
-		Name: cb.cmd,
+	RegisterCommand(&Command{
+		Name:    cb.cmd,
 		Aliases: cb.alias,
 		Handler: cb.handler,
 	})
-	
+
 }

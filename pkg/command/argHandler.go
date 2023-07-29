@@ -4,11 +4,7 @@ import (
 	"strconv"
 )
 
-type ArgHandler struct {
-	input      string
-	args       []string
-	currentArg int
-}
+
 
 func (self *ArgHandler) Next(defaultValues ...string) *string {
 	var defaultValue *string = nil
