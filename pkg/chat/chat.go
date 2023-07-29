@@ -94,22 +94,25 @@ func (chat *ChatBuilder) Send() *ChatBuilder {
 		chat.requestMsg.Message = sampstr.Encode(chat.requestMsg.Message)
 	}
 
-	switch chat.requestMsg.Range {
-	case Global:
+	if chat.requestMsg.Player.ID == Global {
 		natives.SendClientMessageToAll(-1, chat.requestMsg.Message)
+	}
+
+	switch chat.requestMsg.Range {
 	case Local:
-		chat.requestMsg.Range = 15
+		chat.requestMsg.Range = PotencyLocal
 		err := sendRange(chat)
 		if err != nil {
 			fmt.Println(err)
 		}
 	case Grito:
-		chat.requestMsg.Range = 45
+		chat.requestMsg.Range = PotencyGrito
 		err := sendRange(chat)
 		if err != nil {
 			fmt.Println(err)
 		}
 	default:
+	
 		err := sendRange(chat)
 		if err != nil {
 			fmt.Println(err)

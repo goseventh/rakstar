@@ -1,21 +1,18 @@
 package server
 
 import (
-	"main/pkg/utils/common"
 	"time"
 
 	"github.com/goseventh/rakstar/internal/natives"
 	"github.com/goseventh/rakstar/pkg/chat"
 )
 
-
-
 func (rb *ServerBuild) Player(playerid int) *ServerBuild {
 	rb.playerID = playerid
 	return rb
 }
 
-func (rb *ServerBuild) Wait(wait... time.Duration) *ServerBuild {
+func (rb *ServerBuild) Wait(wait ...time.Duration) *ServerBuild {
 	if wait[0].Seconds() < 1 {
 		wait[0] = time.Second
 	}
@@ -23,15 +20,13 @@ func (rb *ServerBuild) Wait(wait... time.Duration) *ServerBuild {
 	return rb
 }
 
-func (rb *ServerBuild) Expulse() *ServerBuild {
+func (rb *ServerBuild) Expulse(cb *chat.ChatBuilder) *ServerBuild {
 	if rb.playerID == -1 {
 		return rb
 	}
-
-	chat.Builder().
-		Color(common.WarnColorStr).
-		Tag("servidor").
-		Message(rb.message)
+	if cb != nil {
+		cb.Send()
+	}
 
 	natives.Kick(rb.playerID)
 
