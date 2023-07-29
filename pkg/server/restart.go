@@ -8,36 +8,41 @@ import (
 	"github.com/goseventh/rakstar/pkg/chat"
 )
 
+/*
+	Define a mensagem que será enviada durante a contagem regresiva para reiniciar
 
+	Exemplo: "O servidor reiniciará"
 
-func (rb *ServerBuild) Message(msg string) *ServerBuild {
-	rb.msgRestart = msg
-	return rb
-}
+	# # Resultado: 
+		- O servidor reiniciará - 5 
+		- O servidor reiniciará - 4 
+		- O servidor reiniciará - 3 
+		- O servidor reiniciará - 2 
+		- O servidor reiniciará - 1 
+		- O servidor reiniciará - 0 
 
+*/
 func (rb *ServerBuild) MessageLoop(msg string) *ServerBuild {
 	rb.msgLoop = msg
 	return rb
 }
 
-func (rb *ServerBuild) RestartNow() *ServerBuild {
-	if rb.msgRestart == "" {
-		rb.msgRestart = "ordem manual para reiniciar servidor em momentos..."
+func (rb *ServerBuild) RestartNow(cb *chat.ChatBuilder) *ServerBuild {
+	if cb != nil {
+		cb.Send()
+	}
+	if rb.msgLoop == "" {
+		rb.msgLoop = "o servidor reiniciará"
 	}
 
-	if rb.tag == "" {
-		rb.tag = "rakstar"
-	}
-
-	chat.Builder().Message(rb.msgLoop).Tag(rb.tag)
 	time.Sleep(7 * time.Second)
 	for i := 5; i > 0; i-- {
 		time.Sleep(time.Second)
-		chat.Builder().
-			Message(
-				fmt.
-					Sprintf("%v - %v", rb.msgLoop, i),
-			)
+		cb.
+			PlayerID(chat.Global).
+			Message(fmt.
+				Sprintf("%v - %v", rb.msgLoop, i)).
+			Send()
 	}
 
 	natives.SendRconCommand("gmx")
