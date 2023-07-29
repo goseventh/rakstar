@@ -27,6 +27,33 @@ func (rb *ServerBuild) MessageLoop(msg string) *ServerBuild {
 	return rb
 }
 
+/*
+	Efetiva a ordem de reinício, recebendo um objeto builder 
+	
+	# # Exemplo:
+
+	cb := chat.Build().
+	PlayerID(chat.global).
+	Tag("servidor").
+	Color(common.WarnColorStr)
+	Message("ordem de reinício")
+	    
+	server.
+	Build().
+	MessageLoop("O servidor reiniciará").
+	RestartNow(cb)
+
+	# * Resultado do chat:
+		- [SERVIDOR] ordem de reínicio
+		- [SERVIDOR] o servidor reiniciará - 5
+		- [SERVIDOR] o servidor reiniciará - 4
+		- [SERVIDOR] o servidor reiniciará - 3
+		- [SERVIDOR] o servidor reiniciará - 2
+		- [SERVIDOR] o servidor reiniciará - 1
+		- [SERVIDOR] o servidor reiniciará - 0
+	... servidor reiniciou
+	
+*/
 func (rb *ServerBuild) RestartNow(cb *chat.ChatBuilder) *ServerBuild {
 	if cb != nil {
 		cb.Send()
