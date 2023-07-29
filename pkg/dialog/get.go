@@ -14,3 +14,8 @@ func (db *DialogBuilder) GetText(text *string) *DialogBuilder {
 	*text = db.DialogResponse.Inputtext
 	return db
 }
+
+func (db *DialogBuilder) GetErr(err *error) *DialogBuilder {
+	*err = db.Err
+	return db
+}

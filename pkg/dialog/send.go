@@ -1,6 +1,8 @@
 package dialog
 
 import (
+	"errors"
+
 	"github.com/goseventh/rakstar/internal/natives"
 	"github.com/goseventh/rakstar/internal/utils/constants/dialogConst"
 	"github.com/goseventh/rakstar/internal/utils/constants/playerConst"
@@ -47,6 +49,7 @@ func (db *DialogBuilder) Send() *DialogBuilder {
 	dialogResponse := <-channel
 
 	if dialogResponse == nil {
+		db.Err = errors.New(ResponseTimeoutDialogError)
 		return db
 	}
 

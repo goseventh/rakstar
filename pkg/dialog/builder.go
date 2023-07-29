@@ -28,9 +28,10 @@ const dialogHandlerID = 9999
 type DialogBuilder struct {
 	DialogRequest  *DialogRequest
 	DialogResponse *DialogResponse
+	Err error
 }
 
-func Builder() *DialogBuilder {
+func  Builder() *DialogBuilder {
 	return new(DialogBuilder)
 }
 
