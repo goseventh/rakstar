@@ -1,5 +1,7 @@
 package dialog
 
+import "time"
+
 const (
 	InvalidStyleDialogError     = "dialog invalid style"
 	InvalidPlayerIDDialogError  = "dialog invalid player id"
@@ -31,3 +33,12 @@ type DialogBuilder struct {
 func Builder() *DialogBuilder {
 	return new(DialogBuilder)
 }
+
+func (db *DialogBuilder) Wait(wait... time.Duration) *DialogBuilder {
+	if wait[0].Seconds() < 1 {
+		wait[0] = time.Second
+	}
+	time.Sleep(wait[0])
+	return new(DialogBuilder)
+}
+
