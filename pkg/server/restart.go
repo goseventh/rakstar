@@ -32,8 +32,9 @@ func (rb *ServerBuild) MessageLoop(msg string) *ServerBuild {
 	
 	# # Exemplo:
 
-	cb := chat.Build().
-	PlayerID(chat.global).
+	cb := chat.Build()
+
+	cb.PlayerID(chat.global).
 	Tag("servidor").
 	Color(common.WarnColorStr).
 	Message("ordem de reinício")
