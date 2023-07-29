@@ -4,6 +4,11 @@ import (
 	"main/pkg/utils/sampstr"
 )
 
+/*
+	Função que deve ser chamada quando uma callback dialog for recebida
+	
+	"onDialogResponse"
+*/
 func HandleDialogResponse(id int, dialogID int, response int, listitem int, inputtext string) bool {
 	if dialogID != dialogHandlerID {
 		return false
