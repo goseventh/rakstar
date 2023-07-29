@@ -11,6 +11,11 @@ import (
 	"github.com/goseventh/rakstar/pkg/chat"
 )
 
+var Fail *chat.ChatBuilder
+
+/*
+Função que deve ser chamada na callback "OnPlayerCommand"
+*/
 func HandlePlayerCommandText(player player.Player, cmdtext string) bool {
 	server.GoroutinePool.Submit(func() {
 		splitCmdText := strings.Split(sampstr.Decode(cmdtext), " ")
@@ -21,12 +26,8 @@ func HandlePlayerCommandText(player player.Player, cmdtext string) bool {
 		command, distance := SearchCommand(commandName)
 
 		if command == nil {
-			chat.Builder().
-				Message("Nenhum comando correspondente foi encontrado!").
-				Color(common.ErrorColorStr).
-				Tag("servidor").
-				PlayerID(player.ID).
-				Send()
+			Fail.PlayerID(player.ID)
+			Fail.Send()
 
 		}
 
