@@ -1,8 +1,8 @@
 package player
 
-import "github.com/goseventh/rakstar/internal/samp"
+import "github.com/goseventh/rakstar/internal/natives"
 
 func (pb *PlayerBuilder) Connected(status *bool) *PlayerBuilder {
-	*status = samp.IsPlayerConnected(pb.ID)
+	*status = natives.IsPlayerConnected(pb.ID)
 	return pb
 }

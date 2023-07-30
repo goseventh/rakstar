@@ -5,13 +5,13 @@ import (
 	"strings"
 	"time"
 
-	"github.com/goseventh/rakstar/internal/samp"
+	"github.com/goseventh/rakstar/internal/natives"
 	"github.com/goseventh/rakstar/internal/utils/constants/playerConst"
 	"github.com/goseventh/rakstar/internal/utils/sampstr"
 )
 
 type SendPlayerMessageRequest struct {
-	Player          *samp.Player
+	Player          *natives.Player
 	Message         string
 	Color           string
 	Local           bool
@@ -38,7 +38,7 @@ func (chat *ChatBuilder) Wait(wait ...time.Duration) *ChatBuilder {
 }
 
 func (chat *ChatBuilder) PlayerID(playerid int) *ChatBuilder {
-	player := samp.Player{ID: playerid}
+	player := natives.Player{ID: playerid}
 	chat.requestMsg.Player = &player
 	return chat
 }
@@ -94,7 +94,7 @@ func (chat *ChatBuilder) Send() *ChatBuilder {
 	}
 
 	if chat.requestMsg.Player.ID == Global {
-		samp.SendClientMessageToAll(-1, chat.requestMsg.Message)
+		natives.SendClientMessageToAll(-1, chat.requestMsg.Message)
 	}
 
 	switch chat.requestMsg.Range {
@@ -126,15 +126,15 @@ func sendRange(chat *ChatBuilder) error {
 	x, y, z, err := chat.requestMsg.Player.GetPos()
 
 	for playerID := 0; playerID < playerConst.MaxPlayers; playerID++ {
-		if !samp.IsPlayerConnected(playerID) {
+		if !natives.IsPlayerConnected(playerID) {
 			continue
 		}
 
-		if !samp.IsPlayerInRangeOfPoint(playerID, chat.requestMsg.Range, x, y, z) {
+		if !natives.IsPlayerInRangeOfPoint(playerID, chat.requestMsg.Range, x, y, z) {
 			continue
 		}
 
-		samp.SendClientMessage(playerID, -1, chat.requestMsg.Message)
+		natives.SendClientMessage(playerID, -1, chat.requestMsg.Message)
 	}
 	return err
 }
@@ -146,5 +146,5 @@ func Active() {
 func Disable() {}
 
 func Flush() {
-	samp.SendClientMessageToAll(-1, " ")
+	natives.SendClientMessageToAll(-1, " ")
 }

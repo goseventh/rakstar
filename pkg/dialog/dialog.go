@@ -1,7 +1,7 @@
 package dialog
 
 import (
-	"github.com/goseventh/rakstar/internal/samp"
+	"github.com/goseventh/rakstar/internal/natives"
 	"github.com/goseventh/rakstar/internal/utils/constants/dialogConst"
 	"github.com/goseventh/rakstar/internal/utils/constants/playerConst"
 )
@@ -11,7 +11,7 @@ func (db *DialogBuilder) Select(arg interface{}) *DialogBuilder {
 	case string:
 		var name string
 		for i := 0; i < playerConst.MaxPlayers; i++ {
-			samp.GetPlayerName(i, &name, playerConst.MaxPlayerName)
+			natives.GetPlayerName(i, &name, playerConst.MaxPlayerName)
 			if name == v {
 				db.DialogRequest.ID = i
 			}
@@ -43,6 +43,6 @@ func (db *DialogBuilder) Buttons(buttons []string) *DialogBuilder {
 }
 
 func (db *DialogBuilder) Close() *DialogBuilder {
-	samp.ShowPlayerDialog(db.DialogRequest.ID, -1, dialogConst.DialogStyleMsgbox, "???", "???", "???", "???")
+	natives.ShowPlayerDialog(db.DialogRequest.ID, -1, dialogConst.DialogStyleMsgbox, "???", "???", "???", "???")
 	return db
 }

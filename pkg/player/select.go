@@ -1,7 +1,7 @@
 package player
 
 import (
-	"github.com/goseventh/rakstar/internal/samp"
+	"github.com/goseventh/rakstar/internal/natives"
 	"github.com/goseventh/rakstar/internal/utils/constants/playerConst"
 )
 
@@ -10,7 +10,7 @@ func (pb *PlayerBuilder) Select(arg interface{}) *PlayerBuilder {
 	case string:
 		var name string
 		for i := 0; i < playerConst.MaxPlayers; i++ {
-			samp.GetPlayerName(i, &name, playerConst.MaxPlayerName)
+			natives.GetPlayerName(i, &name, playerConst.MaxPlayerName)
 			if name == v {
 				pb.ID = i
 			}

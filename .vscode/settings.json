@@ -7,10 +7,6 @@
 	},
 	"go.toolsEnvVars": {
 		"GOARCH": "386",
-		"CGO_ENABLED": "1",
-		"CGO_CFLAGS": ".*",
-		"CGO_LDFLAGS": ".*",
-		"GO111MODULE": "on"
-		"GOOS": "linux"
+		"CGO_ENABLED": "1"
 	}
 }

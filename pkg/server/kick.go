@@ -3,7 +3,7 @@ package server
 import (
 	"time"
 
-	"github.com/goseventh/rakstar/internal/samp"
+	"github.com/goseventh/rakstar/internal/natives"
 	"github.com/goseventh/rakstar/pkg/chat"
 )
 
@@ -28,7 +28,7 @@ func (rb *ServerBuild) Expulse(cb *chat.ChatBuilder) *ServerBuild {
 		cb.Send()
 	}
 
-	samp.Kick(rb.playerID)
+	natives.Kick(rb.playerID)
 
 	return rb
 }
