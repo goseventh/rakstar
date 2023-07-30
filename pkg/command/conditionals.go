@@ -1,14 +1,23 @@
 package command
 
 const (
-	MustPlayerConnected = iota
+	typePlayer = iota
+	typeNumber
+	typeText
 )
 
 type conditionalsBuilder struct {
-	index         int
-	typeIdx       int
-	condils       []int
-	conditionals_ map[int][]int
+	index   int
+	typeIdx int
+	condils []tCondils
+	//	conditionals_ map[int][]int
+	cb *commandBuilder
+}
+
+type tCondils struct {
+	typeIdx int
+	cond    int
+	value   interface{}
 }
 
 func (cb *conditionalsBuilder) Index(index int) *conditionalsBuilder {
@@ -16,18 +25,25 @@ func (cb *conditionalsBuilder) Index(index int) *conditionalsBuilder {
 	return cb
 }
 
-func (cb *conditionalsBuilder) Type(typeIdx int) *conditionalsBuilder {
-	cb.typeIdx = typeIdx
-	return cb
-}
-
-func (cb *conditionalsBuilder) MustPlayerConnected() *conditionalsBuilder {
-	cb.condils = append(cb.condils, MustPlayerConnected)
-	return cb
-}
-
+// registra as condicionais para cada indice(index)
 func (cb *conditionalsBuilder) Set() *conditionalsBuilder {
+
+	if cb.index < 0 {
+		return cb
+	}
+
+	if cb.condils == nil || len(cb.condils) == 0 {
+		return cb
+	}
+
+	//cb.conditionals_s //alocado
+
+	cb.cb.conditionals_[cb.index] = cb.condils
 	cb.condils = nil
-	cb.conditionals_[cb.index] = cb.condils
 	return cb
+}
+
+func (tp *TPlayer) EndConditionals() *commandBuilder {
+	tp.End()
+	return tp.cb.cb
 }

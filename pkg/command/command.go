@@ -11,13 +11,14 @@ import (
 type CommandHandler func(context *CommandContext)
 
 type Command struct {
-	Name         string
-	Handler      CommandHandler
-	Interceptors []CommandInterceptorHandler
-	Description  string
-	RequireLogin bool
-	Aliases      []string
-	Roles        []string
+	Name          string
+	Handler       CommandHandler
+	Interceptors  []CommandInterceptorHandler
+	Description   string
+	RequireLogin  bool
+	Aliases       []string
+	Roles         []string
+	conditionals_ map[int][]tCondils
 }
 
 type CommandContext struct {

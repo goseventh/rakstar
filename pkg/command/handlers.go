@@ -2,11 +2,16 @@ package command
 
 import (
 	"fmt"
+	"log"
+	"strconv"
+
 	//"main/pkg/server"
 	//	"main/pkg/utils/sampstr"
 	"strings"
 
+	"github.com/goseventh/rakstar/internal/natives"
 	"github.com/goseventh/rakstar/internal/player"
+	"github.com/goseventh/rakstar/internal/utils/constants/playerConst"
 	"github.com/goseventh/rakstar/internal/utils/sampstr"
 	"github.com/goseventh/rakstar/pkg/chat"
 	"github.com/goseventh/rakstar/pkg/server"
@@ -15,36 +20,33 @@ import (
 var NotFoundChat *chat.ChatBuilder
 var SimiularFoundMSG *string
 
-
 /*
-	seta as mensagens que são executadas qunado um comando similar é encontrado, ou quando nenhum é encontrado.
-	
-	# Exemplo:
+seta as mensagens que são executadas qunado um comando similar é encontrado, ou quando nenhum é encontrado.
 
-	cb := chat.builder()
-	
-	cb.Message("nenhum comando encontrado")
+# Exemplo:
 
-	similarFound := "comando similar"
+cb := chat.builder()
 
-	SetConfig(cb, similarFound)
+cb.Message("nenhum comando encontrado")
 
-	# # Resultado:
+similarFound := "comando similar"
 
-		- *Jogador digita "/command", mas não existe:
-	
-		> chat: nenhum comando foi encontrado
+SetConfig(cb, similarFound)
 
-		- *Jogador digita "/aujad", e similar foi encontrado: "ajuda"
-	
-		> chat: comando similar: ajuda
+# # Resultado:
 
+  - *Jogador digita "/command", mas não existe:
+
+    > chat: nenhum comando foi encontrado
+
+  - *Jogador digita "/aujad", e similar foi encontrado: "ajuda"
+
+    > chat: comando similar: ajuda
 */
-func SetConfig(NotFoundChat *chat.ChatBuilder, SimilarFoundMsg string){
+func SetConfig(NotFoundChat *chat.ChatBuilder, SimilarFoundMsg string) {
 	NotFoundChat = NotFoundChat
 	SimilarFoundMsg = SimilarFoundMsg
 }
-
 
 /*
 Função que deve ser chamada na callback "OnPlayerCommand"
@@ -105,13 +107,60 @@ func HandlePlayerCommandText(player player.Player, cmdtext string) bool {
 				}
 			}
 
-			fmt.Printf("[rakstar] rodando o comando [%s] para o jogador %s\n", command.Name, player.GetName())
-
 			commandContext := CommandContext{
 				Player:     &player,
 				ArgHandler: argHandler,
 			}
 
+			var pass bool = true
+
+		condLoop:
+			for idx, arg := range commandArgs {
+				for _, cond := range command.conditionals_[idx] {
+					switch cond.typeIdx {
+					case typePlayer:
+						var id int = -1
+						var err error
+						id, err = strconv.Atoi(arg)
+						if err != nil {
+							var nick string
+							for i := 0; i < playerConst.MaxPlayers; i++ {
+								natives.GetPlayerName(i, &nick, playerConst.MaxPlayerName)
+								if nick == arg {
+									id = i
+									break
+								}
+							}
+
+						}
+
+						switch cond.cond {
+						case MustPlayerConnected:
+							if !natives.IsPlayerConnected(id) {
+								log.Printf("[rakstar-cmd idx(%v)] o jogador %v não está conectado", idx, id)
+								pass = false
+								break condLoop
+							}
+
+						case MustNickIs:
+							var nick string
+							natives.GetPlayerName(id, &nick, playerConst.MaxPlayerName)
+							if cond.value != nick {
+								log.Printf("[rakstar-cmd idx(%v)] falha na comparação de nicks entre %v:%v", idx, nick, cond.value)
+								pass = false
+								break condLoop
+							}
+						}
+					}
+
+				}
+			}
+
+			if !pass {
+				return
+			}
+
+			log.Printf("[rakstar] rodando o comando [%s] para o jogador %s\n", command.Name, player.GetName())
 			command.Handler(&commandContext)
 		})
 

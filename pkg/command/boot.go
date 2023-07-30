@@ -13,5 +13,13 @@ func Boot() {
 	cb.Color(common.WarnColorStr).
 		Message("Nenhum comando foi encontrado")
 	SetConfig(cb, "Comando errado, similar")
-	//Registra o handler na callback
+
+	/* Registra o handler na callback
+
+	server.Builder().
+		SetHandler(HandlePlayerCommandText).
+		Subscribe(OnPlayerCommand)
+
+	*/
+
 }

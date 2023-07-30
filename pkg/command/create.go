@@ -17,10 +17,14 @@ func (cb *commandBuilder) Handler(handler CommandHandler) *commandBuilder {
 }
 
 func (cb *commandBuilder) Create() {
-	RegisterCommand(&Command{
+	
+	cmd := &Command{
 		Name:    cb.cmd,
 		Aliases: cb.alias,
 		Handler: cb.handler,
-	})
+		conditionals_: cb.conditionals_,
+	}
+
+	RegisterCommand(cmd)
 
 }
