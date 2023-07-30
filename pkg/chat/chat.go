@@ -3,11 +3,15 @@ package chat
 import (
 	"fmt"
 	"strings"
-	
+	"time"
+
+	"github.com/goseventh/rakstar/internal/natives"
+	"github.com/goseventh/rakstar/internal/utils/constants/playerConst"
+	"github.com/goseventh/rakstar/internal/utils/sampstr"
 )
 
 type SendPlayerMessageRequest struct {
-	Player          *Player
+	Player          *natives.Player
 	Message         string
 	Color           string
 	Local           bool
@@ -16,119 +20,131 @@ type SendPlayerMessageRequest struct {
 	DisableEncoding bool
 }
 
-type SendMessageRequest struct {
-	Player          *Player
-	Message         string
-	Color           string
-	Tag             string
-	DisableEncoding bool
+type ChatBuilder struct {
+	requestMsg SendPlayerMessageRequest
 }
 
 var isChatEnable = true
 
-func CreateLocalMsg(sendPlayerMessageRequest *SendPlayerMessageRequest) {
-	var message string
-	var tag string = ""
+func Builder() *ChatBuilder {
+	return new(ChatBuilder)
+}
+func (chat *ChatBuilder) Wait(wait ...time.Duration) *ChatBuilder {
+	if wait[0].Seconds() < 1 {
+		wait[0] = time.Second
+	}
+	time.Sleep(wait[0])
+	return chat
+}
 
-	if sendPlayerMessageRequest.Message == "" {
-		return
+func (chat *ChatBuilder) PlayerID(playerid int) *ChatBuilder {
+	player := natives.Player{ID: playerid}
+	chat.requestMsg.Player = &player
+	return chat
+}
+
+func (chat *ChatBuilder) Message(msg string) *ChatBuilder {
+	chat.requestMsg.Message = msg
+	return chat
+}
+
+func (chat *ChatBuilder) Color(color string) *ChatBuilder {
+	chat.requestMsg.Color = color
+	return chat
+}
+
+func (chat *ChatBuilder) Tag(tag string) *ChatBuilder {
+	chat.requestMsg.Tag = tag
+	return chat
+}
+
+func (chat *ChatBuilder) Range(r float32) *ChatBuilder {
+	chat.requestMsg.Range = r
+	return chat
+}
+
+func (chat *ChatBuilder) Send() *ChatBuilder {
+	if chat.requestMsg.Message == "" {
+		return chat
 	}
 
-	if sendPlayerMessageRequest.Player == nil {
-		return
+	if chat.requestMsg.Player == nil {
+		return chat
 	}
 
-	if sendPlayerMessageRequest.Color == "" {
-		sendPlayerMessageRequest.Color = "{ffffff}"
+	if chat.requestMsg.Color == "" {
+		chat.requestMsg.Color = "{ffffff}"
 	}
 
-	if sendPlayerMessageRequest.Local && sendPlayerMessageRequest.Range <= 0.0 {
-		sendPlayerMessageRequest.Range = 10.0
+	if chat.requestMsg.Tag != "" {
+		chat.requestMsg.Tag = fmt.Sprintf("[%s] ", strings.ToUpper(chat.requestMsg.Tag))
 	}
 
-	if sendPlayerMessageRequest.Tag != "" {
-		tag = fmt.Sprintf("[%s] ", strings.ToUpper(sendPlayerMessageRequest.Tag))
-	}
-
-	message =
+	chat.requestMsg.Message =
 		fmt.Sprintf(
 			"%s%s%s: {ffffff}%s",
-			sendPlayerMessageRequest.Color,
-			tag,
-			sendPlayerMessageRequest.Player.GetName(),
-			sendPlayerMessageRequest.Message,
+			chat.requestMsg.Color,
+			chat.requestMsg.Tag,
+			chat.requestMsg.Player.GetName(),
+			chat.requestMsg.Message,
 		)
 
-	if !sendPlayerMessageRequest.DisableEncoding {
-		message = Encode(message)
+	if !chat.requestMsg.DisableEncoding {
+		chat.requestMsg.Message = sampstr.Encode(chat.requestMsg.Message)
 	}
 
-	if sendPlayerMessageRequest.Local {
-		x, y, z, err := sendPlayerMessageRequest.Player.GetPos()
+	if chat.requestMsg.Player.ID == Global {
+		natives.SendClientMessageToAll(-1, chat.requestMsg.Message)
+	}
 
+	switch chat.requestMsg.Range {
+	case Local:
+		chat.requestMsg.Range = PotencyLocal
+		err := sendRange(chat)
 		if err != nil {
 			fmt.Println(err)
-			return
 		}
-
-		for playerID := 0; playerID < MaxPlayers; playerID++ {
-			if !IsPlayerConnected(playerID) {
-				continue
-			}
-
-			if !IsPlayerInRangeOfPoint(playerID, sendPlayerMessageRequest.Range, x, y, z) {
-				continue
-			}
-
-			SendClientMessage(playerID, -1, message)
+	case Grito:
+		chat.requestMsg.Range = PotencyGrito
+		err := sendRange(chat)
+		if err != nil {
+			fmt.Println(err)
 		}
+	default:
 
-		return
+		err := sendRange(chat)
+		if err != nil {
+			fmt.Println(err)
+		}
 	}
 
-	SendClientMessageToAll(-1, message)
+	return chat
+
 }
 
-func CreateMsg(sendMessageRequest *SendMessageRequest) {
-	var message string
-	var tag string = ""
+func sendRange(chat *ChatBuilder) error {
+	x, y, z, err := chat.requestMsg.Player.GetPos()
 
-	if sendMessageRequest.Message == "" {
-		return
+	for playerID := 0; playerID < playerConst.MaxPlayers; playerID++ {
+		if !natives.IsPlayerConnected(playerID) {
+			continue
+		}
+
+		if !natives.IsPlayerInRangeOfPoint(playerID, chat.requestMsg.Range, x, y, z) {
+			continue
+		}
+
+		natives.SendClientMessage(playerID, -1, chat.requestMsg.Message)
 	}
-
-	if sendMessageRequest.Color == "" {
-		sendMessageRequest.Color = "{ffffff}"
-	}
-
-	if sendMessageRequest.Tag != "" {
-		tag = fmt.Sprintf("[%s] ", strings.ToUpper(sendMessageRequest.Tag))
-	}
-
-	message =
-		fmt.Sprintf(
-			"%s%s%s",
-			sendMessageRequest.Color,
-			tag,
-			sendMessageRequest.Message,
-		)
-
-	if !sendMessageRequest.DisableEncoding {
-		message = Encode(message)
-	}
-
-	if sendMessageRequest.Player != nil {
-		SendClientMessage(sendMessageRequest.Player.ID, -1, message)
-		return
-	}
-
-	SendClientMessageToAll(-1, message)
+	return err
 }
 
-func Active() {}
+func Active() {
+	print("active")
+}
 
 func Disable() {}
 
 func Flush() {
-	SendClientMessageToAll(-1, " ")
+	natives.SendClientMessageToAll(-1, " ")
 }
