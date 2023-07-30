@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	"github.com/agnivade/levenshtein"
-	"github.com/goseventh/rakstar/internal/player"
+	"github.com/goseventh/rakstar/internal/natives"
 )
 
 type CommandHandler func(context *CommandContext)
@@ -22,7 +22,7 @@ type Command struct {
 }
 
 type CommandContext struct {
-	Player     *player.Player
+	Player     *natives.Player
 	ArgHandler *ArgHandler
 }
 

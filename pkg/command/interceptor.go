@@ -2,11 +2,12 @@ package command
 
 import (
 	"strings"
-	"github.com/goseventh/rakstar/internal/player"
+
+	"github.com/goseventh/rakstar/internal/natives"
 )
 
 type CommandInterceptorContext struct {
-	Player     *player.Player
+	Player     *natives.Player
 	ArgHandler *ArgHandler
 	next       bool
 }

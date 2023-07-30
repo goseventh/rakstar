@@ -1,9 +1,9 @@
-package player
+package natives
 
 import (
 	"fmt"
-	"github.com/goseventh/rakstar/internal/natives"
-	
+
+	"github.com/goseventh/rakstar/internal/utils/constants/playerConst"
 )
 
 // Player implements OO players.
@@ -14,7 +14,7 @@ type Player struct {
 // GetName returns the players name.
 func (p *Player) GetName() string {
 	var name string
-	natives.GetPlayerName(p.ID, &name, MaxPlayerName)
+	GetPlayerName(p.ID, &name, playerConst.MaxPlayerName)
 	return name
 }
 

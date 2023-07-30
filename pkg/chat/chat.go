@@ -6,13 +6,12 @@ import (
 	"time"
 
 	"github.com/goseventh/rakstar/internal/natives"
-	"github.com/goseventh/rakstar/internal/player"
 	"github.com/goseventh/rakstar/internal/utils/constants/playerConst"
 	"github.com/goseventh/rakstar/internal/utils/sampstr"
 )
 
 type SendPlayerMessageRequest struct {
-	Player          *player.Player
+	Player          *natives.Player
 	Message         string
 	Color           string
 	Local           bool
@@ -39,7 +38,7 @@ func (chat *ChatBuilder) Wait(wait ...time.Duration) *ChatBuilder {
 }
 
 func (chat *ChatBuilder) PlayerID(playerid int) *ChatBuilder {
-	player := player.Player{ID: playerid}
+	player := natives.Player{ID: playerid}
 	chat.requestMsg.Player = &player
 	return chat
 }
@@ -112,7 +111,7 @@ func (chat *ChatBuilder) Send() *ChatBuilder {
 			fmt.Println(err)
 		}
 	default:
-	
+
 		err := sendRange(chat)
 		if err != nil {
 			fmt.Println(err)

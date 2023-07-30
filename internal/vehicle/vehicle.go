@@ -4,9 +4,8 @@ import (
 	"fmt"
 	"math"
 
-	"github.com/goseventh/rakstar/internal/player"
-	"github.com/goseventh/rakstar/internal/utils/constants/vehiclesConst"
 	"github.com/goseventh/rakstar/internal/natives"
+	"github.com/goseventh/rakstar/internal/utils/constants/vehiclesConst"
 )
 
 const (
@@ -32,7 +31,7 @@ type VehicleParams struct {
 
 func NewVehicle(modelid int, x, y, z, rotation float32, color1, color2 uint8, respawn_delay int, addsiren bool) (Vehicle, error) {
 	var v Vehicle
-	if !natives.IsValidVehicleModel(modelid) {
+	if !natives.UGMPIsValidVehicleModel(modelid) {
 		return v, fmt.Errorf("invalid vehicle model")
 	}
 	v.ID = natives.CreateVehicle(modelid, x, y, z, rotation, int(color1), int(color2), respawn_delay, addsiren)
@@ -65,7 +64,7 @@ func (v *Vehicle) GetSpeedInt() int {
 	return int(math.Round(v.GetSpeedFloat64()))
 }
 
-func (v *Vehicle) PutPlayer(p *player.Player, seat int) error {
+func (v *Vehicle) PutPlayer(p *natives.Player, seat int) error {
 	if !natives.PutPlayerInVehicle(p.ID, v.ID, seat) {
 		return fmt.Errorf("player or vehicle doesn't exist")
 	}

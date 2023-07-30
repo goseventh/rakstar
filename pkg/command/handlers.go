@@ -10,7 +10,6 @@ import (
 	"strings"
 
 	"github.com/goseventh/rakstar/internal/natives"
-	"github.com/goseventh/rakstar/internal/player"
 	"github.com/goseventh/rakstar/internal/utils/constants/playerConst"
 	"github.com/goseventh/rakstar/internal/utils/sampstr"
 	"github.com/goseventh/rakstar/pkg/chat"
@@ -43,15 +42,15 @@ SetConfig(cb, similarFound)
 
     > chat: comando similar: ajuda
 */
-func SetConfig(NotFoundChat *chat.ChatBuilder, SimilarFoundMsg string) {
-	NotFoundChat = NotFoundChat
-	SimilarFoundMsg = SimilarFoundMsg
+func SetConfig(notFoundChat *chat.ChatBuilder, similarFoundMsg string) {
+	NotFoundChat = notFoundChat
+	SimiularFoundMSG = &similarFoundMsg
 }
 
 /*
 Função que deve ser chamada na callback "OnPlayerCommand"
 */
-func HandlePlayerCommandText(player player.Player, cmdtext string) bool {
+func HandlePlayerCommandText(player natives.Player, cmdtext string) bool {
 	server.Builder().
 		Goroutine().
 		Submit(func() {

@@ -34,12 +34,12 @@ type event struct {
 	Type    EventType
 }
 
-var events = make(map[string]event)
+var Events = make(map[string]event)
 var mainEvent func() = nil
 
 //export onTick
 func onTick() {
-	evt, ok := events["tick"]
+	evt, ok := Events["tick"]
 	if !ok {
 		return
 	}
@@ -60,12 +60,12 @@ func onTick() {
 
 // On registers an event with a handler.
 func On(eventName string, handler interface{}) error {
-	_, ok := events[eventName]
+	_, ok := Events[eventName]
 	if ok {
 		return fmt.Errorf("this handler already exists")
 	}
 
-	events[eventName] = event{Handler: handler, Type: Repeat}
+	Events[eventName] = event{Handler: handler, Type: Repeat}
 	_ = Print(fmt.Sprintf("Registered %s event", eventName))
 
 	return nil
@@ -73,12 +73,12 @@ func On(eventName string, handler interface{}) error {
 
 // Once registers an event with a handler one time only.
 func Once(eventName string, handler interface{}) error {
-	_, ok := events[eventName]
+	_, ok := Events[eventName]
 	if ok {
 		return fmt.Errorf("this handler already exists")
 	}
 
-	events[eventName] = event{Handler: handler, Type: OnceOnly}
+	Events[eventName] = event{Handler: handler, Type: OnceOnly}
 	_ = Print(fmt.Sprintf("Registered %s event", eventName))
 
 	return nil
