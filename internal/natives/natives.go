@@ -21,7 +21,6 @@ import "C"
 
 import "unsafe"
 
-
 // For documentation, please visit https://open.mp/docs/scripting/functions/CreateActor
 func CreateActor(modelid int, x, y, z, rotation float32) int {
 	return int(C.CreateActor(C.int(modelid), C.float(x), C.float(y), C.float(z), C.float(rotation)))

@@ -1,9 +1,9 @@
 package command
 
 import (
-	rakstar "github.com/goseventh/rakstar/internal"
+	"github.com/goseventh/rakstar/chat"
+	"github.com/goseventh/rakstar/internal/callbacks"
 	"github.com/goseventh/rakstar/internal/utils/common"
-	"github.com/goseventh/rakstar/pkg/chat"
 )
 
 /*
@@ -14,8 +14,8 @@ func Boot() bool {
 	cb.Color(common.WarnColorStr).
 		Message("Nenhum comando foi encontrado")
 	SetConfig(cb, "Comando errado, similar")
-	
-	err := rakstar.On("playerCommandText", HandlePlayerCommandText)
+
+	err := callbacks.On("playerCommandText", HandlePlayerCommandText)
 	return err == nil
 
 	/* Registra o handler na callback

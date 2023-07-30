@@ -9,11 +9,11 @@ import (
 	//	"main/pkg/utils/sampstr"
 	"strings"
 
+	"github.com/goseventh/rakstar/chat"
 	"github.com/goseventh/rakstar/internal/natives"
 	"github.com/goseventh/rakstar/internal/utils/constants/playerConst"
 	"github.com/goseventh/rakstar/internal/utils/sampstr"
-	"github.com/goseventh/rakstar/pkg/chat"
-	"github.com/goseventh/rakstar/pkg/server"
+	"github.com/goseventh/rakstar/server"
 )
 
 var NotFoundChat *chat.ChatBuilder

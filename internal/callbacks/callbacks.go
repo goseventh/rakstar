@@ -1,4 +1,4 @@
-package rakstar
+package callbacks
 
 /*
 #cgo windows CFLAGS: -I../lib -I../lib/amx -Wno-attributes -Wno-implicit-function-declaration
@@ -21,36 +21,96 @@ import (
 	"fmt"
 	"unsafe"
 
-	rakstar "github.com/goseventh/rakstar/internal"
 	"github.com/goseventh/rakstar/internal/natives"
+	"github.com/goseventh/rakstar/internal/serverlog"
 )
+
+type EventType int
+
+const (
+	Repeat EventType = iota
+	OnceOnly
+)
+
+type event struct {
+	Handler interface{}
+	Type    EventType
+}
+
+var Events = make(map[string]event)
+var mainEvent func() = nil
+
+func On(eventName string, handler interface{}) error {
+	_, ok := Events[eventName]
+	if ok {
+		return fmt.Errorf("this handler already exists")
+	}
+
+	Events[eventName] = event{Handler: handler, Type: Repeat}
+	_ = serverlog.Print(fmt.Sprintf("Registered %s event", eventName))
+
+	return nil
+}
+
+func Once(eventName string, handler interface{}) error {
+	_, ok := Events[eventName]
+	if ok {
+		return fmt.Errorf("this handler already exists")
+	}
+
+	Events[eventName] = event{Handler: handler, Type: OnceOnly}
+	_ = serverlog.Print(fmt.Sprintf("Registered %s event", eventName))
+
+	return nil
+}
+
+//export onTick
+func onTick() {
+	evt, ok := Events["tick"]
+	if !ok {
+		return
+	}
+
+	fn, ok := evt.Handler.(func())
+	if !ok {
+		return
+	}
+	fn()
+
+	if evt.Type == OnceOnly {
+		// If this event was registered only once, then reassign this event to a new blank struct.
+		// PoC code. Still needs to be implemented completely.
+	}
+
+	return
+}
 
 //export callEvent
 func callEvent(amx *C.AMX, funcName *C.char_t, format *C.char_t, params []C.cell) bool {
 	name := C.GoString(C.constToNonConst(funcName))
 	specifiers := C.GoString(C.constToNonConst(format))
 
-	evt, ok := rakstar.Events[name]
+	evt, ok := Events[name]
 	if !ok {
-		_ = rakstar.Print(fmt.Sprintf("rakstar: Called an event ('%s') that is not registered by rakstar.", name))
+		_ = serverlog.Print(fmt.Sprintf("rakstar: Called an event ('%s') that is not registered by ", name))
 		return false
 	}
 
-	_ = rakstar.Print("callEvent (1)")
+	_ = serverlog.Print("callEvent (1)")
 	specifiersLen := len(specifiers)
 
 	if specifiersLen == 0 {
 		fn, ok := evt.Handler.(func())
 		if !ok {
-			_ = rakstar.Print(fmt.Sprintf("rakstar: Event ('%s') failed to call", name))
+			_ = serverlog.Print(fmt.Sprintf("rakstar: Event ('%s') failed to call", name))
 			return false
 		}
-		_ = rakstar.Print("callEvent (2)")
+		_ = serverlog.Print("callEvent (2)")
 		fn()
 	} else {
 		fn, ok := evt.Handler.(func([]interface{}))
 		if !ok {
-			_ = rakstar.Print(fmt.Sprintf("rakstar: Event ('%s') failed to call", name))
+			_ = serverlog.Print(fmt.Sprintf("rakstar: Event ('%s') failed to call", name))
 			return false
 		}
 		in := make([]interface{}, specifiersLen)
@@ -59,13 +119,13 @@ func callEvent(amx *C.AMX, funcName *C.char_t, format *C.char_t, params []C.cell
 			var index int = i + param_offset + 3
 			switch specifiers[i] {
 			case 'i', 'd':
-				_ = rakstar.Print("It is an int")
+				_ = serverlog.Print("It is an int")
 				in[i] = int(params[index])
 			case 'f':
-				_ = rakstar.Print("It is a float")
+				_ = serverlog.Print("It is a float")
 				in[i] = float32(params[index])
 			case 's':
-				_ = rakstar.Print("It is a string")
+				_ = serverlog.Print("It is a string")
 				var maddr *C.cell
 				var len C.int = 0
 				if C.amx_GetAddr(amx, params[index], &maddr) == C.AMX_ERR_NONE || &maddr != nil {
@@ -80,7 +140,7 @@ func callEvent(amx *C.AMX, funcName *C.char_t, format *C.char_t, params []C.cell
 				}
 			}
 		}
-		_ = rakstar.Print("callEvent (2)")
+		_ = serverlog.Print("callEvent (2)")
 		fn(in)
 	}
 	return true
@@ -88,7 +148,7 @@ func callEvent(amx *C.AMX, funcName *C.char_t, format *C.char_t, params []C.cell
 
 //export onGameModeInit
 func onGameModeInit() bool {
-	evt, ok := rakstar.Events["goModeInit"]
+	evt, ok := Events["goModeInit"]
 	if !ok {
 		return false
 	}
@@ -103,7 +163,7 @@ func onGameModeInit() bool {
 
 //export onGameModeExit
 func onGameModeExit() bool {
-	evt, ok := rakstar.Events["goModeExit"]
+	evt, ok := Events["goModeExit"]
 	if !ok {
 		return false
 	}
@@ -118,7 +178,7 @@ func onGameModeExit() bool {
 
 //export onPlayerConnect
 func onPlayerConnect(playerid C.int) bool {
-	evt, ok := rakstar.Events["playerConnect"]
+	evt, ok := Events["playerConnect"]
 	if !ok {
 		return false
 	}
@@ -139,7 +199,7 @@ func onPlayerConnect(playerid C.int) bool {
 
 //export onPlayerDisconnect
 func onPlayerDisconnect(playerid C.int, reason C.int) bool {
-	evt, ok := rakstar.Events["playerDisconnect"]
+	evt, ok := Events["playerDisconnect"]
 	if !ok {
 		return false
 	}
@@ -153,7 +213,7 @@ func onPlayerDisconnect(playerid C.int, reason C.int) bool {
 
 //export onPlayerSpawn
 func onPlayerSpawn(playerid C.int) bool {
-	evt, ok := rakstar.Events["playerSpawn"]
+	evt, ok := Events["playerSpawn"]
 	if !ok {
 		return true
 	}
@@ -167,7 +227,7 @@ func onPlayerSpawn(playerid C.int) bool {
 
 //export onPlayerDeath
 func onPlayerDeath(playerid C.int, killerid C.int, reason C.int) bool {
-	evt, ok := rakstar.Events["playerDeath"]
+	evt, ok := Events["playerDeath"]
 	if !ok {
 		return false
 	}
@@ -181,7 +241,7 @@ func onPlayerDeath(playerid C.int, killerid C.int, reason C.int) bool {
 
 //export onVehicleSpawn
 func onVehicleSpawn(vehicleid C.int) bool {
-	evt, ok := rakstar.Events["vehicleSpawn"]
+	evt, ok := Events["vehicleSpawn"]
 	if !ok {
 		return true
 	}
@@ -195,7 +255,7 @@ func onVehicleSpawn(vehicleid C.int) bool {
 
 //export onVehicleDeath
 func onVehicleDeath(vehicleid C.int, killerid C.int) bool {
-	evt, ok := rakstar.Events["vehicleDeath"]
+	evt, ok := Events["vehicleDeath"]
 	if !ok {
 		return false
 	}
@@ -210,7 +270,7 @@ func onVehicleDeath(vehicleid C.int, killerid C.int) bool {
 
 //export onPlayerText
 func onPlayerText(playerid C.int, text *C.char_t) bool {
-	evt, ok := rakstar.Events["playerText"]
+	evt, ok := Events["playerText"]
 	if !ok {
 		return true
 	}
@@ -224,7 +284,7 @@ func onPlayerText(playerid C.int, text *C.char_t) bool {
 
 //export onPlayerCommandText
 func onPlayerCommandText(playerid C.int, cmdtext *C.char_t) bool {
-	evt, ok := rakstar.Events["playerCommandText"]
+	evt, ok := Events["playerCommandText"]
 	if !ok {
 		return true
 	}
@@ -238,7 +298,7 @@ func onPlayerCommandText(playerid C.int, cmdtext *C.char_t) bool {
 
 //export onPlayerRequestClass
 func onPlayerRequestClass(playerid C.int, classid C.int) bool {
-	evt, ok := rakstar.Events["playerRequestClass"]
+	evt, ok := Events["playerRequestClass"]
 	if !ok {
 		return false
 	}
@@ -253,7 +313,7 @@ func onPlayerRequestClass(playerid C.int, classid C.int) bool {
 
 //export onPlayerEnterVehicle
 func onPlayerEnterVehicle(playerid C.int, vehicleid C.int, ispassenger C.bool) bool {
-	evt, ok := rakstar.Events["playerEnterVehicle"]
+	evt, ok := Events["playerEnterVehicle"]
 	if !ok {
 		return false
 	}
@@ -268,7 +328,7 @@ func onPlayerEnterVehicle(playerid C.int, vehicleid C.int, ispassenger C.bool) b
 
 //export onPlayerExitVehicle
 func onPlayerExitVehicle(playerid C.int, vehicleid C.int) bool {
-	evt, ok := rakstar.Events["playerExitVehicle"]
+	evt, ok := Events["playerExitVehicle"]
 	if !ok {
 		return false
 	}
@@ -283,7 +343,7 @@ func onPlayerExitVehicle(playerid C.int, vehicleid C.int) bool {
 
 //export onPlayerStateChange
 func onPlayerStateChange(playerid C.int, newstate C.int, oldstate C.int) bool {
-	evt, ok := rakstar.Events["playerStateChange"]
+	evt, ok := Events["playerStateChange"]
 	if !ok {
 		return false
 	}
@@ -298,7 +358,7 @@ func onPlayerStateChange(playerid C.int, newstate C.int, oldstate C.int) bool {
 
 //export onPlayerEnterCheckpoint
 func onPlayerEnterCheckpoint(playerid C.int) bool {
-	evt, ok := rakstar.Events["playerEnterCheckpoint"]
+	evt, ok := Events["playerEnterCheckpoint"]
 	if !ok {
 		return false
 	}
@@ -313,7 +373,7 @@ func onPlayerEnterCheckpoint(playerid C.int) bool {
 
 //export onPlayerLeaveCheckpoint
 func onPlayerLeaveCheckpoint(playerid C.int) bool {
-	evt, ok := rakstar.Events["playerLeaveCheckpoint"]
+	evt, ok := Events["playerLeaveCheckpoint"]
 	if !ok {
 		return false
 	}
@@ -328,7 +388,7 @@ func onPlayerLeaveCheckpoint(playerid C.int) bool {
 
 //export onPlayerEnterRaceCheckpoint
 func onPlayerEnterRaceCheckpoint(playerid C.int) bool {
-	evt, ok := rakstar.Events["playerEnterRaceCheckpoint"]
+	evt, ok := Events["playerEnterRaceCheckpoint"]
 	if !ok {
 		return false
 	}
@@ -343,7 +403,7 @@ func onPlayerEnterRaceCheckpoint(playerid C.int) bool {
 
 //export onPlayerLeaveRaceCheckpoint
 func onPlayerLeaveRaceCheckpoint(playerid C.int) bool {
-	evt, ok := rakstar.Events["playerLeaveRaceCheckpoint"]
+	evt, ok := Events["playerLeaveRaceCheckpoint"]
 	if !ok {
 		return false
 	}
@@ -358,7 +418,7 @@ func onPlayerLeaveRaceCheckpoint(playerid C.int) bool {
 
 //export onRconCommand
 func onRconCommand(cmd *C.char_t) bool {
-	evt, ok := rakstar.Events["rconCommand"]
+	evt, ok := Events["rconCommand"]
 	if !ok {
 		return false
 	}
@@ -372,7 +432,7 @@ func onRconCommand(cmd *C.char_t) bool {
 
 //export onPlayerRequestSpawn
 func onPlayerRequestSpawn(playerid C.int) bool {
-	evt, ok := rakstar.Events["playerRequestSpawn"]
+	evt, ok := Events["playerRequestSpawn"]
 	if !ok {
 		return true
 	}
@@ -386,7 +446,7 @@ func onPlayerRequestSpawn(playerid C.int) bool {
 
 //export onObjectMoved
 func onObjectMoved(objectid C.int) bool {
-	evt, ok := rakstar.Events["objectMoved"]
+	evt, ok := Events["objectMoved"]
 	if !ok {
 		return false
 	}
@@ -401,7 +461,7 @@ func onObjectMoved(objectid C.int) bool {
 
 //export onPlayerObjectMoved
 func onPlayerObjectMoved(playerid C.int, objectid C.int) bool {
-	evt, ok := rakstar.Events["playerObjectMoved"]
+	evt, ok := Events["playerObjectMoved"]
 	if !ok {
 		return false
 	}
@@ -416,7 +476,7 @@ func onPlayerObjectMoved(playerid C.int, objectid C.int) bool {
 
 //export onPlayerPickUpPickup
 func onPlayerPickUpPickup(playerid C.int, pickupid C.int) bool {
-	evt, ok := rakstar.Events["playerPickUpPickup"]
+	evt, ok := Events["playerPickUpPickup"]
 	if !ok {
 		return false
 	}
@@ -431,7 +491,7 @@ func onPlayerPickUpPickup(playerid C.int, pickupid C.int) bool {
 
 //export onVehicleMod
 func onVehicleMod(playerid C.int, vehicleid C.int, componentid C.int) bool {
-	evt, ok := rakstar.Events["vehicleMod"]
+	evt, ok := Events["vehicleMod"]
 	if !ok {
 		return true
 	}
@@ -445,7 +505,7 @@ func onVehicleMod(playerid C.int, vehicleid C.int, componentid C.int) bool {
 
 //export onEnterExitModShop
 func onEnterExitModShop(playerid C.int, enterexit C.bool, interiorid C.int) bool {
-	evt, ok := rakstar.Events["enterExitModShop"]
+	evt, ok := Events["enterExitModShop"]
 	if !ok {
 		return false
 	}
@@ -460,7 +520,7 @@ func onEnterExitModShop(playerid C.int, enterexit C.bool, interiorid C.int) bool
 
 //export onVehiclePaintjob
 func onVehiclePaintjob(playerid C.int, vehicleid C.int, paintjobid C.int) bool {
-	evt, ok := rakstar.Events["vehiclePaintjob"]
+	evt, ok := Events["vehiclePaintjob"]
 	if !ok {
 		return true
 	}
@@ -474,7 +534,7 @@ func onVehiclePaintjob(playerid C.int, vehicleid C.int, paintjobid C.int) bool {
 
 //export onVehicleRespray
 func onVehicleRespray(playerid C.int, vehicleid C.int, color1 C.int, color2 C.int) bool {
-	evt, ok := rakstar.Events["vehicleRespray"]
+	evt, ok := Events["vehicleRespray"]
 	if !ok {
 		return true
 	}
@@ -488,7 +548,7 @@ func onVehicleRespray(playerid C.int, vehicleid C.int, color1 C.int, color2 C.in
 
 //export onVehicleDamageStatusUpdate
 func onVehicleDamageStatusUpdate(vehicleid C.int, playerid C.int) bool {
-	evt, ok := rakstar.Events["vehicleDamageStatusUpdate"]
+	evt, ok := Events["vehicleDamageStatusUpdate"]
 	if !ok {
 		return false
 	}
@@ -502,7 +562,7 @@ func onVehicleDamageStatusUpdate(vehicleid C.int, playerid C.int) bool {
 
 //export onUnoccupiedVehicleUpdate
 func onUnoccupiedVehicleUpdate(vehicleid C.int, playerid C.int, passenger_seat C.int, new_x C.float, new_y C.float, new_z C.float, vel_x C.float, vel_y C.float, vel_z C.float) bool {
-	evt, ok := rakstar.Events["unoccupiedVehicleUpdate"]
+	evt, ok := Events["unoccupiedVehicleUpdate"]
 	if !ok {
 		return true
 	}
@@ -516,7 +576,7 @@ func onUnoccupiedVehicleUpdate(vehicleid C.int, playerid C.int, passenger_seat C
 
 //export onPlayerSelectedMenuRow
 func onPlayerSelectedMenuRow(playerid C.int, row C.int) bool {
-	evt, ok := rakstar.Events["playerSelectedMenuRow"]
+	evt, ok := Events["playerSelectedMenuRow"]
 	if !ok {
 		return false
 	}
@@ -531,7 +591,7 @@ func onPlayerSelectedMenuRow(playerid C.int, row C.int) bool {
 
 //export onPlayerExitedMenu
 func onPlayerExitedMenu(playerid C.int) bool {
-	evt, ok := rakstar.Events["playerExitedMenu"]
+	evt, ok := Events["playerExitedMenu"]
 	if !ok {
 		return false
 	}
@@ -546,7 +606,7 @@ func onPlayerExitedMenu(playerid C.int) bool {
 
 //export onPlayerInteriorChange
 func onPlayerInteriorChange(playerid C.int, newinteriorid C.int, oldinteriorid C.int) bool {
-	evt, ok := rakstar.Events["playerInteriorChange"]
+	evt, ok := Events["playerInteriorChange"]
 	if !ok {
 		return false
 	}
@@ -561,7 +621,7 @@ func onPlayerInteriorChange(playerid C.int, newinteriorid C.int, oldinteriorid C
 
 //export onPlayerKeyStateChange
 func onPlayerKeyStateChange(playerid C.int, newkeys C.int, oldkeys C.int) bool {
-	evt, ok := rakstar.Events["playerKeyStateChange"]
+	evt, ok := Events["playerKeyStateChange"]
 	if !ok {
 		return false
 	}
@@ -576,7 +636,7 @@ func onPlayerKeyStateChange(playerid C.int, newkeys C.int, oldkeys C.int) bool {
 
 //export onRconLoginAttempt
 func onRconLoginAttempt(ip *C.char_t, password *C.char_t, success C.bool) bool {
-	evt, ok := rakstar.Events["rconLoginAttempt"]
+	evt, ok := Events["rconLoginAttempt"]
 	if !ok {
 		return false
 	}
@@ -591,7 +651,7 @@ func onRconLoginAttempt(ip *C.char_t, password *C.char_t, success C.bool) bool {
 
 //export onPlayerUpdate
 func onPlayerUpdate(playerid C.int) bool {
-	evt, ok := rakstar.Events["playerUpdate"]
+	evt, ok := Events["playerUpdate"]
 	if !ok {
 		return true
 	}
@@ -605,7 +665,7 @@ func onPlayerUpdate(playerid C.int) bool {
 
 //export onPlayerStreamIn
 func onPlayerStreamIn(playerid C.int, forplayerid C.int) bool {
-	evt, ok := rakstar.Events["playerStreamIn"]
+	evt, ok := Events["playerStreamIn"]
 	if !ok {
 		return false
 	}
@@ -620,7 +680,7 @@ func onPlayerStreamIn(playerid C.int, forplayerid C.int) bool {
 
 //export onPlayerStreamOut
 func onPlayerStreamOut(playerid C.int, forplayerid C.int) bool {
-	evt, ok := rakstar.Events["playerStreamOut"]
+	evt, ok := Events["playerStreamOut"]
 	if !ok {
 		return false
 	}
@@ -635,7 +695,7 @@ func onPlayerStreamOut(playerid C.int, forplayerid C.int) bool {
 
 //export onVehicleStreamIn
 func onVehicleStreamIn(vehicleid C.int, forplayerid C.int) bool {
-	evt, ok := rakstar.Events["vehicleStreamIn"]
+	evt, ok := Events["vehicleStreamIn"]
 	if !ok {
 		return false
 	}
@@ -650,7 +710,7 @@ func onVehicleStreamIn(vehicleid C.int, forplayerid C.int) bool {
 
 //export onVehicleStreamOut
 func onVehicleStreamOut(vehicleid C.int, forplayerid C.int) bool {
-	evt, ok := rakstar.Events["vehicleStreamOut"]
+	evt, ok := Events["vehicleStreamOut"]
 	if !ok {
 		return false
 	}
@@ -665,7 +725,7 @@ func onVehicleStreamOut(vehicleid C.int, forplayerid C.int) bool {
 
 //export onActorStreamIn
 func onActorStreamIn(actorid C.int, forplayerid C.int) bool {
-	evt, ok := rakstar.Events["actorStreamIn"]
+	evt, ok := Events["actorStreamIn"]
 	if !ok {
 		return false
 	}
@@ -680,7 +740,7 @@ func onActorStreamIn(actorid C.int, forplayerid C.int) bool {
 
 //export onActorStreamOut
 func onActorStreamOut(actorid C.int, forplayerid C.int) bool {
-	evt, ok := rakstar.Events["actorStreamOut"]
+	evt, ok := Events["actorStreamOut"]
 	if !ok {
 		return false
 	}
@@ -695,7 +755,7 @@ func onActorStreamOut(actorid C.int, forplayerid C.int) bool {
 
 //export onDialogResponse
 func onDialogResponse(playerid C.int, dialogid C.int, response C.int, listitem C.int, inputtext *C.char_t) bool {
-	evt, ok := rakstar.Events["dialogResponse"]
+	evt, ok := Events["dialogResponse"]
 	if !ok {
 		return false
 	}
@@ -709,7 +769,7 @@ func onDialogResponse(playerid C.int, dialogid C.int, response C.int, listitem C
 
 //export onPlayerTakeDamage
 func onPlayerTakeDamage(playerid C.int, issuerid C.int, amount C.float, weaponid C.int, bodypart C.int) bool {
-	evt, ok := rakstar.Events["playerTakeDamage"]
+	evt, ok := Events["playerTakeDamage"]
 	if !ok {
 		return false
 	}
@@ -723,7 +783,7 @@ func onPlayerTakeDamage(playerid C.int, issuerid C.int, amount C.float, weaponid
 
 //export onPlayerGiveDamage
 func onPlayerGiveDamage(playerid C.int, damagedid C.int, amount C.float, weaponid C.int, bodypart C.int) bool {
-	evt, ok := rakstar.Events["playerGiveDamage"]
+	evt, ok := Events["playerGiveDamage"]
 	if !ok {
 		return false
 	}
@@ -737,7 +797,7 @@ func onPlayerGiveDamage(playerid C.int, damagedid C.int, amount C.float, weaponi
 
 //export onPlayerGiveDamageActor
 func onPlayerGiveDamageActor(playerid C.int, damaged_actorid C.int, amount C.float, weaponid C.int, bodypart C.int) bool {
-	evt, ok := rakstar.Events["playerGiveDamageActor"]
+	evt, ok := Events["playerGiveDamageActor"]
 	if !ok {
 		return false
 	}
@@ -751,7 +811,7 @@ func onPlayerGiveDamageActor(playerid C.int, damaged_actorid C.int, amount C.flo
 
 //export onPlayerClickMap
 func onPlayerClickMap(playerid C.int, fX C.float, fY C.float, fZ C.float) bool {
-	evt, ok := rakstar.Events["playerClickMap"]
+	evt, ok := Events["playerClickMap"]
 	if !ok {
 		return false
 	}
@@ -765,7 +825,7 @@ func onPlayerClickMap(playerid C.int, fX C.float, fY C.float, fZ C.float) bool {
 
 //export onPlayerClickTextDraw
 func onPlayerClickTextDraw(playerid C.int, clickedid C.int) bool {
-	evt, ok := rakstar.Events["playerClickTextDraw"]
+	evt, ok := Events["playerClickTextDraw"]
 	if !ok {
 		return false
 	}
@@ -779,7 +839,7 @@ func onPlayerClickTextDraw(playerid C.int, clickedid C.int) bool {
 
 //export onPlayerClickPlayerTextDraw
 func onPlayerClickPlayerTextDraw(playerid C.int, playertextid C.int) bool {
-	evt, ok := rakstar.Events["playerClickPlayerTextDraw"]
+	evt, ok := Events["playerClickPlayerTextDraw"]
 	if !ok {
 		return false
 	}
@@ -793,7 +853,7 @@ func onPlayerClickPlayerTextDraw(playerid C.int, playertextid C.int) bool {
 
 //export onIncomingConnection
 func onIncomingConnection(playerid C.int, ip_address *C.char_t, port C.int) bool {
-	evt, ok := rakstar.Events["incomingConnection"]
+	evt, ok := Events["incomingConnection"]
 	if !ok {
 		return false
 	}
@@ -807,7 +867,7 @@ func onIncomingConnection(playerid C.int, ip_address *C.char_t, port C.int) bool
 
 //export onTrailerUpdate
 func onTrailerUpdate(playerid C.int, vehicleid C.int) bool {
-	evt, ok := rakstar.Events["trailerUpdate"]
+	evt, ok := Events["trailerUpdate"]
 	if !ok {
 		return true
 	}
@@ -821,7 +881,7 @@ func onTrailerUpdate(playerid C.int, vehicleid C.int) bool {
 
 //export onVehicleSirenStateChange
 func onVehicleSirenStateChange(playerid C.int, vehicleid C.int, newstate C.int) bool {
-	evt, ok := rakstar.Events["vehicleSirenStateChange"]
+	evt, ok := Events["vehicleSirenStateChange"]
 	if !ok {
 		return false
 	}
@@ -835,7 +895,7 @@ func onVehicleSirenStateChange(playerid C.int, vehicleid C.int, newstate C.int) 
 
 //export onPlayerClickPlayer
 func onPlayerClickPlayer(playerid C.int, clickedplayerid C.int, source C.int) bool {
-	evt, ok := rakstar.Events["playerClickPlayer"]
+	evt, ok := Events["playerClickPlayer"]
 	if !ok {
 		return true
 	}
@@ -850,7 +910,7 @@ func onPlayerClickPlayer(playerid C.int, clickedplayerid C.int, source C.int) bo
 
 //export onPlayerEditObject
 func onPlayerEditObject(playerid C.int, playerobject C.bool, objectid C.int, response C.int, fX C.float, fY C.float, fZ C.float, fRotX C.float, fRotY C.float, fRotZ C.float) bool {
-	evt, ok := rakstar.Events["playerEditObject"]
+	evt, ok := Events["playerEditObject"]
 	if !ok {
 		return false
 	}
@@ -864,7 +924,7 @@ func onPlayerEditObject(playerid C.int, playerobject C.bool, objectid C.int, res
 
 //export onPlayerEditAttachedObject
 func onPlayerEditAttachedObject(playerid C.int, response C.int, index C.int, modelid C.int, boneid C.int, fOffsetX C.float, fOffsetY C.float, fOffsetZ C.float, fRotX C.float, fRotY C.float, fRotZ C.float, fScaleX C.float, fScaleY C.float, fScaleZ C.float) bool {
-	evt, ok := rakstar.Events["playerEditAttachedObject"]
+	evt, ok := Events["playerEditAttachedObject"]
 	if !ok {
 		return false
 	}
@@ -878,7 +938,7 @@ func onPlayerEditAttachedObject(playerid C.int, response C.int, index C.int, mod
 
 //export onPlayerSelectObject
 func onPlayerSelectObject(playerid C.int, type_ C.int, objectid C.int, modelid C.int, fX C.float, fY C.float, fZ C.float) bool {
-	evt, ok := rakstar.Events["playerSelectObject"]
+	evt, ok := Events["playerSelectObject"]
 	if !ok {
 		return false
 	}
@@ -892,7 +952,7 @@ func onPlayerSelectObject(playerid C.int, type_ C.int, objectid C.int, modelid C
 
 //export onPlayerWeaponShot
 func onPlayerWeaponShot(playerid C.int, weaponid C.int, hittype C.int, hitid C.int, fX C.float, fY C.float, fZ C.float) bool {
-	evt, ok := rakstar.Events["playerWeaponShot"]
+	evt, ok := Events["playerWeaponShot"]
 	if !ok {
 		return true
 	}
@@ -906,7 +966,7 @@ func onPlayerWeaponShot(playerid C.int, weaponid C.int, hittype C.int, hitid C.i
 
 //export onPlayerRequestDownload
 func onPlayerRequestDownload(playerid C.int, type_ C.int, crc C.int) bool {
-	evt, ok := rakstar.Events["playerRequestDownload"]
+	evt, ok := Events["playerRequestDownload"]
 	if !ok {
 		return true
 	}

@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/goseventh/rakstar/internal/utils/constants/textDrawConst"
-
 )
 
 const (
