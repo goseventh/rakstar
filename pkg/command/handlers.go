@@ -9,7 +9,7 @@ import (
 	//	"main/pkg/utils/sampstr"
 	"strings"
 
-	"github.com/goseventh/rakstar/internal/natives"
+	"github.com/goseventh/rakstar/internal/samp"
 	"github.com/goseventh/rakstar/internal/utils/constants/playerConst"
 	"github.com/goseventh/rakstar/internal/utils/sampstr"
 	"github.com/goseventh/rakstar/pkg/chat"
@@ -50,7 +50,7 @@ func SetConfig(notFoundChat *chat.ChatBuilder, similarFoundMsg string) {
 /*
 Função que deve ser chamada na callback "OnPlayerCommand"
 */
-func HandlePlayerCommandText(player natives.Player, cmdtext string) bool {
+func HandlePlayerCommandText(player samp.Player, cmdtext string) bool {
 	server.Builder().
 		Goroutine().
 		Submit(func() {
@@ -124,7 +124,7 @@ func HandlePlayerCommandText(player natives.Player, cmdtext string) bool {
 						if err != nil {
 							var nick string
 							for i := 0; i < playerConst.MaxPlayers; i++ {
-								natives.GetPlayerName(i, &nick, playerConst.MaxPlayerName)
+								samp.GetPlayerName(i, &nick, playerConst.MaxPlayerName)
 								if nick == arg {
 									id = i
 									break
@@ -135,7 +135,7 @@ func HandlePlayerCommandText(player natives.Player, cmdtext string) bool {
 
 						switch cond.cond {
 						case MustPlayerConnected:
-							if !natives.IsPlayerConnected(id) {
+							if !samp.IsPlayerConnected(id) {
 								log.Printf("[rakstar-cmd idx(%v)] o jogador %v não está conectado", idx, id)
 								pass = false
 								break condLoop
@@ -143,7 +143,7 @@ func HandlePlayerCommandText(player natives.Player, cmdtext string) bool {
 
 						case MustNickIs:
 							var nick string
-							natives.GetPlayerName(id, &nick, playerConst.MaxPlayerName)
+							samp.GetPlayerName(id, &nick, playerConst.MaxPlayerName)
 							if cond.value != nick {
 								log.Printf("[rakstar-cmd idx(%v)] falha na comparação de nicks entre %v:%v", idx, nick, cond.value)
 								pass = false

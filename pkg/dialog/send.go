@@ -3,7 +3,7 @@ package dialog
 import (
 	"errors"
 
-	"github.com/goseventh/rakstar/internal/natives"
+	"github.com/goseventh/rakstar/internal/samp"
 	"github.com/goseventh/rakstar/internal/utils/constants/dialogConst"
 	"github.com/goseventh/rakstar/internal/utils/constants/playerConst"
 	"github.com/goseventh/rakstar/internal/utils/sampstr"
@@ -34,7 +34,7 @@ func (db *DialogBuilder) Send() *DialogBuilder {
 		button1 = db.DialogRequest.Buttons[0]
 	}
 
-	natives.ShowPlayerDialog(
+	samp.ShowPlayerDialog(
 		db.DialogRequest.ID,
 		dialogHandlerID,
 		db.DialogRequest.Style,
