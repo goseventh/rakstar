@@ -66,7 +66,7 @@ func (rb *ServerBuild) RestartNow(cb *chat.ChatBuilder) *ServerBuild {
 	for i := 5; i > 0; i-- {
 		time.Sleep(time.Second)
 		cb.
-			PlayerID(chat.Global).
+			Range(chat.Global).
 			Message(fmt.
 				Sprintf("%v - %v", rb.msgLoop, i)).
 			Send()

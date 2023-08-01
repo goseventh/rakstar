@@ -37,7 +37,7 @@ func (chat *ChatBuilder) Wait(wait ...time.Duration) *ChatBuilder {
 	return chat
 }
 
-func (chat *ChatBuilder) PlayerID(playerid int) *ChatBuilder {
+func (chat *ChatBuilder) Select(playerid int) *ChatBuilder {
 	player := natives.Player{ID: playerid}
 	chat.requestMsg.Player = &player
 	return chat

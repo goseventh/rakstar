@@ -11,6 +11,7 @@ import (
 
 	"github.com/goseventh/rakstar/chat"
 	"github.com/goseventh/rakstar/internal/natives"
+	"github.com/goseventh/rakstar/internal/utils/common"
 	"github.com/goseventh/rakstar/internal/utils/constants/playerConst"
 	"github.com/goseventh/rakstar/internal/utils/sampstr"
 	"github.com/goseventh/rakstar/server"
@@ -63,20 +64,22 @@ func HandlePlayerCommandText(player natives.Player, cmdtext string) bool {
 
 			if command == nil {
 				NotFoundChat.
-					PlayerID(player.ID).
+					Select(player.ID).
 					Tag("rakstar").
 					Send()
+				return
 			}
 
 			if distance == 2 {
 
 				chat.Builder().
-					PlayerID(player.ID).
+					Select(player.ID).
+					Color(common.WarnColorStr).
 					Tag("rakstar").
 					Message(fmt.
 						Sprintf(
 							"%v: %v",
-							SimiularFoundMSG,
+							*SimiularFoundMSG,
 							command.Name,
 						)).
 					Send()
