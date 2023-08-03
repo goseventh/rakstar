@@ -9,7 +9,9 @@ type vehicleBuilder struct {
 }
 
 func Builder() *vehicleBuilder {
-	return new(vehicleBuilder)
+  v := new(vehicleBuilder)
+  v.id = -1
+	return v
 }
 
 func (v *vehicleBuilder) Engine() *engine {

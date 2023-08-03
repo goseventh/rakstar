@@ -23,6 +23,8 @@ func (v *vehicleBuilder) Start() *vehicleBuilder {
 		func() {
 			for {
 				<-ticker.C
+        verifyBattery(v)
+        verifyFuel(v)
 			}
 
 		},
