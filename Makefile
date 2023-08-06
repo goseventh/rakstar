@@ -1,5 +1,5 @@
 test:
-	sudo GOGC=960 CGO_ENABLED=1 GOOS=linux GOARCH=386 go test ./pkg/... ./internal/...
+	sudo GOGC=960 CGO_ENABLED=1 GOOS=linux GOARCH=386 go test ./... -v 
 
 test-cover:
 	sudo GOGC=960 CGO_ENABLED=1 GOOS=linux GOARCH=386 go test -coverprofile=coverage.out ./...	

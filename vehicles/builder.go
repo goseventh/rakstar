@@ -1,3 +1,12 @@
+/*
+Este pacote oferece o sistema Advanced Vehicle Engine, permitindo
+a criação e simulação avançada do comportamento de veículos,
+inspirados no mundo real. Com este pacote, os desenvolvedores
+têm a capacidade de criar e manipular veículos virtuais com
+detalhes minuciosos, incluindo características como o sistema de
+combustível, consumo, parte elétrica do veículo, bateria e sistemas
+de ignição.
+*/
 package vehicle
 
 type vehicleBuilder struct {
@@ -6,22 +15,42 @@ type vehicleBuilder struct {
 	health                       float32
 	colorPrimary, colorSecondary int
 	posX, posY, posZ, rotate     float32
+	eletrics                     struct {
+		batteryCharger float32
+		v              *vehicleBuilder
+	}
+  engine struct{
+    fuel float32
+    fuelEconomy float32
+  }
 }
 
+type eletricsBuilder struct {
+	// batteryCharger float32
+	v              *vehicleBuilder
+}
+
+type engineBuilder struct {
+	// fuel        float32
+	// fuelEconomy float32
+	v           *vehicleBuilder
+}
+ 
 func Builder() *vehicleBuilder {
-  v := new(vehicleBuilder)
-  v.id = -1
+	v := new(vehicleBuilder)
+	v.id = -1
 	return v
 }
 
-func (v *vehicleBuilder) Engine() *engine {
-	e := new(engine)
+/*Funcao par ser funcar*/
+func (v *vehicleBuilder) Engine() *engineBuilder {
+	e := new(engineBuilder)
 	e.v = v
 	return e
 }
 
-func (v *vehicleBuilder) Eletrics() *eletrics {
-	e := new(eletrics)
+func (v *vehicleBuilder) Eletrics() *eletricsBuilder {
+	e := new(eletricsBuilder)
 	e.v = v
 	return e
 }

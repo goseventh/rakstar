@@ -3,7 +3,7 @@ package vehicle
 import "github.com/goseventh/rakstar/internal/natives"
 
 func (v *vehicleBuilder) Pos(x, y, z, rotate float32) *vehicleBuilder {
-	v.posX, v.posY, v.posZ, rotate = x, y, z, rotate
+	v.posX, v.posY, v.posZ, v.rotate = x, y, z, rotate
 	return v
 }
 

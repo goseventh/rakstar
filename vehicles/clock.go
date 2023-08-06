@@ -23,8 +23,11 @@ func (v *vehicleBuilder) Start() *vehicleBuilder {
 		func() {
 			for {
 				<-ticker.C
-        verifyBattery(v)
-        verifyFuel(v)
+        v.Eletrics().IntroduceElectricalDrain()
+				// verifyBattery(v)
+				// verifyFuel(v)
+				v.engine.fuel -= (0.001 - v.engine.fuelEconomy)
+				v.eletrics.batteryCharger -= 0.001
 			}
 
 		},
@@ -33,7 +36,7 @@ func (v *vehicleBuilder) Start() *vehicleBuilder {
 }
 
 func verifyFuel(v *vehicleBuilder) {
-	if v.Engine().fuel > 25 {
+	if v.engine.fuel > 25 {
 		return
 	}
 	state := rand.Intn(1 - (-1) + 1)
@@ -43,17 +46,36 @@ func verifyFuel(v *vehicleBuilder) {
 	v.Engine().TurnOff()
 
 }
-func verifyBattery(v *vehicleBuilder) {
-	if v.Eletrics().batteryCharger > 25 {
-		return
-	}
-	state := rand.Intn(1 - (-1) + 1)
-	rounds := rand.Intn(100 - (-30) + 100)
-	if state != 0 {
-		return
-	}
-	for i := 0; i < rounds; i++ {
-		time.Sleep(time.Duration(rand.Intn(1000 - 100 + 1000)))
-		v.Eletrics().ToggleLights()
-	}
-}
+// func verifyBattery(v *vehicleBuilder) {
+// 	server.
+// 		Builder().
+// 		Goroutine().Submit(
+// 		func() {
+// 			var lights int
+// 			natives.GetVehicleParamsEx(
+// 				v.id,
+// 				nil,
+// 				&lights,
+// 				nil,
+// 				nil,
+// 				nil,
+// 				nil,
+// 				nil,
+// 			)
+// 			if lights != 1 {
+// 				return
+// 			}
+// 			if v.eletrics.batteryCharger > 25 {
+// 				return
+// 			}
+// 			state := rand.Intn(1 - (-1) + 1)
+// 			rounds := rand.Intn(100 - (-30) + 100)
+// 			if state != 0 {
+// 				return
+// 			}
+// 			for i := 0; i < rounds; i++ {
+// 				time.Sleep(time.Duration(rand.Intn(1000 - 100 + 1000)))
+// 				v.Eletrics().ToggleLights()
+// 			}
+// 		})
+// }

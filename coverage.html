@@ -1,0 +1,523 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>vehicles: Go Coverage Report</title>
+		<style>
+			body {
+				background: black;
+				color: rgb(80, 80, 80);
+			}
+			body, pre, #legend span {
+				font-family: Menlo, monospace;
+				font-weight: bold;
+			}
+			#topbar {
+				background: black;
+				position: fixed;
+				top: 0; left: 0; right: 0;
+				height: 42px;
+				border-bottom: 1px solid rgb(80, 80, 80);
+			}
+			#content {
+				margin-top: 50px;
+			}
+			#nav, #legend {
+				float: left;
+				margin-left: 10px;
+			}
+			#legend {
+				margin-top: 12px;
+			}
+			#nav {
+				margin-top: 10px;
+			}
+			#legend span {
+				margin: 0 5px;
+			}
+			.cov0 { color: rgb(192, 0, 0) }
+.cov1 { color: rgb(128, 128, 128) }
+.cov2 { color: rgb(116, 140, 131) }
+.cov3 { color: rgb(104, 152, 134) }
+.cov4 { color: rgb(92, 164, 137) }
+.cov5 { color: rgb(80, 176, 140) }
+.cov6 { color: rgb(68, 188, 143) }
+.cov7 { color: rgb(56, 200, 146) }
+.cov8 { color: rgb(44, 212, 149) }
+.cov9 { color: rgb(32, 224, 152) }
+.cov10 { color: rgb(20, 236, 155) }
+
+		</style>
+	</head>
+	<body>
+		<div id="topbar">
+			<div id="nav">
+				<select id="files">
+				
+				<option value="file0">github.com/goseventh/rakstar/vehicles/builder.go (81.8%)</option>
+				
+				<option value="file1">github.com/goseventh/rakstar/vehicles/clock.go (0.0%)</option>
+				
+				<option value="file2">github.com/goseventh/rakstar/vehicles/eletrics.go (35.7%)</option>
+				
+				<option value="file3">github.com/goseventh/rakstar/vehicles/engine.go (20.4%)</option>
+				
+				<option value="file4">github.com/goseventh/rakstar/vehicles/vehicle.go (0.0%)</option>
+				
+				</select>
+			</div>
+			<div id="legend">
+				<span>not tracked</span>
+			
+				<span class="cov0">not covered</span>
+				<span class="cov8">covered</span>
+			
+			</div>
+		</div>
+		<div id="content">
+		
+		<pre class="file" id="file0" style="display: none">package vehicle
+
+type vehicleBuilder struct {
+        id                           int
+        model                        int
+        health                       float32
+        colorPrimary, colorSecondary int
+        posX, posY, posZ, rotate     float32
+}
+
+func Builder() *vehicleBuilder <span class="cov8" title="1">{
+  v := new(vehicleBuilder)
+  v.id = -1
+        return v
+}</span>
+
+func (v *vehicleBuilder) Engine() *engine <span class="cov8" title="1">{
+        e := new(engine)
+        e.v = v
+        return e
+}</span>
+
+func (v *vehicleBuilder) Eletrics() *eletrics <span class="cov8" title="1">{
+        e := new(eletrics)
+        e.v = v
+        return e
+}</span>
+
+/*
+Seleciona o veículo que será usado para manipulações
+
+- Recebe o ID de criação do veículo
+*/
+func (v *vehicleBuilder) Select(id int) *vehicleBuilder <span class="cov0" title="0">{
+        v.id = id
+        return v
+}</span>
+</pre>
+		
+		<pre class="file" id="file1" style="display: none">package vehicle
+
+import (
+        "math/rand"
+        "time"
+
+        "github.com/goseventh/rakstar/internal/natives"
+        "github.com/goseventh/rakstar/server"
+)
+
+/*
+Inicia o clock do veículo
+  - O clock do veículo realiza todo o processamento e computação
+    necessários para que os sistemas elétricos, motor, e outros
+    funcionem corretamente.
+
+Importante: invocar mais de uma vez essa função na mesma instância, causará
+comportamentos estranhos
+*/
+func (v *vehicleBuilder) Start() *vehicleBuilder <span class="cov0" title="0">{
+        ticker := time.NewTicker(time.Second)
+        server.Builder().
+                Goroutine().Submit(
+                func() </span><span class="cov0" title="0">{
+                        for </span><span class="cov0" title="0">{
+                                &lt;-ticker.C
+                                verifyBattery(v)
+                                verifyFuel(v)
+                                v.Engine().fuel -= (0.001 - v.Engine().fuelEconomy)
+                                v.Eletrics().batteryCharger -= 0.001
+                        }</span>
+
+                },
+        )
+        <span class="cov0" title="0">return v</span>
+}
+
+func verifyFuel(v *vehicleBuilder) <span class="cov0" title="0">{
+        if v.Engine().fuel &gt; 25 </span><span class="cov0" title="0">{
+                return
+        }</span>
+        <span class="cov0" title="0">state := rand.Intn(1 - (-1) + 1)
+        if state != 0 </span><span class="cov0" title="0">{
+                return
+        }</span>
+        <span class="cov0" title="0">v.Engine().TurnOff()</span>
+
+}
+func verifyBattery(v *vehicleBuilder) <span class="cov0" title="0">{
+        server.
+                Builder().
+                Goroutine().Submit(
+                func() </span><span class="cov0" title="0">{
+                        var lights int
+                        natives.GetVehicleParamsEx(
+                                v.id,
+                                nil,
+                                &amp;lights,
+                                nil,
+                                nil,
+                                nil,
+                                nil,
+                                nil,
+                        )
+                        if lights != 1 </span><span class="cov0" title="0">{
+                                return
+                        }</span>
+                        <span class="cov0" title="0">if v.Eletrics().batteryCharger &gt; 25 </span><span class="cov0" title="0">{
+                                return
+                        }</span>
+                        <span class="cov0" title="0">state := rand.Intn(1 - (-1) + 1)
+                        rounds := rand.Intn(100 - (-30) + 100)
+                        if state != 0 </span><span class="cov0" title="0">{
+                                return
+                        }</span>
+                        <span class="cov0" title="0">for i := 0; i &lt; rounds; i++ </span><span class="cov0" title="0">{
+                                time.Sleep(time.Duration(rand.Intn(1000 - 100 + 1000)))
+                                v.Eletrics().ToggleLights()
+                        }</span>
+                })
+}
+</pre>
+		
+		<pre class="file" id="file2" style="display: none">package vehicle
+
+import "github.com/goseventh/rakstar/internal/natives"
+
+type eletrics struct {
+        batteryCharger float32
+        v              *vehicleBuilder
+}
+
+/*
+Alterar a carga da bateria: valores 0~100
+*/
+func (e *eletrics) BatteryCharger(charger float32) *eletrics <span class="cov8" title="1">{
+        if charger &gt; 100 </span><span class="cov8" title="1">{
+                charger = 100
+        }</span> else<span class="cov8" title="1"> if charger &lt; 0 </span><span class="cov0" title="0">{
+                charger = 0
+        }</span>
+
+        <span class="cov8" title="1">e.batteryCharger = charger
+        return e</span>
+}
+
+/*
+Altera o estado do faról do veículo
+
+- Se estiver ligado, o faról desligará
+
+- Se estiver desligado, o faról ligará
+*/
+func (e *eletrics) ToggleLights() *eletrics <span class="cov0" title="0">{
+        var (
+                engine    int
+                lights    int
+                alarm     int
+                doors     int
+                bonnet    int
+                boot      int
+                objective int
+        )
+        natives.GetVehicleParamsEx(
+                e.v.id,
+                &amp;engine,
+                &amp;lights,
+                &amp;alarm,
+                &amp;doors,
+                &amp;bonnet,
+                &amp;boot,
+                &amp;objective,
+        )
+        if lights == 1 </span><span class="cov0" title="0">{
+                lights = 0
+        }</span> else<span class="cov0" title="0"> if lights == 0 </span><span class="cov0" title="0">{
+                lights = 1
+        }</span>
+        <span class="cov0" title="0">natives.SetVehicleParamsEx(
+                e.v.id,
+                engine,
+                lights,
+                alarm,
+                doors,
+                bonnet,
+                boot,
+                objective,
+        )
+        return e</span>
+}
+</pre>
+		
+		<pre class="file" id="file3" style="display: none">package vehicle
+
+import (
+        "math/rand"
+        "time"
+
+        "github.com/goseventh/rakstar/internal/natives"
+)
+
+type engine struct {
+        fuel        float32
+        fuelEconomy float32
+        v           *vehicleBuilder
+}
+
+/*
+Altera a economia de combustível do veículo: valores 0~100
+
+- Se definido como 100, provavelmente o veículo não consumirá
+quantias significantes e em alguns casos pode-se tornar combustível
+infinito. Se definido 0, o veículo consumirá drasticamente e provavelmente,
+de forma imediata.
+*/
+func (e *engine) FuelEconomy(fe float32) *engine <span class="cov8" title="1">{
+        if fe &gt; 100 </span><span class="cov8" title="1">{
+                fe = 100
+        }</span> else<span class="cov8" title="1"> if fe &lt; 0 </span><span class="cov0" title="0">{
+                fe = 0
+        }</span>
+        <span class="cov8" title="1">e.fuelEconomy = fe
+        return e</span>
+}
+
+/*
+Altera o combustível que o veículo possuí no tanque: valores 0~100
+
+- 100 -&gt; Tanque cheio
+
+- 0 -&gt; Tanque vazio
+*/
+func (e *engine) Fuel(f float32) *engine <span class="cov8" title="1">{
+        if f &gt; 100 </span><span class="cov8" title="1">{
+                f = 100
+        }</span> else<span class="cov8" title="1"> if f &lt; 0 </span><span class="cov0" title="0">{
+                f = 0
+        }</span>
+        <span class="cov8" title="1">e.fuel = f
+        return e</span>
+}
+
+/*
+Obtem o combustível dispnível no tanque do veículo, e seta
+no endereço da váriavel f *float32
+*/
+func (e *engine) GetFuel(f *float32) *engine <span class="cov0" title="0">{
+        *f = e.fuel
+        return e
+}</span>
+
+/*
+Obtem o quão economico o veículo é, e seta
+no endereço da váriavel fe *float32
+*/
+func (e *engine) GetFuelEconomy(fe *float32) *engine <span class="cov0" title="0">{
+        *fe = e.fuelEconomy
+        return e
+}</span>
+/*
+Tentará dar partida ao motor do veículo, as chances de sucesso dependerá
+da quantidade de combustível armazenado no tanque e da carga da bateria
+
+- Atualiza o endereço da várivael status para true, se o motor efetuar a
+partida
+*/
+func (e *engine) Ignite(status *bool) *engine <span class="cov0" title="0">{
+        lights := 0
+        alarm := 0
+        doors := 0
+        bonnet := 0
+        boot := 0
+        objective := 0
+
+        min := -1
+        switch </span>{
+        case (e.v.Eletrics().
+                batteryCharger &gt; 80):<span class="cov0" title="0">
+
+                min = rand.Intn((-1) - (-2) + (-1))</span>
+
+        case (e.v.Eletrics().
+                batteryCharger &lt; 50 &amp;&amp;
+                e.v.Eletrics().
+                        batteryCharger &gt; 30):<span class="cov0" title="0">
+
+                min = rand.Intn((-1) - (-4) + (-1))</span>
+
+        case (e.v.Eletrics().
+                batteryCharger &lt; 25):<span class="cov0" title="0">
+
+                min = rand.Intn((-1) - (-17) + (-1))</span>
+        }
+        <span class="cov0" title="0">max := 1
+        switch </span>{
+        case (e.fuel &gt; 80):<span class="cov0" title="0">
+                max = rand.Intn(1 - 0 + 1)</span>
+        case (e.fuel &lt; 50 &amp;&amp; e.fuel &gt; 30):<span class="cov0" title="0">
+                max = rand.Intn(1 - (-1) + 1)</span>
+        case (e.fuel &lt; 25):<span class="cov0" title="0">
+                max = rand.Intn(1 - (-5) + 1)</span>
+        }
+
+        <span class="cov0" title="0">natives.GetVehicleParamsEx(
+                e.v.id,
+                nil,
+                &amp;lights,
+                &amp;alarm,
+                &amp;doors,
+                &amp;bonnet,
+                &amp;boot,
+                &amp;objective,
+        )
+        verifyBattery(e.v)
+        ignite := rand.Intn(max - (min) + max)
+        if ignite == 1 &amp;&amp; status != nil </span><span class="cov0" title="0">{
+                *status = true
+        }</span>
+        <span class="cov0" title="0">time.Sleep(time.Duration(rand.Intn(30 - (3) + 30)))
+        natives.SetVehicleParamsEx(
+                e.v.id,
+                ignite,
+                lights,
+                alarm,
+                doors,
+                bonnet,
+                boot,
+                objective,
+        )
+        return e</span>
+}
+
+/*
+Desliga o motor do veículo
+*/
+func (e *engine) TurnOff() *engine <span class="cov0" title="0">{
+        lights := 0
+        alarm := 0
+        doors := 0
+        bonnet := 0
+        boot := 0
+        objective := 0
+
+        natives.GetVehicleParamsEx(
+                e.v.id,
+                nil,
+                &amp;lights,
+                &amp;alarm,
+                &amp;doors,
+                &amp;bonnet,
+                &amp;boot,
+                &amp;objective,
+        )
+        natives.SetVehicleParamsEx(
+                e.v.id,
+                0,
+                lights,
+                alarm,
+                doors,
+                bonnet,
+                boot,
+                objective,
+        )
+        return e
+}</span>
+</pre>
+		
+		<pre class="file" id="file4" style="display: none">package vehicle
+
+import "github.com/goseventh/rakstar/internal/natives"
+
+func (v *vehicleBuilder) Pos(x, y, z, rotate float32) *vehicleBuilder <span class="cov0" title="0">{
+        v.posX, v.posY, v.posZ, v.rotate = x, y, z, rotate
+        return v
+}</span>
+
+func (v *vehicleBuilder) Health(h float32) *vehicleBuilder <span class="cov0" title="0">{
+        v.health = h
+        return v
+}</span>
+
+func (v *vehicleBuilder) Color(prim, secon int) *vehicleBuilder <span class="cov0" title="0">{
+        v.colorPrimary, v.colorSecondary = prim, secon
+        return v
+}</span>
+
+/*
+Escolhe o modelo do veículo para futuras criações
+*/
+func (v *vehicleBuilder) Model(m int) *vehicleBuilder <span class="cov0" title="0">{
+        v.model = m
+        return v
+}</span>
+
+/*
+Cria o veículo e o spawna
+
+seta o ID de criação do veículo após o spawn
+*/
+func (v *vehicleBuilder) Create() *vehicleBuilder <span class="cov0" title="0">{
+        v.id = natives.CreateVehicle(
+                v.model,
+                v.posX,
+                v.posY,
+                v.posZ,
+                v.rotate,
+                v.colorPrimary,
+                v.colorSecondary,
+                -1,
+                false,
+        )
+        return v
+}</span>
+</pre>
+		
+		</div>
+	</body>
+	<script>
+	(function() {
+		var files = document.getElementById('files');
+		var visible;
+		files.addEventListener('change', onChange, false);
+		function select(part) {
+			if (visible)
+				visible.style.display = 'none';
+			visible = document.getElementById(part);
+			if (!visible)
+				return;
+			files.value = part;
+			visible.style.display = 'block';
+			location.hash = part;
+		}
+		function onChange() {
+			select(files.value);
+			window.scrollTo(0, 0);
+		}
+		if (location.hash != "") {
+			select(location.hash.substr(1));
+		}
+		if (!visible) {
+			select("file0");
+		}
+	})();
+	</script>
+</html>
