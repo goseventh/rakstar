@@ -94,6 +94,35 @@ func (e *engineBuilder) Ignite(status *bool) *engineBuilder {
 	return e
 }
 
+func (e *engineBuilder) canIgniteEngine() bool {
+    battery := e.v.Eletrics().GetBatteryCharger()
+    fuel := e.GetFuel()
+   
+    rand.New(rand.NewSource(0))
+
+    if fuel == 0 || battery == 0 {
+        return false
+    }
+
+    minConsumable := min(battery, fuel)
+    weight := rand.Intn(11) - 5
+
+    failRange := rand.Intn(100) + 1
+    igniteRange := int(minConsumable) + weight
+
+    canIgnite := igniteRange > failRange
+
+    return canIgnite
+}
+
+func min(a, b float32) float32 {
+    if a < b {
+        return a
+    }
+
+    return b
+}
+
 func (e *engineBuilder) SortIgnite() bool {
 	rand.New(rand.NewSource(0))
 	fuel := e.GetFuel()

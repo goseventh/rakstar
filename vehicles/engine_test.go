@@ -88,7 +88,7 @@ func TestSortIgnite(t *testing.T) {
 			for i := 0; i < rounds; i++ {
 				veh.Eletrics().BatteryCharger(charger)
 				veh.Engine().Fuel(fuel)
-				stared := veh.Engine().SortIgnite()
+				stared := veh.Engine().canIgniteEngine()
 				if !stared {
 					continue
 				}
