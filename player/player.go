@@ -25,3 +25,10 @@ func (pb *PlayerBuilder) Nick(nick *string) *PlayerBuilder {
 	natives.GetPlayerName(pb.ID, nick, playerConst.MaxPlayerName)
 	return pb
 }
+
+
+func (pb*PlayerBuilder) GetAngle() float32{
+  var angle float32
+  natives.GetPlayerFacingAngle(pb.ID, &angle)
+  return angle
+}
