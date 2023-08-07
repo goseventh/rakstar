@@ -1,12 +1,12 @@
 package vehicle
 
 import (
+	"math"
 	"math/rand"
 	// "time"
 
 	"github.com/goseventh/rakstar/internal/natives"
 )
-
 
 /*
 Altera a economia de combustível do veículo: valores 0~100
@@ -75,7 +75,7 @@ func (e *engineBuilder) Ignite(status *bool) *engineBuilder {
 	objective := 0
 
 	var ignite int
-	if e.SortIgnite() {
+	if e.canIgniteEngine() {
 		ignite = 1
 	}
 
@@ -95,63 +95,24 @@ func (e *engineBuilder) Ignite(status *bool) *engineBuilder {
 }
 
 func (e *engineBuilder) canIgniteEngine() bool {
-    battery := e.v.Eletrics().GetBatteryCharger()
-    fuel := e.GetFuel()
-   
-    rand.New(rand.NewSource(0))
-
-    if fuel == 0 || battery == 0 {
-        return false
-    }
-
-    minConsumable := min(battery, fuel)
-    weight := rand.Intn(11) - 5
-
-    failRange := rand.Intn(100) + 1
-    igniteRange := int(minConsumable) + weight
-
-    canIgnite := igniteRange > failRange
-
-    return canIgnite
-}
-
-func min(a, b float32) float32 {
-    if a < b {
-        return a
-    }
-
-    return b
-}
-
-func (e *engineBuilder) SortIgnite() bool {
-	rand.New(rand.NewSource(0))
+	charger := e.v.Eletrics().GetBatteryCharger()
 	fuel := e.GetFuel()
-	battery := e.v.Eletrics().GetBatteryCharger()
-	if fuel == 0 || battery == 0 {
+
+	rand.New(rand.NewSource(0))
+
+	if fuel == 0 || charger == 0 {
 		return false
 	}
 
+	minConsumable := math.Min(float64(charger), float64(fuel))
+	weight := rand.Intn(11) - 5
+
 	failRange := rand.Intn(100) + 1
-	igniteRange := 100
+	successRange := int(minConsumable) + weight
 
-	if battery <= 95 || fuel <= 90 {
-		igniteRange = 90
-	}
+	canIgnite := successRange > failRange
 
-	if battery <= 50 || fuel <= 40 {
-		igniteRange = 60
-	}
-
-	if battery <= 30 || fuel <= 20 {
-		igniteRange = 30
-	}
-
-	if battery <= 20 || fuel <= 10 {
-		igniteRange = 15
-	}
-
-	canToggle := igniteRange > failRange
-  return canToggle
+	return canIgnite
 }
 
 /*

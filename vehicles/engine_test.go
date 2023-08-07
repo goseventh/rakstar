@@ -80,67 +80,61 @@ func TestSetGetBatteryCharger(t *testing.T) {
 }
 
 func TestSortIgnite(t *testing.T) {
-	rounds := 7000
-	for charger := float32(0); charger <= 100; charger+=5{
-		for fuel := float32(0); fuel <= 100; fuel+=5{
+  rounds := 50_000
+	for charger := float32(0); charger <= 100; charger += 5 {
+		for fuel := float32(0); fuel <= 100; fuel += 5 {
 			veh := Builder()
-			starts := 0
+			igniteCount := 0
+
 			for i := 0; i < rounds; i++ {
 				veh.Eletrics().BatteryCharger(charger)
 				veh.Engine().Fuel(fuel)
-				stared := veh.Engine().canIgniteEngine()
-				if !stared {
+
+				canIgnite := veh.Engine().canIgniteEngine()
+
+				if !canIgnite {
 					continue
 				}
-				starts += 1
+
+				igniteCount += 1
 			}
 
-			switch {
-			case veh.Engine().GetFuel() <= 90 &&
-				veh.Engine().GetFuel() >= 85 ||
-				veh.Eletrics().GetBatteryCharger() <= 100 &&
-					veh.Eletrics().GetBatteryCharger() >= 80:
+			successAverage := float32(igniteCount) / float32(rounds) * 100
+			minFuelCharger := math.Min(
+				float64(veh.Engine().GetFuel()),
+				float64(veh.Eletrics().GetBatteryCharger()),
+			)
 
-				if (float64(starts) / float64(rounds) * 100) <= 100 &&
-        (float64(starts)/float64(rounds)*100 >= 85){
-					continue
-				}
-				t.Errorf("expected: ≈90%%; got: %0.1f%%", (float64(starts) / float64(rounds) * 100))
-
-			case veh.Engine().GetFuel() <= 40 &&
-				veh.Engine().GetFuel() >= 30 ||
-				veh.Eletrics().GetBatteryCharger() <= 50 &&
-					veh.Eletrics().GetBatteryCharger() >= 35:
-
-				if (float64(starts) / float64(rounds) * 100) <= 65&&
-        (float64(starts)/float64(rounds)*100) >= 55 {
+			if minFuelCharger == 90 {
+				if successAverage >= 85 && successAverage <= 95 {
 					continue
 				}
 
-				t.Errorf("expected: ≈60%%; got: %0.1f%%", (float64(starts) / float64(rounds) * 100))
+				t.Errorf("expected: ≈90%%; got: %0.1f%%", successAverage)
+			}
 
-			case veh.Engine().GetFuel() <= 20 &&
-				veh.Engine().GetFuel() >= 15 ||
-				veh.Eletrics().GetBatteryCharger() <= 30 &&
-					veh.Eletrics().GetBatteryCharger() >= 25:
-
-				if (float64(starts) / float64(rounds) * 100) <= 35 &&
-        (float64(starts)/(float64(rounds)*100) >= 25){
+			if minFuelCharger == 40 {
+				if successAverage >= 35 && successAverage <= 45 {
 					continue
 				}
 
-				t.Errorf("expected: ≈30%%; got: %0.1f%%", (float64(starts) / float64(rounds) * 100))
+				t.Errorf("expected: ≈40%%; got: %0.1f%%", successAverage)
+			}
 
-			case veh.Engine().GetFuel() <= 10 &&
-				veh.Engine().GetFuel() >= 1 ||
-				veh.Eletrics().GetBatteryCharger() <= 20 &&
-					veh.Eletrics().GetBatteryCharger() >= 1:
-
-				if float64(starts)/float64(rounds)*100 <= 20 &&
-        float64(starts)/float64(rounds)*100 >= 10{
+			if minFuelCharger == 20 {
+				if successAverage >= 15 && successAverage <= 25 {
 					continue
 				}
-				t.Errorf("expected: ≈15%%; got: %0.1f%%", (float64(starts) / float64(rounds) * 100))
+
+				t.Errorf("expected: ≈20%%; got: %0.1f%%", successAverage)
+			}
+
+			if minFuelCharger == 10 {
+				if successAverage >= 5 && successAverage <= 15 {
+					continue
+				}
+
+				t.Errorf("expected: ≈10%%; got: %0.1f%%", successAverage)
 			}
 		}
 	}
