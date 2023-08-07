@@ -1,1 +1,1 @@
-package vehicle
+package vehicles

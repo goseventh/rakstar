@@ -7,7 +7,7 @@ detalhes minuciosos, incluindo características como o sistema de
 combustível, consumo, parte elétrica do veículo, bateria e sistemas
 de ignição.
 */
-package vehicle
+package vehicles
 
 type vehicleBuilder struct {
 	id                           int

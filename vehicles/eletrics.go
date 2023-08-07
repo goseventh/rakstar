@@ -1,4 +1,4 @@
-package vehicle
+package vehicles
 
 import "github.com/goseventh/rakstar/internal/natives"
 import "math/rand"
