@@ -35,6 +35,9 @@ func (pb *PlayerBuilder) GetPos() (float32, float32, float32) {
 	var (
 		x, y, z float32
 	)
-	natives.GetPlayerPos(pb.ID, &x, &y, &z)
+  connected := natives.GetPlayerPos(pb.ID, &x, &y, &z)
+  if !connected{
+    return -1, -1, -1
+  }
 	return x, y, z
 }
