@@ -20,15 +20,21 @@ func (pb *PlayerBuilder) Spawn() *PlayerBuilder {
 	return pb
 }
 
-
 func (pb *PlayerBuilder) Nick(nick *string) *PlayerBuilder {
 	natives.GetPlayerName(pb.ID, nick, playerConst.MaxPlayerName)
 	return pb
 }
 
+func (pb *PlayerBuilder) GetAngle() float32 {
+	var angle float32
+	natives.GetPlayerFacingAngle(pb.ID, &angle)
+	return angle
+}
 
-func (pb*PlayerBuilder) GetAngle() float32{
-  var angle float32
-  natives.GetPlayerFacingAngle(pb.ID, &angle)
-  return angle
+func (pb *PlayerBuilder) GetPos() (float32, float32, float32) {
+	var (
+		x, y, z float32
+	)
+	natives.GetPlayerPos(pb.ID, &x, &y, &z)
+	return x, y, z
 }
