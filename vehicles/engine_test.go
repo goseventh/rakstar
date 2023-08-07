@@ -80,7 +80,7 @@ func TestSetGetBatteryCharger(t *testing.T) {
 }
 
 func TestSortIgnite(t *testing.T) {
-  rounds := 50_000
+	rounds := 50_000
 	for charger := float32(0); charger <= 100; charger += 5 {
 		for fuel := float32(0); fuel <= 100; fuel += 5 {
 			veh := Builder()
@@ -111,7 +111,7 @@ func TestSortIgnite(t *testing.T) {
 				}
 
 				t.Errorf("expected: ≈90%%; got: %0.1f%%", successAverage)
-			}
+      }
 
 			if minFuelCharger == 40 {
 				if successAverage >= 35 && successAverage <= 45 {

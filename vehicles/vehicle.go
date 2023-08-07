@@ -1,6 +1,9 @@
 package vehicle
 
-import "github.com/goseventh/rakstar/internal/natives"
+import (
+	"github.com/goseventh/rakstar/internal/natives"
+	"github.com/goseventh/rakstar/player"
+)
 
 func (v *vehicleBuilder) Pos(x, y, z, rotate float32) *vehicleBuilder {
 	v.posX, v.posY, v.posZ, v.rotate = x, y, z, rotate
@@ -43,4 +46,32 @@ func (v *vehicleBuilder) Create() *vehicleBuilder {
 		false,
 	)
 	return v
+}
+
+func (v *vehicleBuilder) AttachPlayer(p *player.PlayerBuilder) *vehicleBuilder{
+	var seats[]int
+	for i := 0; i <= natives.GetMaxPlayers(); i++ {
+		vehID := natives.GetPlayerVehicleID(i)
+    if vehID != v.id{
+      continue
+    }
+    seat := natives.GetPlayerVehicleSeat(i)
+    if seat <= -1 {
+      continue
+    }
+    seats = append(seats, seat+1)
+	}
+  
+  if len(seats) > 4 {
+    v.AttachPlayer(p)
+  }
+
+  for s := 0; s<=4; s++{
+    if seats[s] != 0{
+      continue
+    }
+    natives.PutPlayerInVehicle(p.ID, v.id, s-1)
+    break
+  }
+  return v
 }
