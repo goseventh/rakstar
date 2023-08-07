@@ -27,7 +27,10 @@ func (pb *PlayerBuilder) Nick(nick *string) *PlayerBuilder {
 
 func (pb *PlayerBuilder) GetAngle() float32 {
 	var angle float32
-	natives.GetPlayerFacingAngle(pb.ID, &angle)
+	connected := natives.GetPlayerFacingAngle(pb.ID, &angle)
+	if !connected {
+		return -1
+	}
 	return angle
 }
 
@@ -35,9 +38,9 @@ func (pb *PlayerBuilder) GetPos() (float32, float32, float32) {
 	var (
 		x, y, z float32
 	)
-  connected := natives.GetPlayerPos(pb.ID, &x, &y, &z)
-  if !connected{
-    return -1, -1, -1
-  }
+	connected := natives.GetPlayerPos(pb.ID, &x, &y, &z)
+	if !connected {
+		return -1, -1, -1
+	}
 	return x, y, z
 }
