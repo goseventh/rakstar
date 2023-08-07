@@ -51,4 +51,10 @@ func (pb *PlayerBuilder) InVehicle() bool {
 }
 
 
+func (pb *PlayerBuilder) DeleteCurrentVehicle() bool {
+  vehID := natives.GetPlayerVehicleID(pb.ID)
+  return natives.DestroyVehicle(vehID)
+}
+
+
 
