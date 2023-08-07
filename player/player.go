@@ -44,3 +44,11 @@ func (pb *PlayerBuilder) GetPos() (float32, float32, float32) {
 	}
 	return x, y, z
 }
+
+
+func (pb *PlayerBuilder) InVehicle() bool {
+  return natives.IsPlayerInAnyVehicle(pb.ID)
+}
+
+
+
