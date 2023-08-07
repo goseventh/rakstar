@@ -48,6 +48,10 @@ func (v *vehicleBuilder) Create() *vehicleBuilder {
 	return v
 }
 
+// Adiciona um jogador a um assento disponível de um veículo
+//
+// a função tentará encontrar quais assentos estão disponíveis
+// para o veiculo, caso houver setará automaticamente o jogador 
 func (v *vehicleBuilder) AttachPlayer(p *player.PlayerBuilder) *vehicleBuilder{
 	var seats[]int
 	for i := 0; i <= natives.GetMaxPlayers(); i++ {
