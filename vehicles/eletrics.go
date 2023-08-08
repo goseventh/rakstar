@@ -75,17 +75,26 @@ func (e *eletricsBuilder) ToggleLights() *eletricsBuilder {
 //
 // - Utilize essa função para simular uma ignição
 func (e *eletricsBuilder) IntroduceElectricalDrain() {
-	var lights int
+	vehicleID := e.v.id
+	engine := 0
+	lights := 0
+	alarm := 0
+	doors := 0
+	bonnet := 0
+	boot := 0
+	objective := 0
+
 	natives.GetVehicleParamsEx(
-		e.v.id,
-		nil,
+		vehicleID,
+		&engine,
 		&lights,
-		nil,
-		nil,
-		nil,
-		nil,
-		nil,
+		&alarm,
+		&doors,
+		&bonnet,
+		&boot,
+		&objective,
 	)
+
 	if lights != 1 {
 		return
 	}
