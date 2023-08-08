@@ -30,7 +30,7 @@ func Boot() error {
 		Nonblocking:   false , //bloqueando pra testar
 		ExpiryDuration: time.Duration(7) * time.Second,
 		PanicHandler: func(i interface{}) {
-			log.Println("[rakstar] a panic occurred in the server manager.")
+      log.Println("[rakstar] a panic occurred in the server manager:", i)
 		},
 	}))
 	return err
