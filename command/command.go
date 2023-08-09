@@ -81,7 +81,7 @@ func SearchCommand(inputName string) (*Command, int) {
 		}
 	}
 
-	if lastDistance > 2 {
+	if lastDistance == -1 || lastDistance > 2 {
 		return nil, lastDistance
 	}
 
