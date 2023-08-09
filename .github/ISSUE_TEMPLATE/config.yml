@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Sugerir ideias
+    url: https://github.com/goseventh/rakstar/discussions
+    about: Enviar ideias ou retirar dúvidas
