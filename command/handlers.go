@@ -144,6 +144,7 @@ func HandlePlayerCommandText(player natives.Player, cmdtext string) bool {
 								break condLoop
 							}
 
+							log.Printf("[rakstar-cmd idx(%v)] o jogador %v está conectado", idx, id)
 						case MustNickIs:
 							var nick string
 							natives.GetPlayerName(id, &nick, playerConst.MaxPlayerName)
@@ -152,6 +153,9 @@ func HandlePlayerCommandText(player natives.Player, cmdtext string) bool {
 								pass = false
 								break condLoop
 							}
+
+							log.Printf("[rakstar-cmd idx(%v)] boa comparação de nicks entre %v:%v", idx, nick, cond.value)
+
 						}
 					}
 

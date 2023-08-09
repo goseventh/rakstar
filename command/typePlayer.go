@@ -29,7 +29,7 @@ func (tp *TPlayer) MustConnected() *TPlayer {
 
 func (tp *TPlayer) MustNickIs(nick string) *TPlayer {
 	cond := tCondils{
-		cond:    MustPlayerConnected,
+		cond:    MustNickIs,
 		typeIdx: tp.cb.index,
 		value:   nick,
 	}
