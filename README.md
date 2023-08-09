@@ -10,7 +10,7 @@ O desenvolvimento de <b>servidores SA-MP</b> não precisa ser <b>complicado</b>,
 </br>
 
 ## 💡 Sobre
-Um framework <b>moderno</b> e <b>optinativo</b> feito em <b>go</b>, para escrever gamemodes <b>sa-mp</b>.
+Um framework <b>moderno</b> e <b>opinativo</b> feito em <b>go</b>, para escrever gamemodes <b>sa-mp</b>.
 
 ## 🚧 Desenvolvimento
 
