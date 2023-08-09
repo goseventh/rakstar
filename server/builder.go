@@ -26,7 +26,7 @@ type Goroutine struct {
 func Boot() error {
 	var err error
 	pool, err = ants.NewPool(defaultRuntimes, ants.WithOptions(ants.Options{
-		PreAlloc:       false,
+		PreAlloc:      false,
 		Nonblocking:   false , //bloqueando pra testar
 		ExpiryDuration: time.Duration(7) * time.Second,
 		PanicHandler: func(i interface{}) {

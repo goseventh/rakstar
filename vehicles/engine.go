@@ -79,7 +79,7 @@ func (e *engineBuilder) Ignite(status *bool) *engineBuilder {
 		ignite = 1
 	}
 
-	e.v.Eletrics().IntroduceElectricalDrain()
+	// e.v.Eletrics().IntroduceElectricalDrain()
 	// time.Slieep(time.Duration(rand.Intn(30 - (3) + 30)))
 	natives.SetVehicleParamsEx(
 		e.v.id,
