@@ -85,7 +85,5 @@ func SearchCommand(inputName string) (*Command, int) {
 		return nil, lastDistance
 	}
 
-	commandCopy := *lastCommand
-
-	return &commandCopy, lastDistance
+	return lastCommand, lastDistance
 }
