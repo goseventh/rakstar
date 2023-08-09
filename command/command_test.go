@@ -175,3 +175,55 @@ func TestSearchCommandOverload(t *testing.T) {
 		}
 	}
 }
+
+func TestBuilderRegister(t *testing.T) {
+	commands = make(map[string]*Command)
+	Builder().
+		Command("test").
+		Handler(func(context *CommandContext) {}).
+		Create()
+
+	if len(commands) != 1 {
+		t.Errorf("expected: 1; got %v", commands)
+		return
+	}
+}
+
+func TestBuilderCommandOverload(t *testing.T) {
+	commands = make(map[string]*Command)
+
+	for i := 0; i < 10000; i++ {
+		if len(commands) != i {
+			t.Errorf("expected: %v; got %v", i*2, commands)
+			return
+		}
+
+		Builder().
+			Command(fmt.Sprintf("%dtest", i)).
+			Handler(func(context *CommandContext) {}).
+			Create()
+	}
+}
+
+func TestBuilderCommandOverloadWithAliases(t *testing.T) {
+	commands = make(map[string]*Command)
+
+	for i := 0; i < 10000; i++ {
+		if len(commands) != i*100+i {
+			t.Errorf("expected: %v; got %v", i*100+i, commands)
+			return
+		}
+
+		cmdBuilder := Builder()
+
+		cmdBuilder.
+			Command(fmt.Sprintf("%dtest", i)).
+			Handler(func(context *CommandContext) {})
+
+		for l := 0; l < 100; l++ {
+			cmdBuilder.Alias(fmt.Sprintf("%dalone%d", i, l))
+		}
+
+		cmdBuilder.Create()
+	}
+}
