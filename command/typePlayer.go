@@ -18,12 +18,14 @@ func (c *conditionalsBuilder) TypePlayer() *TypePlayer {
 }
 
 func (t *TypePlayer) MustConnected() *TypePlayer {
- t.createConditional(MustPlayerConnected, t.c.index, nil)
+ t.c.createConditional(MustPlayerConnected, t.c.index, nil)
+
 	return t
+
 }
 
 func (t *TypePlayer) MustNickIs(nick string) *TypePlayer {
-  t.createConditional(MustNickIs, t.c.index, nick)
+  t.c.createConditional(MustNickIs, t.c.index, nick)
 	return t
 }
 

@@ -24,6 +24,16 @@ func (c *conditionalsBuilder) Index(index int) *conditionalsBuilder {
 	return c
 }
 
+func (c *conditionalsBuilder) createConditional(typeCondiction, typeIdx int, value interface{}) {
+	cond := condition{
+		cond:    typeCondiction,
+		typeIdx: c.index,
+		value:   value,
+	}
+
+	c.conditions = append(c.conditions, cond)
+}
+
 // registra as condicionais para cada indice(index)
 func (c *conditionalsBuilder) Set() *conditionalsBuilder {
 
@@ -45,12 +55,3 @@ func (t *TypePlayer) EndConditionals() *commandBuilder {
 	return t.c.c
 }
 
-func (t *TypePlayer) createConditional(typeCondiction, typeIdx int, value interface{}) {
-	cond := condition{
-		cond:    typeCondiction,
-		typeIdx: t.c.index,
-		value:   value,
-	}
-
-	t.c.conditions = append(t.c.conditions, cond)
-}
