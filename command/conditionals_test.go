@@ -25,8 +25,6 @@ func TestCreateConditional(t *testing.T) {
 			}
 		})
 	}
-	// b :=Builder()
-
 }
 
 func TestBuilderConditional(t *testing.T) {
@@ -37,11 +35,14 @@ func TestBuilderConditional(t *testing.T) {
 
 	testCases := []struct {
 		name     string
-		idx    int
+		idx      int
 		typeIdx  int
 		expected result
 	}{
-		{"test index", 0, 1, result{0, 0}},
+		{name: "test index", idx: 0, expected: result{idx: 0}},
+		{name: "test index", idx: 0, expected: result{idx: 0}},
+		{name: "test type index", typeIdx: 0, expected: result{typeIdx: 0}},
+		{name: "test type index", typeIdx: 0, expected: result{typeIdx: 0}},
 	}
 
 	for _, tc := range testCases {
@@ -49,9 +50,25 @@ func TestBuilderConditional(t *testing.T) {
 			cmd := Builder()
 			cmd.Conditionals().
 				Index(tc.idx)
+
+			switch tc.typeIdx {
+			case typePlayer:
+				cmd.Conditionals().TypePlayer()
+			case typeNumber:
+				// comentado: ainda não está pronto
+				// cmd.Conditionals().TypeNumber()
+			case typeText:
+				// comentado: ainda não está pronto
+				// cmd.Conditionals().TypeText
+			}
+
 			got := cmd.Conditionals().index
 			if !reflect.DeepEqual(got, tc.expected.idx) {
 				t.Errorf("expeted: %d; got: %d", tc.expected.idx, got)
+			}
+
+			got = cmd.Conditionals().typeIdx
+			if !reflect.DeepEqual(got, tc.expected.typeIdx) {
 			}
 		})
 	}
