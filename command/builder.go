@@ -34,8 +34,6 @@ func (c *commandBuilder) Wait(wait ...time.Duration) *commandBuilder {
 
 func (c *commandBuilder) Conditionals() *conditionalsBuilder {
 	condit := new(conditionalsBuilder)
-	//condit.conditionals_ = make(map[int][]int)
 	condit.c = c
-
 	return condit
 }
