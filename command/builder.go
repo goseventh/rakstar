@@ -5,10 +5,10 @@ import (
 )
 
 type commandBuilder struct {
-	cmd           string
-	alias         []string
-	handler       CommandHandler
-	conditionals_ map[int][]tCondils
+	cmd          string
+	alias        []string
+	handler      CommandHandler
+	conditionals map[int][]condition
 }
 
 type ArgHandler struct {
@@ -18,24 +18,24 @@ type ArgHandler struct {
 }
 
 func Builder() *commandBuilder {
-	cb := new(commandBuilder)
-	cb.conditionals_ = make(map[int][]tCondils)
-	return cb
+	c := new(commandBuilder)
+	c.conditionals = make(map[int][]condition)
+	return c
 }
 
-func (cb *commandBuilder) Wait(wait ...time.Duration) *commandBuilder {
+func (c *commandBuilder) Wait(wait ...time.Duration) *commandBuilder {
 	if wait[0] < time.Second {
 		wait[0] = time.Second
 	}
 	time.Sleep(wait[0])
 
-	return cb
+	return c
 }
 
-func (cb *commandBuilder) Conditionals() *conditionalsBuilder {
+func (c *commandBuilder) Conditionals() *conditionalsBuilder {
 	condit := new(conditionalsBuilder)
 	//condit.conditionals_ = make(map[int][]int)
-	condit.cb = cb
+	condit.c = c
 
 	return condit
 }

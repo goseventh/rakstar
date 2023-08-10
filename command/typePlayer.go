@@ -5,40 +5,40 @@ const (
 	MustNickIs
 )
 
-type TPlayer struct {
-	cb *conditionalsBuilder
+type TypePlayer struct {
+	c *conditionalsBuilder
 }
 
-func (cb *conditionalsBuilder) TypePlayer() *TPlayer {
-	cb.typeIdx = typePlayer
-	tPlayer := new(TPlayer)
-	tPlayer.cb = cb
+func (c *conditionalsBuilder) TypePlayer() *TypePlayer {
+	c.typeIdx = typePlayer
+	tPlayer := new(TypePlayer)
+	tPlayer.c = c
 
 	return tPlayer
 }
 
-func (tp *TPlayer) MustConnected() *TPlayer {
-	cond := tCondils{
+func (t *TypePlayer) MustConnected() *TypePlayer {
+	cond := condition{
 		cond:    MustPlayerConnected,
-		typeIdx: tp.cb.index,
+		typeIdx: t.c.index,
 	}
 
-	tp.cb.condils = append(tp.cb.condils, cond)
-	return tp
+	t.c.conditions = append(t.c.conditions, cond)
+	return t
 }
 
-func (tp *TPlayer) MustNickIs(nick string) *TPlayer {
-	cond := tCondils{
+func (t *TypePlayer) MustNickIs(nick string) *TypePlayer {
+	cond := condition{
 		cond:    MustNickIs,
-		typeIdx: tp.cb.index,
+		typeIdx: t.c.index,
 		value:   nick,
 	}
 
-	tp.cb.condils = append(tp.cb.condils, cond)
-	return tp
+	t.c.conditions = append(t.c.conditions, cond)
+	return t
 }
 
-func (tp *TPlayer) End() *conditionalsBuilder {
-	tp.cb.Set()
-	return tp.cb
+func (t *TypePlayer) End() *conditionalsBuilder {
+	t.c.Set()
+	return t.c
 }

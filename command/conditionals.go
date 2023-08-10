@@ -9,41 +9,40 @@ const (
 type conditionalsBuilder struct {
 	index   int
 	typeIdx int
-	condils []tCondils
-	//	conditionals_ map[int][]int
-	cb *commandBuilder
+	conditions []condition
+	c      *commandBuilder
 }
 
-type tCondils struct {
+type condition struct {
 	typeIdx int
 	cond    int
 	value   interface{}
 }
 
-func (cb *conditionalsBuilder) Index(index int) *conditionalsBuilder {
-	cb.index = index
-	return cb
+func (c *conditionalsBuilder) Index(index int) *conditionalsBuilder {
+	c.index = index
+	return c
 }
 
 // registra as condicionais para cada indice(index)
-func (cb *conditionalsBuilder) Set() *conditionalsBuilder {
+func (c *conditionalsBuilder) Set() *conditionalsBuilder {
 
-	if cb.index < 0 {
-		return cb
+	if c.index < 0 {
+		return c
 	}
 
-	if cb.condils == nil || len(cb.condils) == 0 {
-		return cb
+	if c.conditions == nil || len(c.conditions) == 0 {
+		return c
 	}
 
 	//cb.conditionals_s //alocado
 
-	cb.cb.conditionals_[cb.index] = cb.condils
-	cb.condils = nil
-	return cb
+	c.c.conditionals[c.index] = c.conditions
+	c.conditions = nil
+	return c
 }
 
-func (tp *TPlayer) EndConditionals() *commandBuilder {
-	tp.End()
-	return tp.cb.cb
+func (t *TypePlayer) EndConditionals() *commandBuilder {
+	t.End()
+	return t.c.c
 }

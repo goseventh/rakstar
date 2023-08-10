@@ -22,7 +22,7 @@ func (cb *commandBuilder) Create() {
 		Name:    cb.cmd,
 		Aliases: cb.alias,
 		Handler: cb.handler,
-		conditionals_: cb.conditionals_,
+		conditionals_: cb.conditionals,
 	}
 
 	RegisterCommand(cmd)
