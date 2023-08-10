@@ -226,3 +226,7 @@ func TestBuilderCommandOverloadWithAliases(t *testing.T) {
 		cmdBuilder.Create()
 	}
 }
+
+func TestConditionals(t*testing.T){
+   
+}

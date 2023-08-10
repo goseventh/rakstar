@@ -18,23 +18,12 @@ func (c *conditionalsBuilder) TypePlayer() *TypePlayer {
 }
 
 func (t *TypePlayer) MustConnected() *TypePlayer {
-	cond := condition{
-		cond:    MustPlayerConnected,
-		typeIdx: t.c.index,
-	}
-
-	t.c.conditions = append(t.c.conditions, cond)
+ t.createConditional(MustPlayerConnected, t.c.index, nil)
 	return t
 }
 
 func (t *TypePlayer) MustNickIs(nick string) *TypePlayer {
-	cond := condition{
-		cond:    MustNickIs,
-		typeIdx: t.c.index,
-		value:   nick,
-	}
-
-	t.c.conditions = append(t.c.conditions, cond)
+  t.createConditional(MustNickIs, t.c.index, nick)
 	return t
 }
 

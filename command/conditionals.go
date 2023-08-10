@@ -7,10 +7,10 @@ const (
 )
 
 type conditionalsBuilder struct {
-	index   int
-	typeIdx int
+	index      int
+	typeIdx    int
 	conditions []condition
-	c      *commandBuilder
+	c          *commandBuilder
 }
 
 type condition struct {
@@ -35,8 +35,6 @@ func (c *conditionalsBuilder) Set() *conditionalsBuilder {
 		return c
 	}
 
-	//cb.conditionals_s //alocado
-
 	c.c.conditionals[c.index] = c.conditions
 	c.conditions = nil
 	return c
@@ -45,4 +43,14 @@ func (c *conditionalsBuilder) Set() *conditionalsBuilder {
 func (t *TypePlayer) EndConditionals() *commandBuilder {
 	t.End()
 	return t.c.c
+}
+
+func (t *TypePlayer) createConditional(typeCondiction, typeIdx int, value interface{}) {
+	cond := condition{
+		cond:    typeCondiction,
+		typeIdx: t.c.index,
+		value:   value,
+	}
+
+	t.c.conditions = append(t.c.conditions, cond)
 }
