@@ -20,6 +20,11 @@ import (
 var NotFoundChat *chat.ChatBuilder
 var SimiularFoundMSG *string
 
+type rawCommand struct {
+	name string
+	args []string
+}
+
 /*
 seta as mensagens que são executadas qunado um comando similar é encontrado, ou quando nenhum é encontrado.
 
@@ -55,119 +60,125 @@ func HandlePlayerCommandText(player natives.Player, cmdtext string) bool {
 	server.Builder().
 		Goroutine().
 		Submit(func() {
-			splitCmdText := strings.Split(sampstr.Decode(cmdtext), " ")
+			processCommand(player, cmdtext)
+		})
 
-			commandName := strings.Replace(splitCmdText[0], "/", "", -1)
-			commandArgs := splitCmdText[1:]
+	return true
+}
 
-			command, distance := SearchCommand(commandName)
+func parseCommandArgs(cmdtext string) rawCommand {
+	splitCmdText := strings.Split(sampstr.Decode(cmdtext), " ")
 
-			if command == nil {
-				NotFoundChat.
-					Select(player.ID).
-					Tag("rakstar").
-					Send()
-				return
-			}
+	name := strings.Replace(splitCmdText[0], "/", "", -1)
+	args := splitCmdText[1:]
 
-			if distance == 2 {
+	return rawCommand{
+		name,
+		args,
+	}
+}
 
-				chat.Builder().
-					Select(player.ID).
-					Color(common.WarnColorStr).
-					Tag("rakstar").
-					Message(fmt.
-						Sprintf(
-							"%v: %v",
-							*SimiularFoundMSG,
-							command.Name,
-						)).
-					Send()
+func parseArgHandler(args []string) ArgHandler {
+	var argHandler = ArgHandler{}
 
-			}
+	if len(args) >= 1 {
+		argHandler.args = args
+		argHandler.input = strings.Join(args, " ")
+		argHandler.currentArg = 0
+	}
 
-			var argHandler *ArgHandler = &ArgHandler{}
+	return argHandler
+}
 
-			if len(commandArgs) >= 1 {
-				argHandler.args = commandArgs
-				argHandler.input = strings.Join(commandArgs, " ")
-				argHandler.currentArg = 0
-			}
+func validateArgs(command *Command, args []string) bool {
+	if len(command.conditionals_) > 0 && len(args) <= 0 {
+		return false
+	}
 
-			interceptorContext := &CommandInterceptorContext{
-				Player:     &player,
-				ArgHandler: argHandler,
-				next:       true,
-			}
-
-			for _, intercept := range command.Interceptors {
-				interceptorContext.next = false
-				intercept(interceptorContext)
-
-				if !interceptorContext.next {
-					return
-				}
-			}
-
-			commandContext := CommandContext{
-				Player:     &player,
-				ArgHandler: argHandler,
-			}
-
-			var pass bool = true
-      if len(command.conditionals_) > 0 && len(commandArgs) <= 0{
-        pass = false
-        return
-      }
-
-		condLoop:
-			for idx, arg := range commandArgs {
-				for _, cond := range command.conditionals_[idx] {
-					switch cond.typeIdx {
-					case typePlayer:
-						var id int = -1
-						var err error
-						id, err = strconv.Atoi(arg)
-						if err != nil {
-							var nick string
-							for i := 0; i < playerConst.MaxPlayers; i++ {
-								natives.GetPlayerName(i, &nick, playerConst.MaxPlayerName)
-								if nick == arg {
-									id = i
-									break
-								}
-							}
-						}
-
-						switch cond.cond {
-						case MustPlayerConnected:
-							if !natives.IsPlayerConnected(id) {
-								log.Printf("[rakstar-cmd idx(%v)] o jogador %v não está conectado", idx, id)
-								pass = false
-								break condLoop
-							}
-
-						case MustNickIs:
-							var nick string
-							natives.GetPlayerName(id, &nick, playerConst.MaxPlayerName)
-							if cond.value != nick {
-								log.Printf("[rakstar-cmd idx(%v)] falha na comparação de nicks entre %v:%v", idx, nick, cond.value)
-								pass = false
-								break condLoop
-							}
+	for idx, arg := range args {
+		for _, cond := range command.conditionals_[idx] {
+			switch cond.typeIdx {
+			case typePlayer:
+				var id int = -1
+				var err error
+				id, err = strconv.Atoi(arg)
+				if err != nil {
+					var nick string
+					for i := 0; i < playerConst.MaxPlayers; i++ {
+						natives.GetPlayerName(i, &nick, playerConst.MaxPlayerName)
+						if nick == arg {
+							id = i
+							break
 						}
 					}
+				}
 
+				switch cond.cond {
+				case MustPlayerConnected:
+					if !natives.IsPlayerConnected(id) {
+						log.Printf("[rakstar-cmd idx(%v)] o jogador %v não está conectado", idx, id)
+						return false
+					}
+
+				case MustNickIs:
+					var nick string
+					natives.GetPlayerName(id, &nick, playerConst.MaxPlayerName)
+					if cond.value != nick {
+						log.Printf("[rakstar-cmd idx(%v)] falha na comparação de nicks entre %v:%v", idx, nick, cond.value)
+						return false
+					}
 				}
 			}
 
-			if !pass {
-				return
-			}
+		}
+	}
 
-			log.Printf("[rakstar] rodando o comando [%s] para o jogador %s\n", command.Name, player.GetName())
-			command.Handler(&commandContext)
-		})
+	return true
+}
+
+func processCommand(player natives.Player, cmdtext string) bool {
+	rawCommand := parseCommandArgs(cmdtext)
+	command, distance := SearchCommand(rawCommand.name)
+
+	if command == nil {
+		NotFoundChat.
+			Select(player.ID).
+			Tag("rakstar").
+			Send()
+
+		return false
+	}
+
+	if distance >= 1 && distance <= 2 {
+		chat.Builder().
+			Select(player.ID).
+			Color(common.WarnColorStr).
+			Tag("rakstar").
+			Message(fmt.
+				Sprintf(
+					"%v: %v",
+					*SimiularFoundMSG,
+					command.Name,
+				)).
+			Send()
+	}
+
+	argHandler := parseArgHandler(rawCommand.args)
+
+	context := CommandContext{
+		Player:     &player,
+		ArgHandler: &argHandler,
+	}
+
+	isValidArgs := validateArgs(command, rawCommand.args)
+
+	if !isValidArgs {
+		return false
+	}
+
+	log.Printf("[rakstar] running command [%s] for player %s\n", command.Name, player.GetName())
+
+	command.Handler(&context)
 
 	return true
 }
