@@ -215,7 +215,6 @@ func TestBuilderCommandOverloadWithAliases(t *testing.T) {
 		}
 
 		cmdBuilder := Builder()
-
 		cmdBuilder.
 			Command(fmt.Sprintf("%dtest", i)).
 			Handler(func(context *CommandContext) {})

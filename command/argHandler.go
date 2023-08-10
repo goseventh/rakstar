@@ -4,8 +4,6 @@ import (
 	"strconv"
 )
 
-
-
 func (self *ArgHandler) Next(defaultValues ...string) *string {
 	var defaultValue *string = nil
 

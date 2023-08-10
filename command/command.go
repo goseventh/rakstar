@@ -18,7 +18,7 @@ type Command struct {
 	RequireLogin  bool
 	Aliases       []string
 	Roles         []string
-	conditionals_ map[int][]tCondils
+	conditionals_ map[int][]condition
 }
 
 type CommandContext struct {
