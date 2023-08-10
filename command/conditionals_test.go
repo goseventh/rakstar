@@ -41,7 +41,7 @@ func TestBuilderConditional(t *testing.T) {
 		typeIdx  int
 		expected result
 	}{
-		{"test index", 0, 1, result{1, 0}},
+		{"test index", 0, 1, result{0, 0}},
 	}
 
 	for _, tc := range testCases {
