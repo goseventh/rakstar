@@ -39,10 +39,17 @@ func TestBuilderConditional(t *testing.T) {
 		typeIdx  int
 		expected result
 	}{
-		{name: "test index", idx: 0, expected: result{idx: 0}},
-		{name: "test index", idx: 0, expected: result{idx: 0}},
-		{name: "test type index", typeIdx: 0, expected: result{typeIdx: 0}},
-		{name: "test type index", typeIdx: 0, expected: result{typeIdx: 0}},
+		{name: "test type index", idx: 0, typeIdx: -1, expected: result{0, 0}},
+		{name: "test type index", idx: 0, typeIdx: 0, expected: result{0, 0}},
+		{name: "test type index", idx: 0, typeIdx: typePlayer, expected: result{0, typePlayer}},
+		//aguardando a finalização do builder:
+		// {name: "test type index", idx: 0, typeIdx: typeText, expected: result{0, typeText}},
+		// {name: "test type index", idx: 0, typeIdx: typeNumber, expected: result{0, typeNumber}},
+
+		{name: "test index", idx: -1, typeIdx: 0, expected: result{0, 0}},
+		{name: "test index", idx: 0, typeIdx: 0, expected: result{0, 0}},
+		{name: "test index", idx: 10, typeIdx: 0, expected: result{10, 0}},
+		{name: "test index", idx: 30, typeIdx: 0, expected: result{30, 0}},
 	}
 
 	for _, tc := range testCases {
@@ -69,6 +76,7 @@ func TestBuilderConditional(t *testing.T) {
 
 			got = cmd.Conditionals().typeIdx
 			if !reflect.DeepEqual(got, tc.expected.typeIdx) {
+				t.Errorf("expeted: %d; got: %d", tc.expected.typeIdx, got)
 			}
 		})
 	}

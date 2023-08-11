@@ -20,6 +20,9 @@ type condition struct {
 }
 
 func (c *conditionalsBuilder) Index(index int) *conditionalsBuilder {
+  if index < 0 {
+    index = 0
+  }
 	c.index = index
 	return c
 }
