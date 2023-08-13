@@ -90,49 +90,90 @@ func parseArgHandler(args []string) ArgHandler {
 	return argHandler
 }
 
+func getIDfromName(nick string) int {
+	var id int = -1
+	var err error
+	id, err = strconv.Atoi(nick)
+	if err != nil {
+		var nickSearch string
+		for i := 0; i < playerConst.MaxPlayers; i++ {
+			natives.GetPlayerName(i, &nickSearch, playerConst.MaxPlayerName)
+			if compareNicks(nickSearch, nick) {
+				break
+			}
+		}
+	}
+	return id
+}
+
+func compareNicks(nick, nick2 string) bool {
+	return nick == nick2
+}
+
+func getNickFromID(id int) string {
+	nick := ""
+	natives.GetPlayerName(id, &nick, playerConst.MaxPlayerName)
+	return nick
+}
+
+func isConnected(id int) bool {
+	return natives.IsPlayerConnected(id)
+}
+
+func verifyTypePlayer(cond condition, idx int, arg string) bool {
+	id := getIDfromName(arg)
+	switch cond.cond {
+	case MustPlayerConnected:
+		if !isConnected(id) {
+			log.Printf("[rakstar-cmd idx(%v)] o jogador %v não está conectado", idx, id)
+			return false
+		}
+
+	case MustNickIs:
+		nick := getNickFromID(id)
+		if !compareNicks(nick, cond.value.(string)) {
+			log.Printf("[rakstar-cmd idx(%v)] falha na comparação de nicks entre %v:%v",
+				idx, nick, cond.value)
+			return false
+		}
+	}
+	return true
+}
+
+func validateConditions(command *Command, idx int, arg string) bool {
+	for _, cond := range command.conditions[idx] {
+		switch cond.typeIdx {
+		case typePlayer:
+			ok := verifyTypePlayer(cond, idx, arg)
+			if !ok {
+				return false
+			}
+		case typeNumber:
+			ok := verifyTypePlayer(cond, idx, arg)
+			if !ok {
+				return false
+			}
+		case typeText:
+			ok := verifyTypePlayer(cond, idx, arg)
+			if !ok {
+				return false
+			}
+		}
+	}
+	return true
+}
+
 func validateArgs(command *Command, args []string) bool {
-	if len(command.conditionals_) > 0 && len(args) <= 0 {
+	if len(command.conditions) > 0 && len(args) <= 0 {
 		return false
 	}
 
 	for idx, arg := range args {
-		for _, cond := range command.conditionals_[idx] {
-			switch cond.typeIdx {
-			case typePlayer:
-				var id int = -1
-				var err error
-				id, err = strconv.Atoi(arg)
-				if err != nil {
-					var nick string
-					for i := 0; i < playerConst.MaxPlayers; i++ {
-						natives.GetPlayerName(i, &nick, playerConst.MaxPlayerName)
-						if nick == arg {
-							id = i
-							break
-						}
-					}
-				}
-
-				switch cond.cond {
-				case MustPlayerConnected:
-					if !natives.IsPlayerConnected(id) {
-						log.Printf("[rakstar-cmd idx(%v)] o jogador %v não está conectado", idx, id)
-						return false
-					}
-
-				case MustNickIs:
-					var nick string
-					natives.GetPlayerName(id, &nick, playerConst.MaxPlayerName)
-					if cond.value != nick {
-						log.Printf("[rakstar-cmd idx(%v)] falha na comparação de nicks entre %v:%v", idx, nick, cond.value)
-						return false
-					}
-				}
-			}
-
+		ok := validateConditions(command, idx, arg)
+		if !ok {
+			return false
 		}
 	}
-
 	return true
 }
 
