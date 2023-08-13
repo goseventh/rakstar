@@ -1,7 +1,8 @@
 package command
 
 const (
-	MustBeDivisibleBy = iota
+  MustEqual = iota
+	MustBeDivisibleBy 
 	MustBeGreaterThan
 	MustBeLessThan
 	MustBeBetween
@@ -18,6 +19,12 @@ func (c *conditionalsBuilder) TypeNumber() *TypeNumber {
 	tNumber := new(TypeNumber)
 	tNumber.c = c
 	return tNumber
+}
+
+
+func (t *TypeNumber) MustEqual(x int) *TypeNumber {
+	t.c.createConditional(MustEqual, t.c.index, x)
+	return t
 }
 
 func (t *TypeNumber) MustBeDivisibleBy(x int) *TypeNumber {
