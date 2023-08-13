@@ -63,19 +63,19 @@ func TestStrFuncsTypeNumber(t *testing.T) {
 		expected  result
 	}{
 		{"valueStrEqual", MustEqual, "30", 30, result{value: true}},
-		{"valueStrEqual", MustEqual, "30", 10, result{value: false}},
+		{"valueStrEqualFail", MustEqual, "30", 10, result{value: false}},
 		{"valueStrBeBetween", MustBeBetween, "7", []int{10, 5}, result{value: true}},
-		{"valueStrBeBetween", MustBeBetween, "5", []int{3, 10}, result{value: false}},
+		{"valueStrBeBetweenFail", MustBeBetween, "5", []int{3, 10}, result{value: false}},
 		{"valueStrBeLess", MustBeLessThan, "3", 7, result{value: true}},
-		{"valueStrBeLess", MustBeLessThan, "7", 7, result{value: false}},
+		{"valueStrBeLessFail", MustBeLessThan, "7", 7, result{value: false}},
 		{"valueStrBeGreeter", MustBeGreaterThan, "120", 30, result{value: true}},
-		{"valueStrBeGreeter", MustBeGreaterThan, "30", 50, result{value: false}},
+		{"valueStrBeGreeterFail", MustBeGreaterThan, "30", 50, result{value: false}},
 		{"valueStrSquareRootOf", MustBeSquareRootOf, "2", 4, result{value: true}},
-		{"valueStrSquareRootOf", MustBeSquareRootOf, "2", 16, result{value: false}},
+		{"valueStrSquareRootOfFail", MustBeSquareRootOf, "2", 16, result{value: false}},
 		{"valueStrDivisibleBy", MustBeDivisibleBy, "10", 2, result{value: true}},
-		{"valueStrDivisibleBy", MustBeDivisibleBy, "50", 3, result{value: false}},
+		{"valueStrDivisibleByFail", MustBeDivisibleBy, "50", 3, result{value: false}},
     {"valueStrMultipleOfBy", MustBeMultipleOf, "10", 2, result{value: true}},
-		{"valueStrMultipleOfBy", MustBeMultipleOf, "2", 10, result{value: false}},
+		{"valueStrMultipleOfByFail", MustBeMultipleOf, "2", 10, result{value: false}},
 	}
 
 	for _, tc := range testCases {
