@@ -227,6 +227,3 @@ func TestBuilderCommandOverloadWithAliases(t *testing.T) {
 	}
 }
 
-func TestConditionals(t*testing.T){
-   
-}
