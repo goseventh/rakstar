@@ -290,7 +290,7 @@ func validateConditions(command *Command, idx int, arg string) bool {
 				return false
 			}
 		case typeText:
-			ok := verifyTypePlayer(cond, idx, arg)
+			ok := verifyTypeText(cond, idx, arg)
 			if !ok {
 				return false
 			}
