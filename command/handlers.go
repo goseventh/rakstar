@@ -192,14 +192,6 @@ func valueStrSquareRootOf(xStr string, y int) bool {
 	return x*x == y
 }
 
-func textIsUpper(text string) bool {
-	return text == strings.ToUpper(text)
-}
-
-func textIsLower(text string) bool {
-	return text == strings.ToLower(text)
-}
-
 func verifyTypeNumber(cond condition, idx int, arg string) bool {
 	switch cond.cond {
 	case MustBeBetween:
@@ -234,12 +226,13 @@ func verifyTypeNumber(cond condition, idx int, arg string) bool {
 	return true
 }
 
-func textIsRegMath(text, regex string) bool {
-	ok, err := regexp.Match(regex, []byte(text))
-	if err != nil {
-		return false
-	}
-	return ok
+
+func textIsUpper(text string) bool {
+	return text == strings.ToUpper(text)
+}
+
+func textIsLower(text string) bool {
+	return text == strings.ToLower(text)
 }
 
 func textIsPrefix(text, prefix string) bool {
@@ -248,6 +241,14 @@ func textIsPrefix(text, prefix string) bool {
 
 func textIsSuffix(text, prefix string) bool {
 	return strings.HasSuffix(text, prefix)
+}
+
+func textIsRegMath(text, regex string) bool {
+	ok, err := regexp.Match(regex, []byte(text))
+	if err != nil {
+		return false
+	}
+	return ok
 }
 
 func verifyTypeText(cond condition, idx int, arg string) bool {
