@@ -12,13 +12,13 @@ type CommandHandler func(context *CommandContext)
 
 type Command struct {
 	Name          string
+  conditions map[int][]condition
 	Handler       CommandHandler
 	Interceptors  []CommandInterceptorHandler
 	Description   string
 	RequireLogin  bool
 	Aliases       []string
 	Roles         []string
-	conditionals_ map[int][]condition
 }
 
 type CommandContext struct {

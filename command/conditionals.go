@@ -20,26 +20,23 @@ type condition struct {
 }
 
 func (c *conditionalsBuilder) Index(index int) *conditionalsBuilder {
-  if index < 0 {
-    index = 0
-  }
+	if index < 0 {
+		index = 0
+	}
 	c.index = index
 	return c
 }
 
 func (c *conditionalsBuilder) createConditional(typeCondiction, typeIdx int, value interface{}) {
 	cond := condition{
-		cond:    typeCondiction,
 		typeIdx: c.index,
 		value:   value,
 	}
-
 	c.conditions = append(c.conditions, cond)
 }
 
 // registra as condicionais para cada indice(index)
 func (c *conditionalsBuilder) Set() *conditionalsBuilder {
-
 	if c.index < 0 {
 		return c
 	}
@@ -57,4 +54,3 @@ func (t *TypePlayer) EndConditionals() *commandBuilder {
 	t.End()
 	return t.c.c
 }
-
