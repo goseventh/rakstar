@@ -46,7 +46,7 @@ Ainda é cedo para utilizar o framework em linha de produção, ainda há muito 
 Este framework está em desenvolvimento contínuo e está sujeito a mudanças consideráveis 
 
 ## 👏 Créditos
-[`sampgo`](https://github.com/sampgo/sampgo): um sdk go para escrever gamemodes sa-mp.
+[`sampgo`](https://github.com/sampgo/sampgo): um sdk go para escrever plugins sa-mp.
 
 
 ❤ Líder Chefe do RakStar
