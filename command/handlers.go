@@ -242,6 +242,14 @@ func textIsRegMath(text, regex string) bool {
 	return ok
 }
 
+func textIsPrefix(text, prefix string) bool {
+	return strings.HasPrefix(text, prefix)
+}
+
+func textIsSuffix(text, prefix string) bool {
+	return strings.HasSuffix(text, prefix)
+}
+
 func verifyTypeText(cond condition, idx int, arg string) bool {
 	switch cond.cond {
 	case MustBeUppercase:
@@ -250,6 +258,14 @@ func verifyTypeText(cond condition, idx int, arg string) bool {
 		}
 	case MustBeLowercase:
 		if !textIsLower(arg) {
+			return false
+		}
+	case MustHavePrefix:
+		if !textIsPrefix(arg, cond.value.(string)) {
+			return false
+		}
+	case MustHaveSufix:
+		if !textIsSuffix(arg, cond.value.(string)) {
 			return false
 		}
 	case MustCompileRegex:
