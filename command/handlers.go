@@ -3,6 +3,7 @@ package command
 import (
 	"fmt"
 	"log"
+	"regexp"
 	"strconv"
 	"strings"
 
@@ -142,13 +143,13 @@ func valueStrBeBetween(xStr string, lessGreater []int) bool {
 	if err != nil {
 		return false
 	}
-  if len(lessGreater) == 0{
-    return false
-  }
-  if len(lessGreater) > 2{
-    return false
-  }
-  return x < lessGreater[0] && x > lessGreater[1]
+	if len(lessGreater) == 0 {
+		return false
+	}
+	if len(lessGreater) > 2 {
+		return false
+	}
+	return x < lessGreater[0] && x > lessGreater[1]
 }
 
 func valueStrBeGreeter(xStr string, y int) bool {
@@ -191,6 +192,14 @@ func valueStrSquareRootOf(xStr string, y int) bool {
 	return x*x == y
 }
 
+func textIsUpper(text string) bool {
+	return text == strings.ToUpper(text)
+}
+
+func textIsLower(text string) bool {
+	return text == strings.ToLower(text)
+}
+
 func verifyTypeNumber(cond condition, idx int, arg string) bool {
 	switch cond.cond {
 	case MustBeBetween:
@@ -219,6 +228,32 @@ func verifyTypeNumber(cond condition, idx int, arg string) bool {
 		}
 	case MustBeSquareRootOf:
 		if !valueStrSquareRootOf(arg, cond.value.(int)) {
+			return false
+		}
+	}
+	return true
+}
+
+func textIsRegMath(text, regex string) bool {
+	ok, err := regexp.Match(regex, []byte(text))
+	if err != nil {
+		return false
+	}
+	return ok
+}
+
+func verifyTypeText(cond condition, idx int, arg string) bool {
+	switch cond.cond {
+	case MustBeUppercase:
+		if !textIsUpper(arg) {
+			return false
+		}
+	case MustBeLowercase:
+		if !textIsLower(arg) {
+			return false
+		}
+	case MustCompileRegex:
+		if !textIsRegMath(arg, cond.value.(string)) {
 			return false
 		}
 	}
