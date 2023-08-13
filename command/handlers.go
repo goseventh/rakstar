@@ -165,7 +165,7 @@ func valueStrBeLess(xStr string, y int) bool {
 	if err != nil {
 		return false
 	}
-	return x > y
+	return x < y
 }
 
 func valueStrEqual(xStr string, y int) bool {
