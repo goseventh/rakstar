@@ -54,9 +54,9 @@ func (t *TypeNumber) MustBeSquareRootOf(x int) *TypeNumber {
 	return t
 }
 
-func (t *TypeNumber) MustBeBetween(x, y int) *TypeNumber {
+func (t *TypeNumber) MustBeBetween(min, max int) *TypeNumber {
 	var values []int
-	values = (append(values, x, y))
+	values = (append(values, min, max))
 	t.c.createConditional(MustBeBetween, t.c.index, values)
 	return t
 }

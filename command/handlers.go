@@ -4,9 +4,6 @@ import (
 	"fmt"
 	"log"
 	"strconv"
-
-	//"main/pkg/server"
-	//	"main/pkg/utils/sampstr"
 	"strings"
 
 	"github.com/goseventh/rakstar/chat"
@@ -140,6 +137,94 @@ func verifyTypePlayer(cond condition, idx int, arg string) bool {
 	return true
 }
 
+func valueStrBeBetween(xStr string, lessGreater []int) bool {
+	x, err := strconv.Atoi(xStr)
+	if err != nil {
+		return false
+	}
+  if len(lessGreater) == 0{
+    return false
+  }
+  if len(lessGreater) > 2{
+    return false
+  }
+  return x < lessGreater[0] && x > lessGreater[1]
+}
+
+func valueStrBeGreeter(xStr string, y int) bool {
+	x, err := strconv.Atoi(xStr)
+	if err != nil {
+		return false
+	}
+	return x > y
+}
+
+func valueStrBeLess(xStr string, y int) bool {
+	x, err := strconv.Atoi(xStr)
+	if err != nil {
+		return false
+	}
+	return x > y
+}
+
+func valueStrEqual(xStr string, y int) bool {
+	x, err := strconv.Atoi(xStr)
+	if err != nil {
+		return false
+	}
+	return x == y
+}
+
+func valueStrDivisibleBy(xStr string, y int) bool {
+	x, err := strconv.Atoi(xStr)
+	if err != nil {
+		return false
+	}
+	return x%y == 0
+}
+
+func valueStrSquareRootOf(xStr string, y int) bool {
+	x, err := strconv.Atoi(xStr)
+	if err != nil {
+		return false
+	}
+	return x*x == y
+}
+
+func verifyTypeNumber(cond condition, idx int, arg string) bool {
+	switch cond.cond {
+	case MustBeBetween:
+		if !valueStrBeBetween(arg, cond.value.([]int)) {
+			return false
+		}
+	case MustBeGreaterThan:
+		if !valueStrBeGreeter(arg, cond.value.(int)) {
+			return false
+		}
+	case MustBeLessThan:
+		if !valueStrBeLess(arg, cond.value.(int)) {
+			return false
+		}
+	case MustEqual:
+		if !valueStrEqual(arg, cond.value.(int)) {
+			return false
+		}
+	case MustBeDivisibleBy:
+		if !valueStrDivisibleBy(arg, cond.value.(int)) {
+			return false
+		}
+	case MustBeMultipleOf:
+		if !valueStrDivisibleBy(arg, cond.value.(int)) {
+			return false
+		}
+	case MustBeSquareRootOf:
+		if !valueStrSquareRootOf(arg, cond.value.(int)) {
+			return false
+		}
+	}
+	return true
+}
+
 func validateConditions(command *Command, idx int, arg string) bool {
 	for _, cond := range command.conditions[idx] {
 		switch cond.typeIdx {
@@ -149,7 +234,7 @@ func validateConditions(command *Command, idx int, arg string) bool {
 				return false
 			}
 		case typeNumber:
-			ok := verifyTypePlayer(cond, idx, arg)
+			ok := verifyTypeNumber(cond, idx, arg)
 			if !ok {
 				return false
 			}
