@@ -54,3 +54,13 @@ func (t *TypePlayer) EndConditionals() *commandBuilder {
 	t.End()
 	return t.c.c
 }
+
+func (t *TypeNumber) EndConditionals() *commandBuilder {
+	t.End()
+	return t.c.c
+}
+
+func (t *TypeText) EndConditionals() *commandBuilder {
+	t.End()
+	return t.c.c
+}

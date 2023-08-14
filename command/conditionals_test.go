@@ -43,8 +43,8 @@ func TestBuilderConditional(t *testing.T) {
 		{name: "test type index", idx: 0, typeIdx: 0, expected: result{0, 0}},
 		{name: "test type index", idx: 0, typeIdx: typePlayer, expected: result{0, typePlayer}},
 		//aguardando a finalização do builder:
-		// {name: "test type index", idx: 0, typeIdx: typeText, expected: result{0, typeText}},
-		// {name: "test type index", idx: 0, typeIdx: typeNumber, expected: result{0, typeNumber}},
+		{name: "test type index", idx: 0, typeIdx: typeText, expected: result{0, typeText}},
+		{name: "test type index", idx: 0, typeIdx: typeNumber, expected: result{0, typeNumber}},
 
 		{name: "test index", idx: -1, typeIdx: 0, expected: result{0, 0}},
 		{name: "test index", idx: 0, typeIdx: 0, expected: result{0, 0}},
