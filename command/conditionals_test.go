@@ -39,17 +39,16 @@ func TestBuilderConditional(t *testing.T) {
 		typeIdx  int
 		expected result
 	}{
-		{name: "test type index", idx: 0, typeIdx: -1, expected: result{0, 0}},
-		{name: "test type index", idx: 0, typeIdx: 0, expected: result{0, 0}},
-		{name: "test type index", idx: 0, typeIdx: typePlayer, expected: result{0, typePlayer}},
-		//aguardando a finalização do builder:
-		{name: "test type index", idx: 0, typeIdx: typeText, expected: result{0, typeText}},
-		{name: "test type index", idx: 0, typeIdx: typeNumber, expected: result{0, typeNumber}},
+		{name: "type undefined index", idx: 0, typeIdx: -1, expected: result{0, 0}},
+		{name: "type undefined index", idx: 0, typeIdx: 0, expected: result{0, 0}},
+		{name: "type player index", idx: 0, typeIdx: typePlayer, expected: result{0, typePlayer}},
+		{name: "type text index", idx: 0, typeIdx: typeText, expected: result{0, typeText}},
+		{name: "type number index", idx: 0, typeIdx: typeNumber, expected: result{0, typeNumber}},
 
-		{name: "test index", idx: -1, typeIdx: 0, expected: result{0, 0}},
-		{name: "test index", idx: 0, typeIdx: 0, expected: result{0, 0}},
-		{name: "test index", idx: 10, typeIdx: 0, expected: result{10, 0}},
-		{name: "test index", idx: 30, typeIdx: 0, expected: result{30, 0}},
+		{name: "index", idx: -1, typeIdx: 0, expected: result{0, 0}},
+		{name: "index", idx: 0, typeIdx: 0, expected: result{0, 0}},
+		{name: "index", idx: 10, typeIdx: 0, expected: result{10, 0}},
+		{name: "index", idx: 30, typeIdx: 0, expected: result{30, 0}},
 	}
 
 	for _, tc := range testCases {
