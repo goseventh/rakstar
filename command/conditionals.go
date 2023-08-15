@@ -1,9 +1,9 @@
 package command
 
 const (
-  undefined = iota
+	undefined = iota
 	typePlayer
-  typeNumber
+	typeNumber
 	typeText
 )
 
@@ -28,11 +28,13 @@ func (c *conditionalsBuilder) Index(index int) *conditionalsBuilder {
 	return c
 }
 
-func (c *conditionalsBuilder) createConditional(typeCondiction, typeIdx int, value interface{}) {
+func (c *conditionalsBuilder) createConditional(typeCond, typeIdx int, value interface{}) {
 	cond := condition{
-		typeIdx: c.index,
+		cond:    typeCond,
+		typeIdx: typeIdx,
 		value:   value,
 	}
+
 	c.conditions = append(c.conditions, cond)
 }
 
