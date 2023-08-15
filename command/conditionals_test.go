@@ -1,24 +1,49 @@
 package command
 
-import "testing"
-import "reflect"
+import (
+	"reflect"
+	"testing"
+)
 
 func TestCreateConditional(t *testing.T) {
-	t.Skip()
 	testCases := []struct {
-		name     string
-		input    string
-		expected rawCommand
+		name          string
+		inputTypeCond int
+		inputTypeIdx  int
+		inputValue    interface{}
+		expected      []condition
 	}{
-		{"WithoutArg", "/teste", rawCommand{"teste", []string{}}},
-		{"WithOneArg", "/teste 1", rawCommand{"teste", []string{"1"}}},
-		{"WithManyArgs", "/teste 1 2 3", rawCommand{"teste", []string{"1", "2", "3"}}},
-		{"WithTextArgs", "/teste one two three", rawCommand{"teste", []string{"one", "two", "three"}}},
+		{
+			"PlayerCondition",
+			0,
+			typePlayer,
+			nil,
+			[]condition{{typePlayer, 0, nil}},
+		},
+		{
+			"NumberCondition",
+			0,
+			typeNumber,
+			nil,
+			[]condition{{typeNumber, 0, nil}},
+		},
+		{
+			"TextCondition",
+			0,
+			typeText,
+			nil,
+			[]condition{{typeText, 0, nil}},
+		},
 	}
 
 	for i, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
-			got := parseCommandArgs(tc.input)
+			cb := Builder().
+				Conditionals()
+
+			cb.createConditional(tc.inputTypeCond, tc.inputTypeIdx, tc.inputValue)
+
+			got := cb.conditions
 
 			if !reflect.DeepEqual(tc.expected, got) {
 				t.Fatalf("test %d: expected: %v, got: %v", i+1, tc.expected, got)
