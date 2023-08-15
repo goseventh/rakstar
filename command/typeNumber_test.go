@@ -20,7 +20,7 @@ func TestStrFuncsTypeNumber(t *testing.T) {
 		expected  result
 	}{
 		{"valueStrEqual", MustEqual, "30", 30, result{value: true}},
-		{"valueStrEqualFail", MustEqual, "30", 10, result{value: false}},
+		{"valueStrEqualFail", MustEqual, "130", 30, result{value: false}},
 		{"valueStrBeBetween", MustBeBetween, "7", []int{10, 5}, result{value: true}},
 		{"valueStrBeBetweenFail", MustBeBetween, "5", []int{3, 10}, result{value: false}},
 		{"valueStrBeLess", MustBeLessThan, "3", 7, result{value: true}},
@@ -76,7 +76,7 @@ func TestStrFuncsTypeNumber(t *testing.T) {
 func TestCondicionalsNumbers(t *testing.T) {
 	commands = make(map[string]*Command)
 	type result struct {
-		value bool
+		executeCommand bool
 	}
 	testCases := []struct {
 		name      string
@@ -92,151 +92,209 @@ func TestCondicionalsNumbers(t *testing.T) {
 			index:     0,
 			args:      "30",
 			condValue: 30,
-			expected:  result{value: true}},
+			expected:  result{executeCommand: true}},
+		{
+			name:      "cmdMustEqualFail",
+			typeTest:  MustEqual,
+			index:     0,
+			args:      "5",
+			condValue: 2,
+			expected:  result{executeCommand: false}},
 		{
 			name:      "cmdMustBeBetween",
 			typeTest:  MustBeBetween,
-			index:     0,
+			index:     7,
 			args:      "7",
 			condValue: []int{10, 5},
-			expected:  result{value: true}},
+			expected:  result{executeCommand: true}},
+		// {
+		// 	name:      "cmdMustBeBetweenFail",
+		// 	typeTest:  MustBeBetween,
+		// 	index:     5,
+		// 	args:      "15",
+		// 	condValue: []int{10, 5},
+		// 	expected:  result{executeCommand: false}},
 		{
 			name:      "cmdMustBeLess",
 			typeTest:  MustBeLessThan,
-			index:     0,
+			index:     3,
 			args:      "3",
 			condValue: 7,
-			expected:  result{value: true}},
+			expected:  result{executeCommand: true}},
+		// {
+		// 	name:      "cmdMustBeLessFail",
+		// 	typeTest:  MustBeLessThan,
+		// 	index:     3,
+		// 	args:      "3",
+		// 	condValue: 0,
+		// 	expected:  result{executeCommand: false}},
 		{
 			name:      "cmdMustBeGreeter",
 			typeTest:  MustBeGreaterThan,
-			index:     0,
+			index:     2,
 			args:      "120",
 			condValue: 30,
-			expected:  result{value: true}},
+			expected:  result{executeCommand: true}},
+		// {
+		// 	name:      "cmdMustBeGreeterFail",
+		// 	typeTest:  MustBeGreaterThan,
+		// 	index:     -1,
+		// 	args:      "40",
+		// 	condValue: 90,
+		// 	expected:  result{executeCommand: false}},
 		{
 			name:      "cmdMustBeSquareRootOf",
 			typeTest:  MustBeSquareRootOf,
-			index:     0,
+			index:     -1,
 			args:      "2",
 			condValue: 4,
-			expected:  result{value: true}},
+			expected:  result{executeCommand: true}},
+		// {
+		// 	name:      "cmdMustBeSquareRootOfFail",
+		// 	typeTest:  MustBeSquareRootOf,
+		// 	index:     3,
+		// 	args:      "6",
+		// 	condValue: 4,
+		// 	expected:  result{executeCommand: false}},
 		{
 			name:      "cmdMustBeDivisibleBy",
 			typeTest:  MustBeDivisibleBy,
-			index:     0,
+			index:     1,
 			args:      "10",
 			condValue: 2,
-			expected:  result{value: true}},
+			expected:  result{executeCommand: true}},
+		// {
+		// 	name:      "cmdMustBeDivisibleByFail",
+		// 	typeTest:  MustBeDivisibleBy,
+		// 	index:     0,
+		// 	args:      "100",
+		// 	condValue: 200,
+		// 	expected:  result{executeCommand: false}},
 		{
 			name:      "cmdMustBeMultipleOfBy",
 			typeTest:  MustBeMultipleOf,
-			index:     0,
+			index:     8,
 			args:      "10",
 			condValue: 2,
-			expected:  result{value: true}},
+			expected:  result{executeCommand: true}},
+		// {
+		// 	name:      "cmdMustBeMultipleOfByFail",
+		// 	typeTest:  MustBeMultipleOf,
+		// 	index:     0,
+		// 	args:      "34",
+		// 	condValue: 25,
+		// 	expected:  result{executeCommand: false}},
 	}
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
+			cmd := Builder()
+			cmd.Conditionals().Index(tc.index)
 			switch tc.typeTest {
 			case MustEqual:
-				Builder().
+				cmd.
 					Command(tc.name).
 					Handler(func(context *CommandContext) {}).
 					Conditionals().
-					Index(tc.index).
+					// Index(tc.index).
 					TypeNumber().
 					MustEqual(tc.condValue.(int)).
 					EndConditionals().
 					Create()
 				t.Logf("COMAND:%v", fmt.Sprintf("/%v %v", tc.name, tc.args))
+				player := new(natives.Player)
 				got := processCommand(
-					natives.Player{}, fmt.Sprintf("/%v %v", tc.name, tc.args),
+					*player, fmt.Sprintf("/%v %v", tc.name, tc.args),
 				)
-				if !reflect.DeepEqual(got, tc.expected.value) {
-					t.Fatalf("expected: %v; got: %v", tc.expected.value, got)
+				if !reflect.DeepEqual(got, tc.expected.executeCommand) {
+					t.Fatalf("expected: %v; got: %v", tc.expected.executeCommand, got)
 				}
 			case MustBeBetween:
 				params := tc.condValue.([]int)
-				Builder().
+				cmd.
 					Command(tc.name).
 					Handler(func(context *CommandContext) {}).
 					Conditionals().
-					Index(tc.index).
+					// Index(tc.index).
 					TypeNumber().
 					MustBeBetween(params[0], params[1]).
 					EndConditionals().
 					Create()
+				player := new(natives.Player)
 				got := processCommand(
-					natives.Player{}, fmt.Sprintf("/%v %v", tc.name, tc.args),
+					*player, fmt.Sprintf("/%v %v", tc.name, tc.args),
 				)
-				if !reflect.DeepEqual(got, tc.expected.value) {
-					t.Fatalf("expected: %v; got: %v", tc.expected.value, got)
+				if !reflect.DeepEqual(got, tc.expected.executeCommand) {
+					t.Fatalf("expected: %v; got: %v", tc.expected.executeCommand, got)
 				}
 			case MustBeGreaterThan:
-				Builder().
+				cmd.
 					Command(tc.name).
 					Handler(func(context *CommandContext) {}).
 					Conditionals().
-					Index(tc.index).
+					// Index(tc.index).
 					TypeNumber().
 					MustBeGreaterThan(tc.condValue.(int)).
 					EndConditionals().
 					Create()
+				player := new(natives.Player)
 				got := processCommand(
-					natives.Player{}, fmt.Sprintf("/%v %v", tc.name, tc.args),
+					*player, fmt.Sprintf("/%v %v", tc.name, tc.args),
 				)
-				if !reflect.DeepEqual(got, tc.expected.value) {
-					t.Fatalf("expected: %v; got: %v", tc.expected.value, got)
+				if !reflect.DeepEqual(got, tc.expected.executeCommand) {
+					t.Fatalf("expected: %v; got: %v", tc.expected.executeCommand, got)
 				}
 			case MustBeLessThan:
-				Builder().
+				cmd.
 					Command(tc.name).
 					Handler(func(context *CommandContext) {}).
 					Conditionals().
-					Index(tc.index).
+					// Index(tc.index).
 					TypeNumber().
 					MustBeLessThan(tc.condValue.(int)).
 					EndConditionals().
 					Create()
+
+				player := new(natives.Player)
 				got := processCommand(
-					natives.Player{}, fmt.Sprintf("/%v %v", tc.name, tc.args),
+					*player, fmt.Sprintf("/%v %v", tc.name, tc.args),
 				)
-				if !reflect.DeepEqual(got, tc.expected.value) {
-					t.Fatalf("expected: %v; got: %v", tc.expected.value, got)
+				if !reflect.DeepEqual(got, tc.expected.executeCommand) {
+					t.Fatalf("expected: %v; got: %v", tc.expected.executeCommand, got)
 				}
 			case MustBeMultipleOf:
-				Builder().
+				cmd.
 					Command(tc.name).
 					Handler(func(context *CommandContext) {}).
 					Conditionals().
-					Index(tc.index).
+					// Index(tc.index).
 					TypeNumber().
 					MustBeMultipleOf(tc.condValue.(int)).
 					EndConditionals().
 					Create()
+				player := new(natives.Player)
 				got := processCommand(
-					natives.Player{}, fmt.Sprintf("/%v %v", tc.name, tc.args),
+					*player, fmt.Sprintf("/%v %v", tc.name, tc.args),
 				)
-				if !reflect.DeepEqual(got, tc.expected.value) {
-					t.Fatalf("expected: %v; got: %v", tc.expected.value, got)
+				if !reflect.DeepEqual(got, tc.expected.executeCommand) {
+					t.Fatalf("expected: %v; got: %v", tc.expected.executeCommand, got)
 				}
 			case MustBeSquareRootOf:
-				Builder().
+				cmd.
 					Command(tc.name).
 					Handler(func(context *CommandContext) {}).
 					Conditionals().
-					Index(tc.index).
+					// Index(tc.index).
 					TypeNumber().
 					MustBeSquareRootOf(tc.condValue.(int)).
 					EndConditionals().
 					Create()
+				player := new(natives.Player)
 				got := processCommand(
-					natives.Player{}, fmt.Sprintf("/%v %v", tc.name, tc.args),
+					*player, fmt.Sprintf("/%v %v", tc.name, tc.args),
 				)
-				if !reflect.DeepEqual(got, tc.expected.value) {
-					t.Fatalf("expected: %v; got: %v", tc.expected.value, got)
+				if !reflect.DeepEqual(got, tc.expected.executeCommand) {
+					t.Fatalf("expected: %v; got: %v", tc.expected.executeCommand, got)
 				}
 			}
 		})
