@@ -1,13 +1,13 @@
 package command
 
 const (
-  MustEqual = iota
-	MustBeDivisibleBy 
+	MustEqual = iota
+	MustBeDivisibleBy
 	MustBeGreaterThan
 	MustBeLessThan
 	MustBeBetween
-  MustBeMultipleOf
-  MustBeSquareRootOf
+	MustBeMultipleOf
+	MustBeSquareRootOf
 )
 
 type TypeNumber struct {
@@ -21,43 +21,40 @@ func (c *conditionalsBuilder) TypeNumber() *TypeNumber {
 	return tNumber
 }
 
-
 func (t *TypeNumber) MustEqual(x int) *TypeNumber {
-	t.c.createConditional(MustEqual, t.c.index, x)
+	t.c.createConditional(MustEqual, t.c.typeIdx, x)
 	return t
 }
 
 func (t *TypeNumber) MustBeDivisibleBy(x int) *TypeNumber {
-	t.c.createConditional(MustBeDivisibleBy, t.c.index, x)
+	t.c.createConditional(MustBeDivisibleBy, t.c.typeIdx, x)
 	return t
 }
 
 func (t *TypeNumber) MustBeGreaterThan(x int) *TypeNumber {
-	t.c.createConditional(MustBeGreaterThan, t.c.index, x)
+	t.c.createConditional(MustBeGreaterThan, t.c.typeIdx, x)
 	return t
 }
 
 func (t *TypeNumber) MustBeLessThan(x int) *TypeNumber {
-	t.c.createConditional(MustBeLessThan, t.c.index, x)
+	t.c.createConditional(MustBeLessThan, t.c.typeIdx, x)
 	return t
 }
-
 
 func (t *TypeNumber) MustBeMultipleOf(x int) *TypeNumber {
-	t.c.createConditional(MustBeMultipleOf, t.c.index, x)
+	t.c.createConditional(MustBeMultipleOf, t.c.typeIdx, x)
 	return t
 }
 
-
 func (t *TypeNumber) MustBeSquareRootOf(x int) *TypeNumber {
-	t.c.createConditional(MustBeSquareRootOf, t.c.index, x)
+	t.c.createConditional(MustBeSquareRootOf, t.c.typeIdx, x)
 	return t
 }
 
 func (t *TypeNumber) MustBeBetween(min, max int) *TypeNumber {
 	var values []int
 	values = (append(values, min, max))
-	t.c.createConditional(MustBeBetween, t.c.index, values)
+	t.c.createConditional(MustBeBetween, t.c.typeIdx, values)
 	return t
 }
 

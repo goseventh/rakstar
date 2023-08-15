@@ -3,9 +3,9 @@ package command
 const (
 	MustBeUppercase = iota
 	MustBeLowercase
-  MustHavePrefix
-  MustHaveSufix
-  MustCompileRegex
+	MustHavePrefix
+	MustHaveSufix
+	MustCompileRegex
 )
 
 type TypeText struct {
@@ -20,27 +20,27 @@ func (c *conditionalsBuilder) TypeText() *TypeText {
 }
 
 func (t *TypeText) MustBeUppercaser() *TypeText {
-	t.c.createConditional(MustBeUppercase, t.c.index, nil)
+	t.c.createConditional(MustBeUppercase, t.c.typeIdx, nil)
 	return t
 }
 
 func (t *TypeText) MustBeLowercase() *TypeText {
-	t.c.createConditional(MustBeLowercase, t.c.index, nil)
+	t.c.createConditional(MustBeLowercase, t.c.typeIdx, nil)
 	return t
 }
 
 func (t *TypeText) MustHavePrefix() *TypeText {
-	t.c.createConditional(MustHavePrefix, t.c.index, nil)
+	t.c.createConditional(MustHavePrefix, t.c.typeIdx, nil)
 	return t
 }
 
 func (t *TypeText) MustHaveSufix() *TypeText {
-	t.c.createConditional(MustHaveSufix, t.c.index, nil)
+	t.c.createConditional(MustHaveSufix, t.c.typeIdx, nil)
 	return t
 }
 
 func (t *TypeText) MustCompileRegex(regex string) *TypeText {
-	t.c.createConditional(MustBeLowercase, t.c.index, regex)
+	t.c.createConditional(MustBeLowercase, t.c.typeIdx, regex)
 	return t
 }
 
