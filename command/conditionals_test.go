@@ -62,20 +62,20 @@ func TestBuilderConditional(t *testing.T) {
 				cmd.Conditionals().TypePlayer()
 			case typeNumber:
 				// comentado: ainda não está pronto
-				// cmd.Conditionals().TypeNumber()
+				cmd.Conditionals().TypeNumber()
 			case typeText:
 				// comentado: ainda não está pronto
-				// cmd.Conditionals().TypeText
+				cmd.Conditionals().TypeText()
 			}
 
 			got := cmd.Conditionals().index
 			if !reflect.DeepEqual(got, tc.expected.idx) {
-				t.Errorf("expeted: %d; got: %d", tc.expected.idx, got)
+				t.Errorf("expeted idx: %d; got: %d", tc.expected.idx, got)
 			}
 
 			got = cmd.Conditionals().typeIdx
 			if !reflect.DeepEqual(got, tc.expected.typeIdx) {
-				t.Errorf("expeted: %d; got: %d", tc.expected.typeIdx, got)
+				t.Errorf("expeted type: %d; got: %d", tc.expected.typeIdx, got)
 			}
 		})
 	}

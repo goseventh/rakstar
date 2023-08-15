@@ -1,8 +1,9 @@
 package command
 
 const (
-	typePlayer = iota
-	typeNumber
+  undefined = iota
+	typePlayer
+  typeNumber
 	typeText
 )
 

@@ -226,7 +226,6 @@ func verifyTypeNumber(cond condition, idx int, arg string) bool {
 	return true
 }
 
-
 func textIsUpper(text string) bool {
 	return text == strings.ToUpper(text)
 }
@@ -278,26 +277,33 @@ func verifyTypeText(cond condition, idx int, arg string) bool {
 }
 
 func validateConditions(command *Command, idx int, arg string) bool {
+	var status bool = true
 	for _, cond := range command.conditions[idx] {
 		switch cond.typeIdx {
 		case typePlayer:
 			ok := verifyTypePlayer(cond, idx, arg)
+			log.Printf("[validateConditions] typePlayer is valid? %v", ok)
 			if !ok {
-				return false
+        status = false
+				// return false
 			}
 		case typeNumber:
 			ok := verifyTypeNumber(cond, idx, arg)
+			log.Printf("[validateConditions] typeNumber is valid? %v", ok)
 			if !ok {
-				return false
+        status = false
+				// return false
 			}
 		case typeText:
 			ok := verifyTypeText(cond, idx, arg)
+			log.Printf("[validateConditions] typeText is valid? %v", ok)
 			if !ok {
-				return false
+				status = false
+				// return false
 			}
 		}
 	}
-	return true
+	return status
 }
 
 func validateArgs(command *Command, args []string) bool {
@@ -307,6 +313,7 @@ func validateArgs(command *Command, args []string) bool {
 
 	for idx, arg := range args {
 		ok := validateConditions(command, idx, arg)
+		log.Printf("[validateArgs] validateConditions is valid? - %v", ok)
 		if !ok {
 			return false
 		}
@@ -350,11 +357,12 @@ func processCommand(player natives.Player, cmdtext string) bool {
 
 	isValidArgs := validateArgs(command, rawCommand.args)
 
+	log.Printf("[processCommand] args is valid? - %v", isValidArgs)
 	if !isValidArgs {
 		return false
 	}
 
-	log.Printf("[rakstar] running command [%s] for player %s\n", command.Name, player.GetName())
+	// log.Printf("[rakstar] running command [%s] for player %s\n", command.Name, player.GetName())
 
 	command.Handler(&context)
 
