@@ -29,13 +29,13 @@ func (t *TypeText) MustBeLowercase() *TypeText {
 	return t
 }
 
-func (t *TypeText) MustHavePrefix() *TypeText {
-	t.c.createConditional(MustHavePrefix, t.c.typeIdx, nil)
+func (t *TypeText) MustHavePrefix(preffix string) *TypeText {
+	t.c.createConditional(MustHavePrefix, t.c.typeIdx, preffix)
 	return t
 }
 
-func (t *TypeText) MustHaveSufix() *TypeText {
-	t.c.createConditional(MustHaveSufix, t.c.typeIdx, nil)
+func (t *TypeText) MustHaveSufix(sufix string) *TypeText {
+	t.c.createConditional(MustHaveSufix, t.c.typeIdx, sufix)
 	return t
 }
 
