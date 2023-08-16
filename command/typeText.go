@@ -19,7 +19,7 @@ func (c *conditionalsBuilder) TypeText() *TypeText {
 	return tText
 }
 
-func (t *TypeText) MustBeUppercaser() *TypeText {
+func (t *TypeText) MustBeUppercase() *TypeText {
 	t.c.createConditional(MustBeUppercase, t.c.typeIdx, nil)
 	return t
 }
