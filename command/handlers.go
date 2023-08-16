@@ -242,7 +242,7 @@ func textIsSuffix(text, prefix string) bool {
 	return strings.HasSuffix(text, prefix)
 }
 
-func textIsRegMath(text, regex string) bool {
+func textIsRegMatch(text, regex string) bool {
 	ok, err := regexp.Match(regex, []byte(text))
 	if err != nil {
 		return false
@@ -269,7 +269,7 @@ func verifyTypeText(cond condition, idx int, arg string) bool {
 			return false
 		}
 	case MustCompileRegex:
-		if !textIsRegMath(arg, cond.value.(string)) {
+		if !textIsRegMatch(arg, cond.value.(string)) {
 			return false
 		}
 	}
