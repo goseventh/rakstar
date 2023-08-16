@@ -40,7 +40,7 @@ func (t *TypeText) MustHaveSufix(sufix string) *TypeText {
 }
 
 func (t *TypeText) MustCompileRegex(regex string) *TypeText {
-	t.c.createConditional(MustBeLowercase, t.c.typeIdx, regex)
+	t.c.createConditional(MustCompileRegex, t.c.typeIdx, regex)
 	return t
 }
 
