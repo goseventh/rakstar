@@ -8,7 +8,7 @@ import (
 )
 
 var (
-  FailTeleport = errors.New("Player teleportation failure")
+	FailTeleport = errors.New("Player teleportation failure")
 )
 
 func (pb *PlayerBuilder) Life(life float32) *PlayerBuilder {
@@ -55,13 +55,17 @@ func (pb *PlayerBuilder) Teleport(x, y, z, r float32) error {
 	sucess := natives.SetPlayerPos(pb.ID, x, y, z)
 	sucess2 := natives.SetPlayerFacingAngle(pb.ID, r)
 	if !sucess || !sucess2 {
-    return FailTeleport
+		return FailTeleport
 	}
 	return nil
 }
 
 func (pb *PlayerBuilder) InVehicle() bool {
 	return natives.IsPlayerInAnyVehicle(pb.ID)
+}
+
+func (pb *PlayerBuilder) GetVehicle() int {
+	return natives.GetPlayerVehicleID(pb.ID)
 }
 
 func (pb *PlayerBuilder) DeleteCurrentVehicle() bool {
