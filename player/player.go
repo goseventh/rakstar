@@ -10,6 +10,7 @@ import (
 var (
 	FailTeleport = errors.New("Player teleportation failure")
   FailSetCharacter = errors.New("Failure to set player character.")
+  FailSelectWeapon= errors.New("Failure to select player's weapon.")
  )
 
 // Seta a vida do player
@@ -93,6 +94,16 @@ func (pb*PlayerBuilder) SelectCharacter(skin int) error{
   sucess := natives.SetPlayerSkin(pb.ID, skin)
   if !sucess{
     return FailSetCharacter
+  }
+  return nil
+}
+
+// Invocar esta função selecionará a arma que o jogador está
+// segurando
+func (pb*PlayerBuilder) SelectWeapon(weapon int) error{
+ sucess := natives.SetPlayerArmedWeapon(pb.ID, weapon)
+  if !sucess{
+    return FailSelectWeapon
   }
   return nil
 }
