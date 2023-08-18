@@ -1,8 +1,14 @@
 package player
 
 import (
+	"errors"
+
 	"github.com/goseventh/rakstar/internal/natives"
 	"github.com/goseventh/rakstar/internal/utils/constants/playerConst"
+)
+
+var (
+  FailTeleport = errors.New("Player teleportation failure")
 )
 
 func (pb *PlayerBuilder) Life(life float32) *PlayerBuilder {
@@ -45,16 +51,20 @@ func (pb *PlayerBuilder) GetPos() (float32, float32, float32) {
 	return x, y, z
 }
 
+func (pb *PlayerBuilder) Teleport(x, y, z, r float32) error {
+	sucess := natives.SetPlayerPos(pb.ID, x, y, z)
+	sucess2 := natives.SetPlayerFacingAngle(pb.ID, r)
+	if !sucess || !sucess2 {
+    return FailTeleport
+	}
+	return nil
+}
 
 func (pb *PlayerBuilder) InVehicle() bool {
-  return natives.IsPlayerInAnyVehicle(pb.ID)
+	return natives.IsPlayerInAnyVehicle(pb.ID)
 }
-
 
 func (pb *PlayerBuilder) DeleteCurrentVehicle() bool {
-  vehID := natives.GetPlayerVehicleID(pb.ID)
-  return natives.DestroyVehicle(vehID)
+	vehID := natives.GetPlayerVehicleID(pb.ID)
+	return natives.DestroyVehicle(vehID)
 }
-
-
-
