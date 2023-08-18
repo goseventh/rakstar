@@ -111,3 +111,13 @@ func (v *vehicleBuilder) DeleteInRange(player player.PlayerBuilder, distance flo
     break
 	}
 }
+
+func(v*vehicleBuilder) DestroyAll() bool {
+  for vehicle:=0; vehicle < vehiclesConst.MaxVehicles; vehicle++{
+    sucess := natives.DestroyVehicle(vehicle)
+    if !sucess{
+      return false
+    }
+  }
+  return true
+}
