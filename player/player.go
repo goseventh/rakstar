@@ -9,7 +9,8 @@ import (
 
 var (
 	FailTeleport = errors.New("Player teleportation failure")
-)
+  FailSetCharacter = errors.New("Failure to set player character.")
+ )
 
 // Seta a vida do player
 func (pb *PlayerBuilder) Life(life float32) *PlayerBuilder {
@@ -86,4 +87,12 @@ func (pb *PlayerBuilder) GetVehicle() int {
 func (pb *PlayerBuilder) DeleteCurrentVehicle() bool {
 	vehID := natives.GetPlayerVehicleID(pb.ID)
 	return natives.DestroyVehicle(vehID)
+}
+
+func (pb*PlayerBuilder) SelectCharacter(skin int) error{
+  sucess := natives.SetPlayerSkin(pb.ID, skin)
+  if !sucess{
+    return FailSetCharacter
+  }
+  return nil
 }
