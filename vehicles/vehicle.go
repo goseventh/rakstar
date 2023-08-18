@@ -83,6 +83,12 @@ func (v *vehicleBuilder) AttachPlayer(p *player.PlayerBuilder) *vehicleBuilder {
 	return v
 }
 
+// Invocar esta função destruirá todos os veiculos
+// próximos do player que estejam na distancia X
+//
+// Exemplo:
+//   p := player.Builder().Select("alph4b3eth")
+//   DeleteInRange(p, 30)
 func (v *vehicleBuilder) DeleteInRange(player player.PlayerBuilder, distance float64) {
 	requestX, requestY, requestZ := player.GetPos()
 	if distance < 0 {
@@ -112,6 +118,9 @@ func (v *vehicleBuilder) DeleteInRange(player player.PlayerBuilder, distance flo
 	}
 }
 
+// Invocar esta função destruirá todos os veículos do servidor
+// Se ocorrer falhas durante a execução, ela retornará false
+// Se ocorrer com êxito, ela retornará true
 func(v*vehicleBuilder) DestroyAll() bool {
   for vehicle:=0; vehicle < vehiclesConst.MaxVehicles; vehicle++{
     sucess := natives.DestroyVehicle(vehicle)
