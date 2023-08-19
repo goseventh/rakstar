@@ -47,8 +47,8 @@ func (v *vehicleBuilder) Model(m int) *vehicleBuilder {
 
 // Invocar esta função setará o texto que aparecerá
 // na placa do veículo
-func (v *vehicleBuilder) Place(place string) {
-	natives.SetVehicleNumberPlate(v.id, place)
+func (v *vehicleBuilder) Plate(plate string) {
+	natives.SetVehicleNumberPlate(v.id, plate)
 }
 
 // Cria o veículo e o spawna
