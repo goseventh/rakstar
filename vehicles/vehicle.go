@@ -8,21 +8,24 @@ import (
 	"github.com/goseventh/rakstar/player"
 )
 
-func (v *vehicleBuilder) Pos(x, y, z, rotate float32) *vehicleBuilder {
+// Invocar esta função setará a coordenada do veículo
+func (v *vehicleBuilder) Coordinate(x, y, z, rotate float32) *vehicleBuilder {
 	v.posX, v.posY, v.posZ, v.rotate = x, y, z, rotate
 	return v
 }
 
+// Invocar esta funcão setará a saúde do veículo
 func (v *vehicleBuilder) Health(h float32) *vehicleBuilder {
 	v.health = h
 	return v
 }
 
+// Invocar esta função setará a cor do veículo, incluíndo cores
+// primárias e secundárias
 func (v *vehicleBuilder) Color(prim, secon int) *vehicleBuilder {
 	v.colorPrimary, v.colorSecondary = prim, secon
 	return v
 }
-
 
 // Escolhe o modelo do veículo para futuras criações
 func (v *vehicleBuilder) Model(m int) *vehicleBuilder {
@@ -32,8 +35,8 @@ func (v *vehicleBuilder) Model(m int) *vehicleBuilder {
 
 // Invocar esta função setará o texto que aparecerá
 // na placa do veículo
-func (v*vehicleBuilder) Place(place string){
-  natives.SetVehicleNumberPlate(v.id, place)
+func (v *vehicleBuilder) Place(place string) {
+	natives.SetVehicleNumberPlate(v.id, place)
 }
 
 // Cria o veículo e o spawna
@@ -89,8 +92,9 @@ func (v *vehicleBuilder) AttachPlayer(p *player.PlayerBuilder) *vehicleBuilder {
 // próximos do player que estejam na distancia X
 //
 // Exemplo:
-//   p := player.Builder().Select("alph4b3eth")
-//   DeleteInRange(p, 30)
+//
+//	p := player.Builder().Select("alph4b3eth")
+//	DeleteInRange(p, 30)
 func (v *vehicleBuilder) DeleteInRange(player player.PlayerBuilder, distance float64) {
 	requestX, requestY, requestZ := player.GetPos()
 	if distance < 0 {
@@ -115,20 +119,20 @@ func (v *vehicleBuilder) DeleteInRange(player player.PlayerBuilder, distance flo
 			continue
 		}
 
-    natives.DestroyVehicle(vehicle)
-    break
+		natives.DestroyVehicle(vehicle)
+		break
 	}
 }
 
 // Invocar esta função destruirá todos os veículos do servidor
 // Se ocorrer falhas durante a execução, ela retornará false
 // Se ocorrer com êxito, ela retornará true
-func(v*vehicleBuilder) DestroyAll() bool {
-  for vehicle:=0; vehicle < vehiclesConst.MaxVehicles; vehicle++{
-    sucess := natives.DestroyVehicle(vehicle)
-    if !sucess{
-      return false
-    }
-  }
-  return true
+func (v *vehicleBuilder) DestroyAll() bool {
+	for vehicle := 0; vehicle < vehiclesConst.MaxVehicles; vehicle++ {
+		sucess := natives.DestroyVehicle(vehicle)
+		if !sucess {
+			return false
+		}
+	}
+	return true
 }
