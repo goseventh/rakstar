@@ -43,13 +43,13 @@ func (pb *PlayerBuilder) SelectWeapon(weapon int) error {
 // - https://pkg.go.dev/github.com/goseventh/rakstar/player#PlayerBuilder.AddWeapon
 func (pb *PlayerBuilder) SelectRandomWeapon() error {
 	var list []Weapon
-	var weapon Weapon
 
 	copy(list, pb.ListWeapons)
-	rand.Shuffle(len(list), func(idx, weapon int) {
-		weapon = weapon
+	rand.Shuffle(len(list), func(i, j int) {
+    list[i], list[j] = list[j], list[i]
 	})
 
+  weapon := list[len(list)-1]
   sucess := natives.SetPlayerArmedWeapon(pb.ID, weapon.ID)
 	if !sucess {
 		return ErrFailSelectWeapon
