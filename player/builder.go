@@ -1,13 +1,13 @@
 package player
-type PlayerBuilder struct {
-	ID int
-	Name string
 
+type PlayerBuilder struct {
+	ID   int
+	Name string
+	Weapon
 }
 
-func Builder() *PlayerBuilder{
+func Builder() *PlayerBuilder {
 	pb := new(PlayerBuilder)
 	pb.ID = -1
 	return pb
 }
-

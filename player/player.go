@@ -98,12 +98,3 @@ func (pb*PlayerBuilder) SelectCharacter(skin int) error{
   return nil
 }
 
-// Invocar esta função selecionará a arma que o jogador está
-// segurando
-func (pb*PlayerBuilder) SelectWeapon(weapon int) error{
- sucess := natives.SetPlayerArmedWeapon(pb.ID, weapon)
-  if !sucess{
-    return FailSelectWeapon
-  }
-  return nil
-}
