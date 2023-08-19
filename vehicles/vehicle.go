@@ -23,19 +23,21 @@ func (v *vehicleBuilder) Color(prim, secon int) *vehicleBuilder {
 	return v
 }
 
-/*
-Escolhe o modelo do veículo para futuras criações
-*/
+
+// Escolhe o modelo do veículo para futuras criações
 func (v *vehicleBuilder) Model(m int) *vehicleBuilder {
 	v.model = m
 	return v
 }
 
-/*
-Cria o veículo e o spawna
+// Invocar esta função setará o texto que aparecerá
+// na placa do veículo
+func (v*vehicleBuilder) Place(place string){
+  natives.SetVehicleNumberPlate(v.id, place)
+}
 
-seta o ID de criação do veículo após o spawn
-*/
+// Cria o veículo e o spawna
+// seta o ID de criação do veículo após o spawn
 func (v *vehicleBuilder) Create() *vehicleBuilder {
 	v.id = natives.CreateVehicle(
 		v.model,
