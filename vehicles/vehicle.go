@@ -8,6 +8,18 @@ import (
 	"github.com/goseventh/rakstar/player"
 )
 
+// Invocar esta função retornará o ID de criação do veículo,
+// ou seja, o ID em ordem crescente de criação de veíuclo do
+// servidor.
+func (v *vehicleBuilder) GetID() int {
+	return v.id
+}
+
+// Invocar esta função retornará o modelo do veículo
+func (v *vehicleBuilder) GetModel() int {
+	return v.model
+}
+
 // Invocar esta função setará a coordenada do veículo
 func (v *vehicleBuilder) Coordinate(x, y, z, rotate float32) *vehicleBuilder {
 	v.posX, v.posY, v.posZ, v.rotate = x, y, z, rotate
@@ -96,7 +108,10 @@ func (v *vehicleBuilder) AttachPlayer(p *player.PlayerBuilder) *vehicleBuilder {
 //	p := player.Builder().Select("alph4b3eth")
 //	DeleteInRange(p, 30)
 func (v *vehicleBuilder) DeleteInRange(player player.PlayerBuilder, distance float64) {
-	requestX, requestY, requestZ := player.GetPos()
+	requestX, requestY, requestZ, _, err := player.GetCoordinate()
+	if err != nil {
+		return
+	}
 	if distance < 0 {
 		distance = 5.0
 	}
