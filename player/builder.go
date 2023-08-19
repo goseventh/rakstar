@@ -3,7 +3,7 @@ package player
 type PlayerBuilder struct {
 	ID   int
 	Name string
-	Weapon
+	ListWeapons []Weapon
 }
 
 func Builder() *PlayerBuilder {

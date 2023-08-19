@@ -8,10 +8,9 @@ import (
 )
 
 var (
-	FailTeleport = errors.New("Player teleportation failure")
-  FailSetCharacter = errors.New("Failure to set player character.")
-  FailSelectWeapon= errors.New("Failure to select player's weapon.")
- )
+	ErrFailTeleport     = errors.New("Player teleportation failure")
+	ErrFailSetCharacter = errors.New("Failure to set player character.")
+)
 
 // Seta a vida do player
 func (pb *PlayerBuilder) Life(life float32) *PlayerBuilder {
@@ -60,15 +59,15 @@ func (pb *PlayerBuilder) GetPos() (float32, float32, float32) {
 }
 
 // Invocar esta função teletransportará o jogador para as
-// coordenadas informadas no parametro, bem como sua direção 
-// de orientação - direção que corresponde, por exemplo, a 
+// coordenadas informadas no parametro, bem como sua direção
+// de orientação - direção que corresponde, por exemplo, a
 // rotação baseada na bússula. Ou seja, a direção que o jogador
-// está olhando 
+// está olhando
 func (pb *PlayerBuilder) Teleport(x, y, z, r float32) error {
 	sucess := natives.SetPlayerPos(pb.ID, x, y, z)
 	sucess2 := natives.SetPlayerFacingAngle(pb.ID, r)
 	if !sucess || !sucess2 {
-		return FailTeleport
+		return ErrFailTeleport
 	}
 	return nil
 }
@@ -90,11 +89,10 @@ func (pb *PlayerBuilder) DeleteCurrentVehicle() bool {
 	return natives.DestroyVehicle(vehID)
 }
 
-func (pb*PlayerBuilder) SelectCharacter(skin int) error{
-  sucess := natives.SetPlayerSkin(pb.ID, skin)
-  if !sucess{
-    return FailSetCharacter
-  }
-  return nil
+func (pb *PlayerBuilder) SelectCharacter(skin int) error {
+	sucess := natives.SetPlayerSkin(pb.ID, skin)
+	if !sucess {
+		return ErrFailSetCharacter
+	}
+	return nil
 }
-
