@@ -151,3 +151,10 @@ func (v *vehicleBuilder) DestroyAll() bool {
 	}
 	return true
 }
+
+// Invocar esta função destruirá o veículo selecionado
+// Se ocorrer falhas durante a execução, ela retornará false
+// Se ocorrer com êxito, ela retornará true
+func (v *vehicleBuilder) Destroy() bool {
+	return natives.DestroyVehicle(v.id)
+}
