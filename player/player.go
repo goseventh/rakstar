@@ -8,8 +8,9 @@ import (
 )
 
 var (
-	ErrFailTeleport     = errors.New("Player teleportation failure")
-	ErrFailSetCharacter = errors.New("Failure to set player character.")
+	ErrFailTeleport      = errors.New("Player teleportation failure")
+	ErrFailSetCharacter  = errors.New("Failure to set player character")
+	ErrFailGetCoordinate = errors.New("Failure to get player coordinate")
 )
 
 // Seta a vida do player
@@ -36,27 +37,23 @@ func (pb *PlayerBuilder) Nick(nick *string) *PlayerBuilder {
 	return pb
 }
 
-// Obtem o angulo do jogador
-func (pb *PlayerBuilder) GetAngle() float32 {
-	var angle float32
-	connected := natives.GetPlayerFacingAngle(pb.ID, &angle)
-	if !connected {
-		return -1
+// Invocar esta função retornará a coordenada do jogador, bem como 
+// a direção de orientação que corresponde, por exemplo, a rotação
+// baseada na bússula. Ou seja, a direção que o jogador está olhando
+func (pb *PlayerBuilder) GetCoordinate() (float32, float32, float32, float32, error) {
+	var (
+		rotation float32
+		x, y, z  float32
+	)
+
+	sucess := natives.GetPlayerFacingAngle(pb.ID, &rotation)
+	sucess2 := natives.GetPlayerPos(pb.ID, &x, &y, &z)
+	if !sucess || !sucess2 {
+		return -1, -1, -1, -1, ErrFailGetCoordinate
 	}
-	return angle
+	return x, y, z, rotation, nil
 }
 
-// Obtem a posição do jogador
-func (pb *PlayerBuilder) GetPos() (float32, float32, float32) {
-	var (
-		x, y, z float32
-	)
-	connected := natives.GetPlayerPos(pb.ID, &x, &y, &z)
-	if !connected {
-		return -1, -1, -1
-	}
-	return x, y, z
-}
 
 // Invocar esta função teletransportará o jogador para as
 // coordenadas informadas no parametro, bem como sua direção
