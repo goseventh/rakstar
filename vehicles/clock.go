@@ -4,7 +4,7 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/goseventh/rakstar/goroutines"
+	"github.com/goseventh/rakstar/server"
 )
 
 /*
@@ -18,17 +18,19 @@ comportamentos estranhos
 */
 func (v *vehicleBuilder) Start() *vehicleBuilder {
 	ticker := time.NewTicker(time.Second)
-	goroutines.Submit(func() {
-		for {
-			<-ticker.C
-			v.Eletrics().IntroduceElectricalDrain()
-			// verifyBattery(v)
-			// verifyFuel(v)
-			v.engine.fuel -= (0.001 - v.engine.fuelEconomy)
-			v.eletrics.batteryCharger -= 0.001
-		}
+	server.Builder().
+		Goroutine().Submit(
+		func() {
+			for {
+				<-ticker.C
+        v.Eletrics().IntroduceElectricalDrain()
+				// verifyBattery(v)
+				// verifyFuel(v)
+				v.engine.fuel -= (0.001 - v.engine.fuelEconomy)
+				v.eletrics.batteryCharger -= 0.001
+			}
 
-	},
+		},
 	)
 	return v
 }
@@ -44,7 +46,6 @@ func verifyFuel(v *vehicleBuilder) {
 	v.Engine().TurnOff()
 
 }
-
 // func verifyBattery(v *vehicleBuilder) {
 // 	server.
 // 		Builder().
