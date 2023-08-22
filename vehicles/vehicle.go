@@ -6,6 +6,7 @@ import (
 	"github.com/goseventh/rakstar/internal/natives"
 	"github.com/goseventh/rakstar/internal/utils/constants/vehiclesConst"
 	"github.com/goseventh/rakstar/player"
+	"golang.org/x/exp/slices"
 )
 
 // Invocar esta função retornará o ID de criação do veículo,
@@ -73,30 +74,41 @@ func (v *vehicleBuilder) Create() *vehicleBuilder {
 // a função tentará encontrar quais assentos estão disponíveis
 // para o veiculo, caso houver setará automaticamente o jogador
 func (v *vehicleBuilder) AttachPlayer(p *player.PlayerBuilder) *vehicleBuilder {
-	var seats []int
+	occupiedSeats := []int{}
+
 	for i := 0; i <= natives.GetMaxPlayers(); i++ {
-		vehID := natives.GetPlayerVehicleID(i)
-		if vehID != v.id {
+		vehicleID := natives.GetPlayerVehicleID(i)
+
+		if vehicleID != v.id {
 			continue
 		}
+
 		seat := natives.GetPlayerVehicleSeat(i)
-		if seat <= -1 {
+
+		if seat == -1 {
 			continue
 		}
-		seats = append(seats, seat+1)
+
+		occupiedSeats = append(occupiedSeats, seat)
 	}
 
-	if len(seats) > 4 {
-		v.AttachPlayer(p)
-	}
+	availableSeat := -1
 
-	for s := 0; s <= 4; s++ {
-		if seats[s] != 0 {
+	for seat := 0; seat < 30; seat++ {
+		if slices.Contains(occupiedSeats, seat) {
 			continue
 		}
-		natives.PutPlayerInVehicle(p.ID, v.id, s-1)
+
+		availableSeat = seat
 		break
 	}
+
+	if availableSeat == -1 {
+		return v
+	}
+
+	natives.PutPlayerInVehicle(p.ID, v.id, availableSeat)
+
 	return v
 }
 
