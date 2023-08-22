@@ -138,18 +138,14 @@ func verifyTypePlayer(cond condition, idx int, arg string) bool {
 	return true
 }
 
-func valueStrBeBetween(xStr string, lessGreater []int) bool {
+func valueStrBeBetween(xStr string, min, max int) bool {
 	x, err := strconv.Atoi(xStr)
+
 	if err != nil {
 		return false
 	}
-	if len(lessGreater) == 0 {
-		return false
-	}
-	if len(lessGreater) > 2 {
-		return false
-	}
-	return x < lessGreater[0] && x > lessGreater[1]
+
+	return x >= min && x <= max
 }
 
 func valueStrBeGreeter(xStr string, y int) bool {
@@ -192,10 +188,10 @@ func valueStrSquareRootOf(xStr string, y int) bool {
 	return x*x == y
 }
 
-func verifyTypeNumber(cond condition, idx int, arg string) bool {
+func verifyTypeNumber(cond condition, _ int, arg string) bool {
 	switch cond.cond {
 	case MustBeBetween:
-		if !valueStrBeBetween(arg, cond.value.([]int)) {
+		if !valueStrBeBetween(arg, cond.value.([]int)[0], cond.value.([]int)[1]) {
 			return false
 		}
 	case MustBeGreaterThan:
@@ -250,7 +246,7 @@ func textIsRegMatch(text, regex string) bool {
 	return ok
 }
 
-func verifyTypeText(cond condition, idx int, arg string) bool {
+func verifyTypeText(cond condition, _ int, arg string) bool {
 	switch cond.cond {
 	case MustBeUppercase:
 		if !textIsUpper(arg) {
@@ -284,14 +280,14 @@ func validateConditions(command *Command, idx int, arg string) bool {
 			ok := verifyTypePlayer(cond, idx, arg)
 			log.Printf("[validateConditions] typePlayer is valid? %v", ok)
 			if !ok {
-        status = false
+				status = false
 				// return false
 			}
 		case typeNumber:
 			ok := verifyTypeNumber(cond, idx, arg)
 			log.Printf("[validateConditions] typeNumber is valid? %v", ok)
 			if !ok {
-        status = false
+				status = false
 				// return false
 			}
 		case typeText:

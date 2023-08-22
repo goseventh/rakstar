@@ -21,8 +21,8 @@ func TestStrFuncsTypeNumber(t *testing.T) {
 	}{
 		{"valueStrEqual", MustEqual, "30", 30, result{value: true}},
 		{"valueStrEqualFail", MustEqual, "130", 30, result{value: false}},
-		{"valueStrBeBetween", MustBeBetween, "7", []int{10, 5}, result{value: true}},
-		{"valueStrBeBetweenFail", MustBeBetween, "5", []int{3, 10}, result{value: false}},
+		{"valueStrBeBetween", MustBeBetween, "7", []int{5, 10}, result{value: true}},
+		{"valueStrBeBetweenFail", MustBeBetween, "5", []int{10, 3}, result{value: false}},
 		{"valueStrBeLess", MustBeLessThan, "3", 7, result{value: true}},
 		{"valueStrBeLessFail", MustBeLessThan, "7", 7, result{value: false}},
 		{"valueStrBeGreeter", MustBeGreaterThan, "120", 30, result{value: true}},
@@ -44,7 +44,7 @@ func TestStrFuncsTypeNumber(t *testing.T) {
 					t.Fatalf("expected: %v; got: %v", tc.expected.value, got)
 				}
 			case MustBeBetween:
-				got := valueStrBeBetween(tc.arg, tc.condValue.([]int))
+				got := valueStrBeBetween(tc.arg, tc.condValue.([]int)[0], tc.condValue.([]int)[1])
 				if !reflect.DeepEqual(got, tc.expected.value) {
 					t.Fatalf("expected: %v; got: %v", tc.expected.value, got)
 				}
