@@ -170,3 +170,106 @@ func (v *vehicleBuilder) DestroyAll() bool {
 func (v *vehicleBuilder) Destroy() bool {
 	return natives.DestroyVehicle(v.id)
 }
+
+func (v *vehicleBuilder) GetVehicleModelName(modelID int) string {
+	switch modelID {
+	case vehiclesConst.VehicleLandstalker:
+		return "Land Stalker"
+	case vehiclesConst.VehicleBravura:
+		return "Bravura"
+	case vehiclesConst.VehicleBuffalo:
+		return "Buffalo"
+	case vehiclesConst.VehicleLinerunner:
+		return "Liner Runner"
+	case vehiclesConst.VehiclePerrenial:
+		return "Perrenial"
+	case vehiclesConst.VehicleSentinel:
+		return "Sentinel"
+	case vehiclesConst.VehicleDumper:
+		return "Dumper"
+	case vehiclesConst.VehicleFiretruck:
+		return "FireTruck"
+	case vehiclesConst.VehicleTrashmaster:
+		return "Trash Master"
+	case vehiclesConst.VehicleStretch:
+		return "Stretch"
+	case vehiclesConst.VehicleManana:
+		return "Manana"
+	case vehiclesConst.VehicleInfernus:
+		return "Infernus"
+	case vehiclesConst.VehicleVoodoo:
+		return "Voodoo"
+	case vehiclesConst.VehiclePony:
+		return "Pony"
+	case vehiclesConst.VehicleMule:
+		return "Mule"
+	case vehiclesConst.VehicleCheetah:
+		return "Cheetah"
+	case vehiclesConst.VehicleAmbulance:
+		return "Ambulance"
+	case vehiclesConst.VehicleLeviathan:
+		return "Leviathan"
+	case vehiclesConst.VehicleMoonbeam:
+		return "Moonbeam"
+	case vehiclesConst.VehicleEsperanto:
+		return "Esperanto"
+	case vehiclesConst.VehicleTaxi:
+		return "Taxi"
+	case vehiclesConst.VehicleWashington:
+		return "Washigton"
+	case vehiclesConst.VehicleBobcat:
+		return "Bob Cat"
+	case vehiclesConst.VehicleMrwhoopee:
+		return "Mr. whoopee"
+	case vehiclesConst.VehicleBfinjection:
+		return "Bf Injection"
+	case vehiclesConst.VehicleHunter:
+		return "Hunter"
+	case vehiclesConst.VehiclePremier:
+		return "Premier"
+	case vehiclesConst.VehicleEnforcer:
+		return "Enforcer"
+	case vehiclesConst.VehicleSecuricar:
+		return "Securicar"
+	case vehiclesConst.VehicleBanshee:
+		return "Banshee"
+	case vehiclesConst.VehiclePredator:
+		return "Predator"
+	case vehiclesConst.VehicleBus:
+		return "Bus"
+	case vehiclesConst.VehicleRhino:
+		return "Rhino"
+	case vehiclesConst.VehicleBarracks:
+		return "VehicleBarracks"
+	case vehiclesConst.VehicleHotknife:
+		return "Hotknife"
+	case vehiclesConst.VehicleArticletrailer1:
+		return "Article trailer1"
+	case vehiclesConst.VehiclePrevion:
+		return "Previon"
+	case vehiclesConst.VehicleCoach:
+		return "Coach"
+	case vehiclesConst.VehicleCabbie:
+		return "Cabbie"
+	case vehiclesConst.VehicleStallion:
+		return "Stallion"
+	case vehiclesConst.VehicleRumpo:
+		return "Rumpo"
+	case vehiclesConst.VehicleRcbandit:
+		return "RC Bandit"
+	case vehiclesConst.VehicleRomero:
+		return "Romero"
+	case vehiclesConst.VehiclePacker:
+		return "Packer"
+	case vehiclesConst.VehicleMonster:
+		return "Monster"
+	case vehiclesConst.VehicleAdmiral:
+		return "Admiral"
+	case vehiclesConst.VehicleSqualo:
+		return "Squalo"
+	case vehiclesConst.VehicleKart:
+		return "Kart"
+	default:
+		return "undefined"
+	}
+}
