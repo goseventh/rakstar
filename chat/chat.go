@@ -17,7 +17,7 @@ type SendPlayerMessageRequest struct {
 	Local           bool
 	Range           float32
 	Tag             string
-	DisableEncoding bool
+	EnableEncoding bool
 }
 
 type ChatBuilder struct {
@@ -27,7 +27,9 @@ type ChatBuilder struct {
 var isChatEnable = true
 
 func Builder() *ChatBuilder {
-	return new(ChatBuilder)
+  chat := new(ChatBuilder)
+  chat.EnableEncodding()
+	return chat
 }
 func (chat *ChatBuilder) Wait(wait ...time.Duration) *ChatBuilder {
 	if wait[0].Seconds() < 1 {
@@ -45,6 +47,34 @@ func (chat *ChatBuilder) Select(playerid int) *ChatBuilder {
 
 func (chat *ChatBuilder) Message(msg string) *ChatBuilder {
 	chat.requestMsg.Message = msg
+	if chat.requestMsg.EnableEncoding {
+		chat.requestMsg.Message = sampstr.Encode(chat.requestMsg.Message)
+	}
+	return chat
+}
+
+// Invocar esta função ativará a codificação necessária
+// para converter seu texto em um texto compatível com acentuações
+// samp. Tentar codificar uma mensagem recebida diretamente do samp
+// causará comportamentos estranhos, use somente se você utilizar uma
+// string Go. O padrão para EnableEncodding é true
+//
+// OBS: Esta função deve ser invocada antes de invocar
+// função message
+func (chat *ChatBuilder) EnableEncodding() *ChatBuilder {
+	chat.requestMsg.EnableEncoding = true
+	return chat
+}
+
+// Invocar esta função desativará codificação necessária
+// para converter seu texto em um texto compatível com acentuações
+//
+// OBS: Esta função deve ser invocada antes de invocar
+// a função message
+// samp. Consulte:
+// - https://pkg.go.dev/github.com/goseventh/rakstar/player#chat.EnableEncoding
+func (chat *ChatBuilder) DisableEncodding() *ChatBuilder {
+	chat.requestMsg.EnableEncoding = false
 	return chat
 }
 
@@ -88,10 +118,6 @@ func (chat *ChatBuilder) Send() *ChatBuilder {
 			chat.requestMsg.Player.GetName(),
 			chat.requestMsg.Message,
 		)
-
-	if !chat.requestMsg.DisableEncoding {
-		chat.requestMsg.Message = sampstr.Encode(chat.requestMsg.Message)
-	}
 
 	if chat.requestMsg.Player.ID == Global {
 		natives.SendClientMessageToAll(-1, chat.requestMsg.Message)
