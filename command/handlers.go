@@ -8,11 +8,11 @@ import (
 	"strings"
 
 	"github.com/goseventh/rakstar/chat"
+	"github.com/goseventh/rakstar/goroutines"
 	"github.com/goseventh/rakstar/internal/natives"
 	"github.com/goseventh/rakstar/internal/utils/common"
 	"github.com/goseventh/rakstar/internal/utils/constants/playerConst"
 	"github.com/goseventh/rakstar/internal/utils/sampstr"
-	"github.com/goseventh/rakstar/server"
 )
 
 var NotFoundChat *chat.ChatBuilder
@@ -55,8 +55,7 @@ func SetConfig(notFoundChat *chat.ChatBuilder, similarFoundMsg string) {
 Função que deve ser chamada na callback "OnPlayerCommand"
 */
 func HandlePlayerCommandText(player natives.Player, cmdtext string) bool {
-	server.Builder().
-		Goroutine().
+	goroutines.Builder().
 		Submit(func() {
 			processCommand(player, cmdtext)
 		})
