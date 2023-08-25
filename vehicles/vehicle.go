@@ -49,6 +49,12 @@ func (v *vehicleBuilder) Model(m int) *vehicleBuilder {
 // Invocar esta função setará o texto que aparecerá
 // na placa do veículo
 func (v *vehicleBuilder) Plate(plate string) {
+	v.plate = plate
+
+	if v.id == -1 {
+		return
+	}
+
 	natives.SetVehicleNumberPlate(v.id, plate)
 }
 
