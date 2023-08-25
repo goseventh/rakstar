@@ -19,23 +19,25 @@ type vehicleBuilder struct {
 		batteryCharger float32
 		v              *vehicleBuilder
 	}
-  engine struct{
-    fuel float32
-    fuelEconomy float32
-  }
+	engine struct {
+		fuel        float32
+		fuelEconomy float32
+	}
+	plate string
+	state *vehicleState
 }
 
 type eletricsBuilder struct {
 	// batteryCharger float32
-	v              *vehicleBuilder
+	v *vehicleBuilder
 }
 
 type engineBuilder struct {
 	// fuel        float32
 	// fuelEconomy float32
-	v           *vehicleBuilder
+	v *vehicleBuilder
 }
- 
+
 func Builder() *vehicleBuilder {
 	v := new(vehicleBuilder)
 	v.id = -1
