@@ -3,11 +3,11 @@ package player
 type PlayerBuilder struct {
 	ID          int
 	Name        string
-	ListWeapons []Weapon
 	State
 }
 
 type State struct {
+  ListWeapons []Weapon //TODO: implementar auto-save/load-save
 	Life       float32
 	Armour     float32
 	Coordinate []float32
@@ -17,5 +17,6 @@ type State struct {
 func Builder() *PlayerBuilder {
 	pb := new(PlayerBuilder)
 	pb.ID = -1
+  pb.loadStates()
 	return pb
 }

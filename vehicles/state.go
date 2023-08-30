@@ -50,7 +50,7 @@ func (v *vehicleBuilder) saveState() {
 		CreateVehicleStateWithWorkers(v.state)
 }
 
-func (v *vehicleBuilder) loadState() {
+func (v *vehicleBuilder) loadStates() {
 	state := new(vehicleState)
 
 	err := mongodb.
@@ -59,6 +59,9 @@ func (v *vehicleBuilder) loadState() {
 		UseCollection(vehicleStatesColl).
 		GetVehicleState(state, bson.D{})
 
+	if err != nil {
+		panic(err)
+	}
 	v.state = state
 
 	natives.SetVehicleHealth(v.id, v.state.health)
@@ -71,7 +74,4 @@ func (v *vehicleBuilder) loadState() {
 		natives.AddVehicleComponent(v.id, v.state.componentSlots[i])
 	}
 
-	if err != nil {
-		panic(err)
-	}
 }
