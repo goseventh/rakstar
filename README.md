@@ -53,4 +53,7 @@ Este framework está em desenvolvimento contínuo e está sujeito a mudanças co
 @[alph4b3th](https://github.com/alph4b3th);
 
 ❤ Co-Criador do RakStar
-@[Real-DavidWilson](https://github.com/Real-DavidWilson)
+@[Real-DavidWilson](https://github.com/Real-DavidWilson);
+
+❤ Co-Criador do RakStar
+@[enriquebeta6](https://github.com/enriquebeta6)
