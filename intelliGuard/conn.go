@@ -6,6 +6,7 @@ import "net"
 // pacotes do servidor samp com proteção de ataques de 
 // negação de serviço (DDOS) e reconstrução de pacotes
 // danificados.
+// Exemplo: CreateReverseProxy("localhost:3000")
 func CreateReverseProxy(source string) {
 	if source == "" {
 		source = "localhost:3000"
