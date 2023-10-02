@@ -3,10 +3,10 @@ package intelliGuard
 import "net"
 import "log"
 
-// esta é uma função interna da proxy reversa para a manipulação dos dados do
+// esta é uma função interna para a manipulação dos dados do
 // servidor proxy - este que exportará as conexões do servidor samp,
 // normalmente na porta 7777.
-func handlerServerData(channel chan interface{}, ln *net.UDPConn) {
+func handlerServerData(receiverChan <-chan interface{}, writerChan chan<- interface{}, ln *net.UDPConn) {
 	defer ln.Close()
 	buffer := make([]byte, 1200)
 	go func() {
@@ -16,11 +16,12 @@ func handlerServerData(channel chan interface{}, ln *net.UDPConn) {
 				log.Println(err)
 				continue
 			}
-			channel <- buffer[:n]
+			writerChan <- buffer[:n]
 		}
 	}()
 
-  for data := range channel{
-    ln.Write(data.([]byte))
-  }
+	for data := range receiverChan {
+    log.Println("handler server enviou ao cliente samp")
+		ln.Write(data.([]byte))
+	}
 }
