@@ -7,6 +7,8 @@ import "net"
 // negação de serviço (DDOS) e reconstrução de pacotes
 // danificados.
 // Exemplo: CreateReverseProxy("localhost:3000")
+// Se uma string vazia for fornecida, a source padrão será
+// "localhost:3000"
 func CreateReverseProxy(source string) {
 	if source == "" {
 		source = "localhost:3000"
