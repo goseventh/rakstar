@@ -6,10 +6,7 @@ import (
 	"github.com/goseventh/rakstar/internal/utils/common"
 )
 
-/*
-Função que é chamada pelo inicializador do RakStar
-*/
-func Boot() {
+func init() {
 	callbacks.On("playerText", handlerChat)
 }
 
