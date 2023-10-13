@@ -14,7 +14,7 @@ type TypeNumber struct {
 	c *conditionalsBuilder
 }
 
-// TypeNumber define o tipo lógico do parametro 
+// TypeNumber define o tipo lógico do parâmetro 
 // do comando para o tipo numérico
 func (c *conditionalsBuilder) TypeNumber() *TypeNumber {
 	c.typeIdx = typeNumber
@@ -72,7 +72,7 @@ func (t *TypeNumber) MustBeBetween(min, max int) *TypeNumber {
 	return t
 }
 
-// End encerra uma expressão lógica
+// End encerra a expressão lógica
 func (t *TypeNumber) End() *conditionalsBuilder {
 	t.c.Set()
 	return t.c
