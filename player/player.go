@@ -1,3 +1,4 @@
+//player fornece funções de gerenciamento de jogadores conectados. 
 package player
 
 import (

@@ -22,10 +22,10 @@ func (pb *PlayerBuilder) initCollectionState() {
 }
 
 func (pb *PlayerBuilder) saveStates() {
-	getStateLife(pb)
-	getStateArmour(pb)
-	getStateCharacter(pb)
-	getStateCoordinate(pb)
+	stateLife(pb)
+	stateArmour(pb)
+	stateCharacter(pb)
+	stateCoordinate(pb)
 	mongodb.Builder().
 		UseDatabase("rk_state").
 		UseCollection(playerStateColl).
@@ -45,7 +45,7 @@ func (pb *PlayerBuilder) loadStates() {
 	setStateCoordinate(pb)
 }
 
-func getStateCoordinate(pb *PlayerBuilder) {
+func stateCoordinate(pb *PlayerBuilder) {
 	var posX, posY, posZ float32
 	ok := natives.GetPlayerPos(pb.ID, &posX, &posY, &posZ)
 	if !ok {
@@ -54,7 +54,7 @@ func getStateCoordinate(pb *PlayerBuilder) {
 	pb.Coordinate = []float32{posX, posY, posZ}
 }
 
-func getStateLife(pb *PlayerBuilder) {
+func stateLife(pb *PlayerBuilder) {
 	var life float32
 	ok := natives.GetPlayerHealth(pb.ID, &life)
 	if !ok {
@@ -63,7 +63,7 @@ func getStateLife(pb *PlayerBuilder) {
 	pb.State.Life = life
 }
 
-func getStateArmour(pb *PlayerBuilder) {
+func stateArmour(pb *PlayerBuilder) {
 	var armour float32
 	ok := natives.GetPlayerArmour(pb.ID, &armour)
 	if !ok {
@@ -72,7 +72,7 @@ func getStateArmour(pb *PlayerBuilder) {
 	pb.State.Armour = armour
 }
 
-func getStateCharacter(pb *PlayerBuilder) {
+func stateCharacter(pb *PlayerBuilder) {
 	character := natives.GetPlayerSkin(pb.ID)
 	if character < 0 {
 		return
