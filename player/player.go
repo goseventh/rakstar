@@ -13,34 +13,44 @@ var (
 	ErrFailGetCoordinate = errors.New("Failure to get player coordinate")
 )
 
-// Seta a vida do player
+// Life define a vida do player
 func (pb *PlayerBuilder) Life(life float32) *PlayerBuilder {
 	natives.SetPlayerHealth(pb.ID, life)
 	return pb
 }
 
-// Seta a armadura(colete) do jogador
+// Armour define a armadura(colete) do jogador
 func (pb *PlayerBuilder) Armour(Armour float32) *PlayerBuilder {
 	natives.SetPlayerArmour(pb.ID, Armour)
 	return pb
 }
 
-// (re)Spawna o jogador
+// Spawn faz o jogador reaparecer no jogo.
+// Ele chama a função nativa SpawnPlayer com o ID do jogador como argumento.
+// O ID do jogador é acessado através do campo ID do objeto PlayerBuilder.
+// Após chamar a função nativa, o método retorna o próprio objeto PlayerBuilder.
 func (pb *PlayerBuilder) Spawn() *PlayerBuilder {
 	natives.SpawnPlayer(pb.ID)
 	return pb
 }
 
-// Obtem o nick do jogador, e seta na variavel recebida no parametro
+// Nick obtém o apelido (nick) do jogador.
+// Ele chama a função nativa GetPlayerName com o ID do jogador 
+// e uma variável de string como argumentos.
+// O ID do jogador é acessado através do campo ID do objeto PlayerBuilder.
+// A variável de string é fornecida como um argumento para o método e 
+// será preenchida com o apelido do jogador.
+// O tamanho máximo do apelido é definido pela constante MaxPlayerName 
+// em playerConst.
+// Após chamar a função nativa, o método retorna o próprio objeto PlayerBuilder.
 func (pb *PlayerBuilder) Nick(nick *string) *PlayerBuilder {
 	natives.GetPlayerName(pb.ID, nick, playerConst.MaxPlayerName)
 	return pb
 }
 
-// Invocar esta função retornará a coordenada do jogador, bem como 
-// a direção de orientação que corresponde, por exemplo, a rotação
-// baseada na bússula. Ou seja, a direção que o jogador está olhando
-func (pb *PlayerBuilder) GetCoordinate() (float32, float32, float32, float32, error) {
+// GetCoordinate obtém a coordenada do jogador e a direção de 
+// que o jogador está olhando
+func (pb *PlayerBuilder) Coordinate() (float32, float32, float32, float32, error) {
 	var (
 		rotation float32
 		x, y, z  float32
@@ -69,23 +79,30 @@ func (pb *PlayerBuilder) Teleport(x, y, z, r float32) error {
 	return nil
 }
 
-// Invocar esta função retornará se o jogador está dentro de um
-// veículo
+// InVehicle é verdadeiro se o jogador está dentro de um
+// veículo, caso contrário será falso
 func (pb *PlayerBuilder) InVehicle() bool {
 	return natives.IsPlayerInAnyVehicle(pb.ID)
 }
 
-// Invocar esta função retornará o ID do veículo que o jogador está
-func (pb *PlayerBuilder) GetVehicle() int {
+// Vehicle retornará o ID do veículo do jogador.
+// Retornará -1 para um ID inválido ou se o jogador 
+// não estiver em nenhum veículo
+func (pb *PlayerBuilder) Vehicle() int {
 	return natives.GetPlayerVehicleID(pb.ID)
 }
 
-// Invocar esta função destruirá o veículo do jogador
+// DeleteCurrentVehicle destruirá o veículo do jogador
 func (pb *PlayerBuilder) DeleteCurrentVehicle() bool {
 	vehID := natives.GetPlayerVehicleID(pb.ID)
 	return natives.DestroyVehicle(vehID)
 }
 
+
+// SelectCharacter seleciona o personagem (skin) do jogador. Ela recebe
+// um ID [ID SKINS] de skin do SA-MP
+//
+// [ID SKINS]: https://sampwiki.blast.hk/wiki/Skins:All
 func (pb *PlayerBuilder) SelectCharacter(skin int) error {
 	sucess := natives.SetPlayerSkin(pb.ID, skin)
 	if !sucess {
