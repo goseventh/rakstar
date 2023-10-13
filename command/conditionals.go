@@ -59,11 +59,13 @@ func (t *TypePlayer) EndConditionals() *commandBuilder {
 	return t.c.c
 }
 
+//EndConditionals encerra o bloco lógico atual.
 func (t *TypeNumber) EndConditionals() *commandBuilder {
 	t.End()
 	return t.c.c
 }
 
+//EndConditionals encerra o bloco lógico atual.
 func (t *TypeText) EndConditionals() *commandBuilder {
 	t.End()
 	return t.c.c
