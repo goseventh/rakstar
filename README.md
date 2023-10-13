@@ -1,5 +1,4 @@
-<p align="center">
-<img width="250px" src="assets/images/logo.png"/>
+<p align="center"> <img width="250px" src="assets/images/logo.png"/>
 </br>
 </br>
 <span>
@@ -38,7 +37,6 @@ Chega de perder tempo com complicações desnecessárias, criações de códigos
 ![image](https://github.com/goseventh/rakstar/assets/66482679/c7e2bac2-4530-4a22-8454-634c03c1c2cd)
 
 
-
 ## 🚧 Desenvolvimento
 
 Ainda é cedo para utilizar o framework em linha de produção, ainda há muito pela frente e o desenvolvimento é contínuo e não para! Esperamos que nosso projeto incrível possa ter motivado de alguma forma o desenvolvimento de maneira elegante, intuitiva e divertida. Agora os desenvolvedores podem estar confortáveis enquanto criam servidores e inspiram mais desenvolvedores a fazer o mesmo. Muitos recursos estão para chegar na versão latest e nos comprometemos em entregar a melhor experiência possível para a comunidade de forma elegante e produtiva — afinal de contas, somos GoSeventh!
@@ -47,16 +45,11 @@ Este framework está em desenvolvimento contínuo e está sujeito a mudanças co
 
 ## 👏 Créditos
 [`sampgo`](https://github.com/sampgo/sampgo): um sdk go para escrever plugins sa-mp.
-<<<<<<< HEAD
-
 
 ❤ Líder Chefe do RakStar
 
 @[alph4b3th](https://github.com/alph4b3th);
 @[Real-DavidWilson](https://github.com/Real-DavidWilson)
-
-=======
-
 
 ❤️‍🔥 Criador; Mantedor principal e Líder do RakStar
 @[alph4b3th](https://github.com/alph4b3th);
