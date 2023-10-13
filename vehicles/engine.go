@@ -9,14 +9,20 @@ import (
 )
 
 /*
-Altera a economia de combustível do veículo: valores 0~100
-
-- Se definido como 100, provavelmente o veículo não consumirá
-quantias significantes e em alguns casos pode-se tornar combustível
-infinito. Se definido 0, o veículo consumirá drasticamente e provavelmente,
-de forma imediata.
+  SetFuelEconomy é um método que altera a economia de combustível do veículo.
+  - Ele recebe um argumento float32 'fe' que representa a nova economia de combustível.
+  - Se 'fe' for maior que 100, ele será definido como 100. Se for menor que 0, será 
+    definido como 0.
+  - O método então define o campo fuelEconomy do objeto engine do veículo para o valor de 'fe'.
+  - O método retorna o próprio objeto engineBuilder, permitindo que chamadas de método sejam 
+    encadeadas em uma única linha.
+  - Nota: Uma economia de combustível de 100 significa que o veículo provavelmente não 
+          consumirá quantidades significativas de combustível e pode até ter combustível 
+          infinito. 
+          Uma economia de combustível de 0 significa que o veículo consumirá combustível 
+          drasticamente e provavelmente de forma imediata.
 */
-func (e *engineBuilder) FuelEconomy(fe float32) *engineBuilder {
+func (e *engineBuilder) SetFuelEconomy(fe float32) *engineBuilder {
 	if fe > 100 {
 		fe = 100
 	} else if fe < 0 {
@@ -26,14 +32,15 @@ func (e *engineBuilder) FuelEconomy(fe float32) *engineBuilder {
 	return e
 }
 
-/*
-Altera o combustível que o veículo possuí no tanque: valores 0~100
-
-- 100 -> Tanque cheio
-
-- 0 -> Tanque vazio
-*/
-func (e *engineBuilder) Fuel(f float32) *engineBuilder {
+// SetFuel é um método que altera a quantidade de combustível no tanque do veículo.
+//  - Ele recebe um argumento float32 'f' que representa a nova quantidade de combustível.
+//  - Se 'f' for maior que 100, ele será definido como 100. Se for menor que 0, será definido como 0.
+//  - O método então define o campo fuel do objeto engine do veículo para o valor de 'f'.
+//  - O método retorna o próprio objeto engineBuilder, permitindo que chamadas de método sejam encadeadas 
+//    em uma única linha.
+//  - Nota: Um valor de combustível de 100 representa um tanque cheio, enquanto um valor de 0 representa 
+//         um tanque vazio.
+func (e *engineBuilder) SetFuel(f float32) *engineBuilder {
 	if f > 100 {
 		f = 100
 	} else if f < 0 {
@@ -43,28 +50,34 @@ func (e *engineBuilder) Fuel(f float32) *engineBuilder {
 	return e
 }
 
-// Retorna a qunatidade de combustível no tanque
-//
-// 100 = cheio;
-// 0 = vazio
-func (e *engineBuilder) GetFuel() float32 {
+/*
+Fuel é um método que retorna a quantidade atual de combustível no tanque do veículo.
+- O método retorna o valor do campo fuel do objeto engine do veículo.
+- Nota: Um valor de retorno de 100 representa um tanque cheio, enquanto um valor 
+        de retorno de 0 representa um tanque vazio.
+*/
+func (e *engineBuilder) Fuel() float32 {
 	return e.v.engine.fuel
 }
 
-// Retorna a qunatidade de economia de combustível
-//
-// 100 = economia máxima;
-// 0 = economia minima/nenhuma
-func (e *engineBuilder) GetFuelEconomy() float32 {
+// FuelEconomy é um método que retorna a economia atual de combustível do veículo.
+//   - O método retorna o valor do campo fuelEconomy do objeto engine do veículo.
+//   - Nota: Um valor de retorno de 100 representa a máxima economia de combustível, 
+//               enquanto um valor de retorno de 0 representa nenhuma economia/minima 
+//               economia de combustível.
+func (e *engineBuilder) FuelEconomy() float32 {
 	return e.v.engine.fuelEconomy
 }
 
 /*
-Tentará dar partida ao motor do veículo, as chances de sucesso dependerá
-da quantidade de combustível armazenado no tanque e da carga da bateria
+Ignite é um método que tenta dar partida no motor do veículo. As chances de sucesso 
+dependem da quantidade atual de combustível no tanque e da carga atual da bateria.
 
-- Atualiza o endereço da várivael status para true, se o motor efetuar a
-partida
+  - Ele recebe um argumento booleano 'status' por referência. Se o motor for iniciado 
+    com sucesso, 'status' será atualizado para true.
+  - O método chama a função nativa SetVehicleParamsEx com o ID do veículo e outros 
+    parâmetros relevantes. Se a função nativa indicar que o motor foi iniciado com sucesso, 
+    'status' será atualizado para true.
 */
 func (e *engineBuilder) Ignite(status *bool) *engineBuilder {
 	lights := 0
@@ -116,7 +129,7 @@ func (e *engineBuilder) canIgniteEngine() bool {
 }
 
 /*
-Desliga o motor do veículo
+TurnOff desliga o motor do veículo
 */
 func (e *engineBuilder) TurnOff() *engineBuilder {
 	lights := 0

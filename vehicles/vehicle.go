@@ -9,46 +9,88 @@ import (
 	"golang.org/x/exp/slices"
 )
 
-// Invocar esta função retornará o ID de criação do veículo,
-// ou seja, o ID em ordem crescente de criação de veíuclo do
-// servidor.
-func (v *vehicleBuilder) GetID() int {
+/*
+ID é um método que retorna o ID de criação do veículo.
+  - O método retorna o valor do campo id do objeto vehicleBuilder.
+  - Nota: O ID de criação do veículo é o ID em ordem crescente
+    de criação de veículo do servidor.
+*/
+func (v *vehicleBuilder) ID() int {
 	return v.id
 }
 
-// Invocar esta função retornará o modelo do veículo
-func (v *vehicleBuilder) GetModel() int {
+/*
+Model é um método que retorna o modelo do veículo.
+  - O método retorna o valor do campo model do objeto vehicleBuilder.
+*/
+func (v *vehicleBuilder) Model() int {
 	return v.model
 }
 
-// Invocar esta função setará a coordenada do veículo
-func (v *vehicleBuilder) Coordinate(x, y, z, rotate float32) *vehicleBuilder {
+/*
+SetCoordinate é um método que define a coordenada do veículo.
+  - Ele recebe quatro argumentos float32: 'x', 'y', 'z' e 'rotate',
+    que representam a posição e a rotação do veículo.
+  - O método define os campos posX, posY, posZ e rotate do objeto
+    vehicleBuilder para os valores fornecidos.
+  - O método retorna o próprio objeto vehicleBuilder, permitindo que
+    chamadas de método sejam encadeadas em uma única linha.
+*/
+func (v *vehicleBuilder) SetCoordinate(x, y, z, rotate float32) *vehicleBuilder {
 	v.posX, v.posY, v.posZ, v.rotate = x, y, z, rotate
 	return v
 }
 
-// Invocar esta funcão setará a saúde do veículo
-func (v *vehicleBuilder) Health(h float32) *vehicleBuilder {
+/*
+SetHealth é um método que define a saúde do veículo.
+  - Ele recebe um argumento float32 'h' que representa a nova saúde do veículo.
+  - O método define o campo health do objeto vehicleBuilder para o valor de 'h'.
+  - O método retorna o próprio objeto vehicleBuilder, permitindo que chamadas
+    de método sejam encadeadas em uma única linha.
+*/
+func (v *vehicleBuilder) SetHealth(h float32) *vehicleBuilder {
 	v.health = h
 	return v
 }
 
-// Invocar esta função setará a cor do veículo, incluíndo cores
-// primárias e secundárias
-func (v *vehicleBuilder) Color(prim, secon int) *vehicleBuilder {
+/*
+SetColor é um método que define a cor do veículo, incluindo as cores primária e secundária.
+  - Ele recebe dois argumentos inteiros: 'prim' e 'secon', que representam as cores primária
+    e secundária, respectivamente.
+  - O método define os campos colorPrimary e colorSecondary do objeto vehicleBuilder para
+    os valores fornecidos.
+  - O método retorna o próprio objeto vehicleBuilder, permitindo que chamadas de método
+    sejam encadeadas em uma única linha.
+*/
+func (v *vehicleBuilder) SetColor(prim, secon int) *vehicleBuilder {
 	v.colorPrimary, v.colorSecondary = prim, secon
 	return v
 }
 
-// Escolhe o modelo do veículo para futuras criações
-func (v *vehicleBuilder) Model(m int) *vehicleBuilder {
+/*
+SetModel é um método que escolhe o modelo do veículo para futuras criações.
+  - Ele recebe um argumento inteiro 'm' que representa o novo modelo do veículo.
+  - O método define o campo model do objeto vehicleBuilder para o valor de 'm'.
+  - O método retorna o próprio objeto vehicleBuilder, permitindo que chamadas de
+    método sejam encadeadas em uma única linha.
+
+Consulte os ID de cada model do SA-MP: [ID DOS MODELOS]
+
+[ID DOS MODELOS]: https://sampwiki.blast.hk/wiki/Vehicles:All
+*/
+func (v *vehicleBuilder) SetModel(m int) *vehicleBuilder {
 	v.model = m
 	return v
 }
 
-// Invocar esta função setará o texto que aparecerá
-// na placa do veículo
-func (v *vehicleBuilder) Plate(plate string) {
+/*
+SetPlate é um método que define o texto que aparecerá na placa do veículo.
+  - Ele recebe um argumento string 'plate' que representa o novo texto da placa.
+  - O método define o campo plate do objeto vehicleBuilder para o valor de 'plate'.
+  - Se o ID do veículo for diferente de -1, o método também chamará a função nativa
+    SetVehicleNumberPlate com o ID do veículo e o novo texto da placa.
+*/
+func (v *vehicleBuilder) SetPlate(plate string) {
 	v.plate = plate
 
 	if v.id == -1 {
@@ -58,8 +100,15 @@ func (v *vehicleBuilder) Plate(plate string) {
 	natives.SetVehicleNumberPlate(v.id, plate)
 }
 
-// Cria o veículo e o spawna
-// seta o ID de criação do veículo após o spawn
+/*
+Create é um método que cria e faz spawn de um veículo no jogo.
+  - O método chama a função nativa CreateVehicle com os parâmetros apropriados obtidos
+    dos campos do objeto vehicleBuilder.
+  - A função nativa retorna um ID de veículo, que é então armazenado no campo id do
+    objeto vehicleBuilder.
+  - O método retorna o próprio objeto vehicleBuilder, permitindo que chamadas de método
+    sejam encadeadas em uma única linha.
+*/
 func (v *vehicleBuilder) Create() *vehicleBuilder {
 	v.id = natives.CreateVehicle(
 		v.model,
@@ -75,10 +124,16 @@ func (v *vehicleBuilder) Create() *vehicleBuilder {
 	return v
 }
 
-// Adiciona um jogador a um assento disponível de um veículo
-//
-// a função tentará encontrar quais assentos estão disponíveis
-// para o veiculo, caso houver setará automaticamente o jogador
+/*
+AttachPlayer é um método que adiciona um jogador a um assento disponível de um veículo.
+  - Ele recebe um argumento do tipo [*player.PlayerBuilder] que representa o jogador a ser
+    adicionado ao veículo.
+  - O método verifica quais assentos estão ocupados e seleciona o primeiro assento disponível.
+  - Em seguida, ele chama a função nativa PutPlayerInVehicle com o ID do jogador, o ID do
+    veículo e o assento disponível.
+  - O método retorna o próprio objeto vehicleBuilder, permitindo que chamadas de método sejam
+    encadeadas em uma única linha.
+*/
 func (v *vehicleBuilder) AttachPlayer(p *player.PlayerBuilder) *vehicleBuilder {
 	occupiedSeats := []int{}
 
@@ -118,13 +173,15 @@ func (v *vehicleBuilder) AttachPlayer(p *player.PlayerBuilder) *vehicleBuilder {
 	return v
 }
 
-// Invocar esta função destruirá todos os veiculos
-// próximos do player que estejam na distancia X
-//
-// Exemplo:
-//
-//	p := player.Builder().Select("alph4b3eth")
-//	DeleteInRange(p, 30)
+/*
+DeleteInRange é um método que destrói todos os veículos próximos a um jogador que estejam
+dentro de uma certa distância.
+  - Ele recebe dois argumentos: um objeto player.PlayerBuilder que representa o jogador
+    e um float64 que representa a distância.
+  - O método verifica a distância entre cada veículo no servidor e o jogador. Se um
+    veículo estiver dentro da distância especificada, ele será destruído.
+  - Nota: Se a distância fornecida for menor que 0, ela será definida como 5.0.
+*/
 func (v *vehicleBuilder) DeleteInRange(player player.PlayerBuilder, distance float64) {
 	requestX, requestY, requestZ, _, err := player.GetCoordinate()
 	if err != nil {
@@ -157,9 +214,14 @@ func (v *vehicleBuilder) DeleteInRange(player player.PlayerBuilder, distance flo
 	}
 }
 
-// Invocar esta função destruirá todos os veículos do servidor
-// Se ocorrer falhas durante a execução, ela retornará false
-// Se ocorrer com êxito, ela retornará true
+/*
+DestroyAll é um método que destrói todos os veículos do servidor.
+  - O método percorre todos os veículos no servidor e tenta destruir cada um chamando
+    a função nativa DestroyVehicle.
+  - Se qualquer chamada para DestroyVehicle retornar false, indicando que o veículo
+    não pôde ser destruído, o método retornará false.
+  - Se todos os veículos forem destruídos com sucesso, o método retornará true.
+*/
 func (v *vehicleBuilder) DestroyAll() bool {
 	for vehicle := 0; vehicle < vehiclesConst.MaxVehicles; vehicle++ {
 		sucess := natives.DestroyVehicle(vehicle)
@@ -170,14 +232,28 @@ func (v *vehicleBuilder) DestroyAll() bool {
 	return true
 }
 
-// Invocar esta função destruirá o veículo selecionado
-// Se ocorrer falhas durante a execução, ela retornará false
-// Se ocorrer com êxito, ela retornará true
+/*
+  Destroy é um método que destrói o veículo selecionado.
+    - O método chama a função nativa DestroyVehicle com o ID do veículo.
+    - Se a função nativa retornar false, indicando que o veículo não pôde
+      ser destruído, o método retornará false.
+    - Se o veículo for destruído com sucesso, o método retornará true.
+*/
 func (v *vehicleBuilder) Destroy() bool {
 	return natives.DestroyVehicle(v.id)
 }
 
-func (v *vehicleBuilder) GetVehicleModelName(modelID int) string {
+/*
+  VehicleModelName é um método que está em construção, que recebe um
+  ID de modelo [ID DOS MODELOS] e retorna o nome respectivo do veículo
+    - Nota: A lista de veículos está em construção e alguns tipos de veículos
+    não possuem suporte. Também não há garantias de estabilidade.
+    Chamar esse método poderá resultar em retornos incorretos ou
+    vazios.
+
+  [ID DOS MODELOS]: https://sampwiki.blast.hk/wiki/Vehicles:All
+*/
+func (v *vehicleBuilder) VehicleModelName(modelID int) string {
 	switch modelID {
 	case vehiclesConst.VehicleLandstalker:
 		return "Land Stalker"
