@@ -12,7 +12,7 @@ type MongoBase struct {
 
 func Builder() *MongoBase {
 	mb := new(MongoBase)
-	mb.connection = GetConn()
+	mb.connection = Conn()
 	go mb.tickerInsert()
 	return mb
 }

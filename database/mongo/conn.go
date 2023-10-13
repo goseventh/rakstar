@@ -47,6 +47,6 @@ func (mb *MongoBase) tickerInsert() {
 	}
 }
 
-func GetConn() *mongo.Client {
+func Conn() *mongo.Client {
 	return conn
 }
