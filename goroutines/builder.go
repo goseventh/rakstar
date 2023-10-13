@@ -9,7 +9,7 @@ type goroutine struct {
 	runtimes int
 }
 
-func Boot() error {
+func init() {
 	var err error
 	pool, err = ants.NewPool(defaultRuntimes, ants.WithOptions(ants.Options{
 		PreAlloc:       false,
@@ -19,7 +19,7 @@ func Boot() error {
 			log.Println("[rakstar] a panic occurred in the server manager:", i)
 		},
 	}))
-	return err
+  panic (err)
 }
 
 func Builder() *goroutine {
