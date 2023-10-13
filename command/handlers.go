@@ -52,10 +52,10 @@ func SetConfig(notFoundChat *chat.ChatBuilder, similarFoundMsg string) {
 
 /*
 HandlePlayerCommandText é um registrador de eventos do servidor,
-responsável pela manipulação dos comandos enviados pelo Player. 
+responsável pela manipulação dos comandos enviados pelo Player.
 
 Quando um Player envia um comando, ele é transmitido atravéz da
-callback "OnPlayerCommand". HandlePlayerCommandText deve ser 
+callback "OnPlayerCommand". HandlePlayerCommandText deve ser
 invocada em "OnPlayerCommand" para que os comandos funcionem
 corretamente.
 */
@@ -92,7 +92,7 @@ func parseArgHandler(args []string) ArgHandler {
 	return argHandler
 }
 
-func getIDfromName(nick string) int {
+func IDfromName(nick string) int {
 	var id int = -1
 	var err error
 	id, err = strconv.Atoi(nick)
@@ -112,7 +112,7 @@ func compareNicks(nick, nick2 string) bool {
 	return nick == nick2
 }
 
-func getNickFromID(id int) string {
+func NickFromID(id int) string {
 	nick := ""
 	natives.GetPlayerName(id, &nick, playerConst.MaxPlayerName)
 	return nick
@@ -123,7 +123,7 @@ func isConnected(id int) bool {
 }
 
 func verifyTypePlayer(cond condition, idx int, arg string) bool {
-	id := getIDfromName(arg)
+	id := IDfromName(arg)
 	switch cond.cond {
 	case MustPlayerConnected:
 		if !isConnected(id) {
@@ -132,7 +132,7 @@ func verifyTypePlayer(cond condition, idx int, arg string) bool {
 		}
 
 	case MustNickIs:
-		nick := getNickFromID(id)
+		nick := NickFromID(id)
 		if !compareNicks(nick, cond.value.(string)) {
 			log.Printf("[rakstar-cmd idx(%v)] falha na comparação de nicks entre %v:%v",
 				idx, nick, cond.value)
