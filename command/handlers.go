@@ -24,28 +24,26 @@ type rawCommand struct {
 }
 
 /*
-SetConfig configura as mensagens que são exibidas qunado um comando 
+SetConfig configura as mensagens que são exibidas qunado um comando
 similar do SA-MP é encontrado ou desconhecido.
 
-# Exemplo:
+Exemplo:
 
-cb := chat.builder()
+		func init(){
+	    cb := chat.builder()
+	    cb.Message("nenhum comando encontrado")
+	    msgSimilar := "comando similar"
+	    SetConfig(cb, msgSimilar)
+		}
 
-cb.Message("nenhum comando encontrado")
+# Resultado:
 
-similarFound := "comando similar"
-
-SetConfig(cb, similarFound)
-
-# # Resultado:
-
-  - *Jogador digita "/command", mas não existe:
-
-    > chat: nenhum comando foi encontrado
-
-  - *Jogador digita "/aujad", e similar foi encontrado: "ajuda"
-
-    > chat: comando similar: ajuda
+ 1. Player envia o comando "/command" dentro do jogo,
+    mas ele não existe
+ 2. Chat para Player: "nenhum comando foi encontrado"
+ 3. Player envia o "/aujad", mas o comando mais próximo
+    registrado é "ajuda"
+ 4. Chat para Player: "comando similar: ajuda"
 */
 func SetConfig(notFoundChat *chat.ChatBuilder, similarFoundMsg string) {
 	NotFoundChat = notFoundChat
@@ -53,7 +51,13 @@ func SetConfig(notFoundChat *chat.ChatBuilder, similarFoundMsg string) {
 }
 
 /*
-Função que deve ser chamada na callback "OnPlayerCommand"
+HandlePlayerCommandText é um registrador de eventos do servidor,
+responsável pela manipulação dos comandos enviados pelo Player. 
+
+Quando um Player envia um comando, ele é transmitido atravéz da
+callback "OnPlayerCommand". HandlePlayerCommandText deve ser 
+invocada em "OnPlayerCommand" para que os comandos funcionem
+corretamente.
 */
 func HandlePlayerCommandText(player natives.Player, cmdtext string) bool {
 	goroutines.Builder().
