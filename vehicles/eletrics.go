@@ -5,9 +5,14 @@ import "math/rand"
 import "time"
 
 /*
-Alterar a carga da bateria: valores 0~100
+  SetBatteryCharger é um método que altera a carga da bateria do veículo.
+  - Ele recebe um argumento float32 'charger' que representa a nova carga da bateria.
+  - Se 'charger' for maior que 100, ele será definido como 100. Se for menor que 0, 
+    será definido como 0.
+  - O método então define o campo batteryCharger do objeto eletrics do veículo para o 
+    valor de 'charger'.
 */
-func (e *eletricsBuilder) BatteryCharger(charger float32) *eletricsBuilder {
+func (e *eletricsBuilder) SetBatteryCharger(charger float32) *eletricsBuilder {
 	if charger > 100 {
 		charger = 100
 	} else if charger < 0 {
@@ -16,18 +21,17 @@ func (e *eletricsBuilder) BatteryCharger(charger float32) *eletricsBuilder {
 
 	e.v.eletrics.batteryCharger = charger
 	return e
-}
 
-func (e *eletricsBuilder) GetBatteryCharger() float32 {
+}
+// BatteryCharger é um método que retorna a carga atual da bateria do veículo.
+func (e *eletricsBuilder) BatteryCharger() float32 {
 	return e.v.eletrics.batteryCharger
 }
 
 /*
-Altera o estado do faról do veículo
-
-- Se estiver ligado, o faról desligará
-
-- Se estiver desligado, o faról ligará
+ ToggleLights é um método que altera o estado dos faróis do veículo.
+   - Se os faróis estiverem ligados, o método os desligará. 
+   - Se estiverem desligados, o método os ligará.
 */
 func (e *eletricsBuilder) ToggleLights() *eletricsBuilder {
 	var (
@@ -67,13 +71,12 @@ func (e *eletricsBuilder) ToggleLights() *eletricsBuilder {
 	return e
 }
 
-// Quando invocada verificará se o veículo tem carga
-// suficiente na bateria: <25% acontecerá uma
-// pane em todo o sistema elétrico.
-// Se tudo ocorrer bem, a função dormirá entre 7-3
-// segundos para simular o dreno da bateria.
-//
-// - Utilize essa função para simular uma ignição
+// IntroduceElectricalDrain é um método que simula uma drenagem elétrica no veículo.
+// - O método verifica se os faróis estão ligados e se a carga da bateria é maior que 25. 
+//   Se qualquer uma dessas condições não for atendida, o método retorna imediatamente.
+// - Caso contrário, o método entra em um loop onde alterna os faróis várias vezes. 
+//   Isso simula uma drenagem elétrica no veículo.
+// - Este método deve ser usado para simular uma ignição.
 func (e *eletricsBuilder) IntroduceElectricalDrain() {
 	vehicleID := e.v.id
 	engine := 0

@@ -47,6 +47,7 @@ Este framework está em desenvolvimento contínuo e está sujeito a mudanças co
 
 ## 👏 Créditos
 [`sampgo`](https://github.com/sampgo/sampgo): um sdk go para escrever plugins sa-mp.
+<<<<<<< HEAD
 
 
 ❤ Líder Chefe do RakStar
@@ -54,3 +55,13 @@ Este framework está em desenvolvimento contínuo e está sujeito a mudanças co
 @[alph4b3th](https://github.com/alph4b3th);
 @[Real-DavidWilson](https://github.com/Real-DavidWilson)
 
+=======
+
+
+❤️‍🔥 Criador; Mantedor principal e Líder do RakStar
+@[alph4b3th](https://github.com/alph4b3th);
+
+❤️ Co-Criadores do RakStar
+@[Real-DavidWilson](https://github.com/Real-DavidWilson);
+@[enriquebeta6](https://github.com/enriquebeta6)
+>>>>>>> dev

@@ -59,29 +59,33 @@
 				
 				<option value="file1">github.com/goseventh/rakstar/command/boot.go (0.0%)</option>
 				
-				<option value="file2">github.com/goseventh/rakstar/command/builder.go (30.0%)</option>
+				<option value="file2">github.com/goseventh/rakstar/command/builder.go (69.2%)</option>
 				
 				<option value="file3">github.com/goseventh/rakstar/command/command.go (85.7%)</option>
 				
-				<option value="file4">github.com/goseventh/rakstar/command/conditionals.go (0.0%)</option>
+				<option value="file4">github.com/goseventh/rakstar/command/conditionals.go (78.9%)</option>
 				
 				<option value="file5">github.com/goseventh/rakstar/command/create.go (100.0%)</option>
 				
-				<option value="file6">github.com/goseventh/rakstar/command/handlers.go (18.2%)</option>
+				<option value="file6">github.com/goseventh/rakstar/command/handlers.go (59.4%)</option>
 				
 				<option value="file7">github.com/goseventh/rakstar/command/interceptor.go (0.0%)</option>
 				
-				<option value="file8">github.com/goseventh/rakstar/command/typePlayer.go (0.0%)</option>
+				<option value="file8">github.com/goseventh/rakstar/command/typeNumber.go (90.9%)</option>
 				
-				<option value="file9">github.com/goseventh/rakstar/vehicles/builder.go (81.8%)</option>
+				<option value="file9">github.com/goseventh/rakstar/command/typePlayer.go (40.0%)</option>
 				
-				<option value="file10">github.com/goseventh/rakstar/vehicles/clock.go (0.0%)</option>
+				<option value="file10">github.com/goseventh/rakstar/command/typeText.go (100.0%)</option>
 				
-				<option value="file11">github.com/goseventh/rakstar/vehicles/eletrics.go (16.7%)</option>
+				<option value="file11">github.com/goseventh/rakstar/vehicles/builder.go (81.8%)</option>
 				
-				<option value="file12">github.com/goseventh/rakstar/vehicles/engine.go (51.1%)</option>
+				<option value="file12">github.com/goseventh/rakstar/vehicles/clock.go (0.0%)</option>
 				
-				<option value="file13">github.com/goseventh/rakstar/vehicles/vehicle.go (0.0%)</option>
+				<option value="file13">github.com/goseventh/rakstar/vehicles/eletrics.go (16.7%)</option>
+				
+				<option value="file14">github.com/goseventh/rakstar/vehicles/engine.go (51.1%)</option>
+				
+				<option value="file15">github.com/goseventh/rakstar/vehicles/vehicle.go (0.0%)</option>
 				
 				</select>
 			</div>
@@ -208,10 +212,18 @@ import (
 )
 
 type commandBuilder struct {
+<<<<<<< HEAD
         cmd          string
         alias        []string
         handler      CommandHandler
         conditionals map[int][]condition
+=======
+        cmd                 string
+        alias               []string
+        handler             CommandHandler
+        conditionals        map[int][]condition
+        conditionalsBuilder *conditionalsBuilder
+>>>>>>> dev
 }
 
 type ArgHandler struct {
@@ -235,6 +247,7 @@ func (c *commandBuilder) Wait(wait ...time.Duration) *commandBuilder <span class
         return c</span>
 }
 
+<<<<<<< HEAD
 func (c *commandBuilder) Conditionals() *conditionalsBuilder <span class="cov0" title="0">{
         condit := new(conditionalsBuilder)
         //condit.conditionals_ = make(map[int][]int)
@@ -242,6 +255,18 @@ func (c *commandBuilder) Conditionals() *conditionalsBuilder <span class="cov0" 
 
         return condit
 }</span>
+=======
+func (c *commandBuilder) Conditionals() *conditionalsBuilder <span class="cov8" title="1">{
+        if c.conditionalsBuilder != nil </span><span class="cov8" title="1">{
+                return c.conditionalsBuilder
+        }</span>
+
+        <span class="cov8" title="1">condit := new(conditionalsBuilder)
+        condit.c = c
+        c.conditionalsBuilder = condit
+        return condit</span>
+}
+>>>>>>> dev
 </pre>
 		
 		<pre class="file" id="file3" style="display: none">package command
@@ -258,13 +283,20 @@ type CommandHandler func(context *CommandContext)
 
 type Command struct {
         Name          string
+<<<<<<< HEAD
+=======
+  conditions map[int][]condition
+>>>>>>> dev
         Handler       CommandHandler
         Interceptors  []CommandInterceptorHandler
         Description   string
         RequireLogin  bool
         Aliases       []string
         Roles         []string
+<<<<<<< HEAD
         conditionals_ map[int][]condition
+=======
+>>>>>>> dev
 }
 
 type CommandContext struct {
@@ -338,16 +370,28 @@ func SearchCommand(inputName string) (*Command, int) <span class="cov8" title="1
 		<pre class="file" id="file4" style="display: none">package command
 
 const (
+<<<<<<< HEAD
         typePlayer = iota
+=======
+        undefined = iota
+        typePlayer
+>>>>>>> dev
         typeNumber
         typeText
 )
 
 type conditionalsBuilder struct {
+<<<<<<< HEAD
         index   int
         typeIdx int
         conditions []condition
         c      *commandBuilder
+=======
+        index      int
+        typeIdx    int
+        conditions []condition
+        c          *commandBuilder
+>>>>>>> dev
 }
 
 type condition struct {
@@ -356,6 +400,7 @@ type condition struct {
         value   interface{}
 }
 
+<<<<<<< HEAD
 func (c *conditionalsBuilder) Index(index int) *conditionalsBuilder <span class="cov0" title="0">{
         c.index = index
         return c
@@ -364,15 +409,45 @@ func (c *conditionalsBuilder) Index(index int) *conditionalsBuilder <span class=
 // registra as condicionais para cada indice(index)
 func (c *conditionalsBuilder) Set() *conditionalsBuilder <span class="cov0" title="0">{
 
+=======
+func (c *conditionalsBuilder) Index(index int) *conditionalsBuilder <span class="cov8" title="1">{
+        if index &lt; 0 </span><span class="cov8" title="1">{
+                index = 0
+        }</span>
+        <span class="cov8" title="1">c.index = index
+        return c</span>
+}
+
+func (c *conditionalsBuilder) createConditional(typeCond, typeIdx int, value interface{}) <span class="cov8" title="1">{
+        cond := condition{
+                cond:    typeCond,
+                typeIdx: typeIdx,
+                value:   value,
+        }
+
+        c.conditions = append(c.conditions, cond)
+}</span>
+
+// registra as condicionais para cada indice(index)
+func (c *conditionalsBuilder) Set() *conditionalsBuilder <span class="cov8" title="1">{
+>>>>>>> dev
         if c.index &lt; 0 </span><span class="cov0" title="0">{
                 return c
         }</span>
 
+<<<<<<< HEAD
         <span class="cov0" title="0">if c.conditions == nil || len(c.conditions) == 0 </span><span class="cov0" title="0">{
                 return c
         }</span>
   
         <span class="cov0" title="0">c.c.conditionals[c.index] = c.conditions
+=======
+        <span class="cov8" title="1">if c.conditions == nil || len(c.conditions) == 0 </span><span class="cov0" title="0">{
+                return c
+        }</span>
+
+        <span class="cov8" title="1">c.c.conditionals[c.index] = c.conditions
+>>>>>>> dev
         c.conditions = nil
         return c</span>
 }
@@ -381,11 +456,27 @@ func (t *TypePlayer) EndConditionals() *commandBuilder <span class="cov0" title=
         t.End()
         return t.c.c
 }</span>
+<<<<<<< HEAD
+=======
+
+func (t *TypeNumber) EndConditionals() *commandBuilder <span class="cov8" title="1">{
+        t.End()
+        return t.c.c
+}</span>
+
+func (t *TypeText) EndConditionals() *commandBuilder <span class="cov8" title="1">{
+        t.End()
+        return t.c.c
+}</span>
+>>>>>>> dev
 </pre>
 		
 		<pre class="file" id="file5" style="display: none">package command
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> dev
 func (cb *commandBuilder) Command(cmd string) *commandBuilder <span class="cov8" title="1">{
         cb.cmd = cmd
         return cb
@@ -402,6 +493,7 @@ func (cb *commandBuilder) Handler(handler CommandHandler) *commandBuilder <span 
 }</span>
 
 func (cb *commandBuilder) Create() <span class="cov8" title="1">{
+<<<<<<< HEAD
         
         cmd := &amp;Command{
                 Name:    cb.cmd,
@@ -412,6 +504,16 @@ func (cb *commandBuilder) Create() <span class="cov8" title="1">{
 
         RegisterCommand(cmd)
 
+=======
+        cmd := &amp;Command{
+                Name:       cb.cmd,
+                Aliases:    cb.alias,
+                Handler:    cb.handler,
+                conditions: cb.conditionals,
+        }
+
+        RegisterCommand(cmd)
+>>>>>>> dev
 }</span>
 </pre>
 		
@@ -420,10 +522,15 @@ func (cb *commandBuilder) Create() <span class="cov8" title="1">{
 import (
         "fmt"
         "log"
+<<<<<<< HEAD
         "strconv"
 
         //"main/pkg/server"
         //        "main/pkg/utils/sampstr"
+=======
+        "regexp"
+        "strconv"
+>>>>>>> dev
         "strings"
 
         "github.com/goseventh/rakstar/chat"
@@ -507,6 +614,7 @@ func parseArgHandler(args []string) ArgHandler <span class="cov8" title="1">{
         <span class="cov8" title="1">return argHandler</span>
 }
 
+<<<<<<< HEAD
 func validateArgs(command *Command, args []string) bool <span class="cov0" title="0">{
         if len(command.conditionals_) &gt; 0 &amp;&amp; len(args) &lt;= 0 </span><span class="cov0" title="0">{
                 return false
@@ -554,6 +662,242 @@ func validateArgs(command *Command, args []string) bool <span class="cov0" title
 }
 
 func processCommand(player natives.Player, cmdtext string) bool <span class="cov0" title="0">{
+=======
+func getIDfromName(nick string) int <span class="cov0" title="0">{
+        var id int = -1
+        var err error
+        id, err = strconv.Atoi(nick)
+        if err != nil </span><span class="cov0" title="0">{
+                var nickSearch string
+                for i := 0; i &lt; playerConst.MaxPlayers; i++ </span><span class="cov0" title="0">{
+                        natives.GetPlayerName(i, &amp;nickSearch, playerConst.MaxPlayerName)
+                        if compareNicks(nickSearch, nick) </span><span class="cov0" title="0">{
+                                break</span>
+                        }
+                }
+        }
+        <span class="cov0" title="0">return id</span>
+}
+
+func compareNicks(nick, nick2 string) bool <span class="cov0" title="0">{
+        return nick == nick2
+}</span>
+
+func getNickFromID(id int) string <span class="cov0" title="0">{
+        nick := ""
+        natives.GetPlayerName(id, &amp;nick, playerConst.MaxPlayerName)
+        return nick
+}</span>
+
+func isConnected(id int) bool <span class="cov0" title="0">{
+        return natives.IsPlayerConnected(id)
+}</span>
+
+func verifyTypePlayer(cond condition, idx int, arg string) bool <span class="cov0" title="0">{
+        id := getIDfromName(arg)
+        switch cond.cond </span>{
+        case MustPlayerConnected:<span class="cov0" title="0">
+                if !isConnected(id) </span><span class="cov0" title="0">{
+                        log.Printf("[rakstar-cmd idx(%v)] o jogador %v não está conectado", idx, id)
+                        return false
+                }</span>
+
+        case MustNickIs:<span class="cov0" title="0">
+                nick := getNickFromID(id)
+                if !compareNicks(nick, cond.value.(string)) </span><span class="cov0" title="0">{
+                        log.Printf("[rakstar-cmd idx(%v)] falha na comparação de nicks entre %v:%v",
+                                idx, nick, cond.value)
+                        return false
+                }</span>
+        }
+        <span class="cov0" title="0">return true</span>
+}
+
+func valueStrBeBetween(xStr string, lessGreater []int) bool <span class="cov8" title="1">{
+        x, err := strconv.Atoi(xStr)
+        if err != nil </span><span class="cov0" title="0">{
+                return false
+        }</span>
+        <span class="cov8" title="1">if len(lessGreater) == 0 </span><span class="cov0" title="0">{
+                return false
+        }</span>
+        <span class="cov8" title="1">if len(lessGreater) &gt; 2 </span><span class="cov0" title="0">{
+                return false
+        }</span>
+        <span class="cov8" title="1">return x &lt; lessGreater[0] &amp;&amp; x &gt; lessGreater[1]</span>
+}
+
+func valueStrBeGreeter(xStr string, y int) bool <span class="cov8" title="1">{
+        x, err := strconv.Atoi(xStr)
+        if err != nil </span><span class="cov0" title="0">{
+                return false
+        }</span>
+        <span class="cov8" title="1">return x &gt; y</span>
+}
+
+func valueStrBeLess(xStr string, y int) bool <span class="cov8" title="1">{
+        x, err := strconv.Atoi(xStr)
+        if err != nil </span><span class="cov0" title="0">{
+                return false
+        }</span>
+        <span class="cov8" title="1">return x &lt; y</span>
+}
+
+func valueStrEqual(xStr string, y int) bool <span class="cov8" title="1">{
+        x, err := strconv.Atoi(xStr)
+        if err != nil </span><span class="cov0" title="0">{
+                return false
+        }</span>
+        <span class="cov8" title="1">return x == y</span>
+}
+
+func valueStrDivisibleBy(xStr string, y int) bool <span class="cov8" title="1">{
+        x, err := strconv.Atoi(xStr)
+        if err != nil </span><span class="cov0" title="0">{
+                return false
+        }</span>
+        <span class="cov8" title="1">return x%y == 0</span>
+}
+
+func valueStrSquareRootOf(xStr string, y int) bool <span class="cov8" title="1">{
+        x, err := strconv.Atoi(xStr)
+        if err != nil </span><span class="cov0" title="0">{
+                return false
+        }</span>
+        <span class="cov8" title="1">return x*x == y</span>
+}
+
+func verifyTypeNumber(cond condition, idx int, arg string) bool <span class="cov8" title="1">{
+        switch cond.cond </span>{
+        case MustBeBetween:<span class="cov0" title="0">
+                if !valueStrBeBetween(arg, cond.value.([]int)) </span><span class="cov0" title="0">{
+                        return false
+                }</span>
+        case MustBeGreaterThan:<span class="cov0" title="0">
+                if !valueStrBeGreeter(arg, cond.value.(int)) </span><span class="cov0" title="0">{
+                        return false
+                }</span>
+        case MustBeLessThan:<span class="cov0" title="0">
+                if !valueStrBeLess(arg, cond.value.(int)) </span><span class="cov0" title="0">{
+                        return false
+                }</span>
+        case MustEqual:<span class="cov8" title="1">
+                if !valueStrEqual(arg, cond.value.(int)) </span><span class="cov8" title="1">{
+                        return false
+                }</span>
+        case MustBeDivisibleBy:<span class="cov0" title="0">
+                if !valueStrDivisibleBy(arg, cond.value.(int)) </span><span class="cov0" title="0">{
+                        return false
+                }</span>
+        case MustBeMultipleOf:<span class="cov0" title="0">
+                if !valueStrDivisibleBy(arg, cond.value.(int)) </span><span class="cov0" title="0">{
+                        return false
+                }</span>
+        case MustBeSquareRootOf:<span class="cov8" title="1">
+                if !valueStrSquareRootOf(arg, cond.value.(int)) </span><span class="cov0" title="0">{
+                        return false
+                }</span>
+        }
+        <span class="cov8" title="1">return true</span>
+}
+
+func textIsUpper(text string) bool <span class="cov8" title="1">{
+        return text == strings.ToUpper(text)
+}</span>
+
+func textIsLower(text string) bool <span class="cov8" title="1">{
+        return text == strings.ToLower(text)
+}</span>
+
+func textIsPrefix(text, prefix string) bool <span class="cov8" title="1">{
+        return strings.HasPrefix(text, prefix)
+}</span>
+
+func textIsSuffix(text, prefix string) bool <span class="cov8" title="1">{
+        return strings.HasSuffix(text, prefix)
+}</span>
+
+func textIsRegMatch(text, regex string) bool <span class="cov8" title="1">{
+        ok, err := regexp.Match(regex, []byte(text))
+        if err != nil </span><span class="cov0" title="0">{
+                return false
+        }</span>
+        <span class="cov8" title="1">return ok</span>
+}
+
+func verifyTypeText(cond condition, idx int, arg string) bool <span class="cov8" title="1">{
+        switch cond.cond </span>{
+        case MustBeUppercase:<span class="cov8" title="1">
+                if !textIsUpper(arg) </span><span class="cov8" title="1">{
+                        return false
+                }</span>
+        case MustBeLowercase:<span class="cov8" title="1">
+                if !textIsLower(arg) </span><span class="cov8" title="1">{
+                        return false
+                }</span>
+        case MustHavePrefix:<span class="cov8" title="1">
+                if !textIsPrefix(arg, cond.value.(string)) </span><span class="cov8" title="1">{
+                        return false
+                }</span>
+        case MustHaveSufix:<span class="cov8" title="1">
+                if !textIsSuffix(arg, cond.value.(string)) </span><span class="cov8" title="1">{
+                        return false
+                }</span>
+        case MustCompileRegex:<span class="cov8" title="1">
+                if !textIsRegMatch(arg, cond.value.(string)) </span><span class="cov8" title="1">{
+                        return false
+                }</span>
+        }
+        <span class="cov8" title="1">return true</span>
+}
+
+func validateConditions(command *Command, idx int, arg string) bool <span class="cov8" title="1">{
+        var status bool = true
+        for _, cond := range command.conditions[idx] </span><span class="cov8" title="1">{
+                switch cond.typeIdx </span>{
+                case typePlayer:<span class="cov0" title="0">
+                        ok := verifyTypePlayer(cond, idx, arg)
+                        log.Printf("[validateConditions] typePlayer is valid? %v", ok)
+                        if !ok </span><span class="cov0" title="0">{
+        status = false
+                                // return false
+                        }</span>
+                case typeNumber:<span class="cov8" title="1">
+                        ok := verifyTypeNumber(cond, idx, arg)
+                        log.Printf("[validateConditions] typeNumber is valid? %v", ok)
+                        if !ok </span><span class="cov8" title="1">{
+        status = false
+                                // return false
+                        }</span>
+                case typeText:<span class="cov8" title="1">
+                        ok := verifyTypeText(cond, idx, arg)
+                        log.Printf("[validateConditions] typeText is valid? %v", ok)
+                        if !ok </span><span class="cov8" title="1">{
+                                status = false
+                                // return false
+                        }</span>
+                }
+        }
+        <span class="cov8" title="1">return status</span>
+}
+
+func validateArgs(command *Command, args []string) bool <span class="cov8" title="1">{
+        if len(command.conditions) &gt; 0 &amp;&amp; len(args) &lt;= 0 </span><span class="cov0" title="0">{
+                return false
+        }</span>
+
+        <span class="cov8" title="1">for idx, arg := range args </span><span class="cov8" title="1">{
+                ok := validateConditions(command, idx, arg)
+                log.Printf("[validateArgs] validateConditions is valid? - %v", ok)
+                if !ok </span><span class="cov8" title="1">{
+                        return false
+                }</span>
+        }
+        <span class="cov8" title="1">return true</span>
+}
+
+func processCommand(player natives.Player, cmdtext string) bool <span class="cov8" title="1">{
+>>>>>>> dev
         rawCommand := parseCommandArgs(cmdtext)
         command, distance := SearchCommand(rawCommand.name)
 
@@ -566,7 +910,11 @@ func processCommand(player natives.Player, cmdtext string) bool <span class="cov
                 return false
         }</span>
 
+<<<<<<< HEAD
         <span class="cov0" title="0">if distance &gt;= 1 &amp;&amp; distance &lt;= 2 </span><span class="cov0" title="0">{
+=======
+        <span class="cov8" title="1">if distance &gt;= 1 &amp;&amp; distance &lt;= 2 </span><span class="cov0" title="0">{
+>>>>>>> dev
                 chat.Builder().
                         Select(player.ID).
                         Color(common.WarnColorStr).
@@ -580,7 +928,11 @@ func processCommand(player natives.Player, cmdtext string) bool <span class="cov
                         Send()
         }</span>
 
+<<<<<<< HEAD
         <span class="cov0" title="0">argHandler := parseArgHandler(rawCommand.args)
+=======
+        <span class="cov8" title="1">argHandler := parseArgHandler(rawCommand.args)
+>>>>>>> dev
 
         context := CommandContext{
                 Player:     &amp;player,
@@ -589,6 +941,7 @@ func processCommand(player natives.Player, cmdtext string) bool <span class="cov
 
         isValidArgs := validateArgs(command, rawCommand.args)
 
+<<<<<<< HEAD
         if !isValidArgs </span><span class="cov0" title="0">{
                 return false
         }</span>
@@ -596,6 +949,16 @@ func processCommand(player natives.Player, cmdtext string) bool <span class="cov
         <span class="cov0" title="0">log.Printf("[rakstar] running command [%s] for player %s\n", command.Name, player.GetName())
 
         command.Handler(&amp;context)
+=======
+        log.Printf("[processCommand] args is valid? - %v", isValidArgs)
+        if !isValidArgs </span><span class="cov8" title="1">{
+                return false
+        }</span>
+
+        // log.Printf("[rakstar] running command [%s] for player %s\n", command.Name, player.GetName())
+
+        <span class="cov8" title="1">command.Handler(&amp;context)
+>>>>>>> dev
 
         return true</span>
 }
@@ -638,6 +1001,75 @@ func RegisterInterceptor(commandName string, interceptor CommandInterceptorHandl
 		<pre class="file" id="file8" style="display: none">package command
 
 const (
+<<<<<<< HEAD
+=======
+        MustEqual = iota
+        MustBeDivisibleBy
+        MustBeGreaterThan
+        MustBeLessThan
+        MustBeBetween
+        MustBeMultipleOf
+        MustBeSquareRootOf
+)
+
+type TypeNumber struct {
+        c *conditionalsBuilder
+}
+
+func (c *conditionalsBuilder) TypeNumber() *TypeNumber <span class="cov8" title="1">{
+        c.typeIdx = typeNumber
+        tNumber := new(TypeNumber)
+        tNumber.c = c
+        return tNumber
+}</span>
+
+func (t *TypeNumber) MustEqual(x int) *TypeNumber <span class="cov8" title="1">{
+        t.c.createConditional(MustEqual, t.c.typeIdx, x)
+        return t
+}</span>
+
+func (t *TypeNumber) MustBeDivisibleBy(x int) *TypeNumber <span class="cov0" title="0">{
+        t.c.createConditional(MustBeDivisibleBy, t.c.typeIdx, x)
+        return t
+}</span>
+
+func (t *TypeNumber) MustBeGreaterThan(x int) *TypeNumber <span class="cov8" title="1">{
+        t.c.createConditional(MustBeGreaterThan, t.c.typeIdx, x)
+        return t
+}</span>
+
+func (t *TypeNumber) MustBeLessThan(x int) *TypeNumber <span class="cov8" title="1">{
+        t.c.createConditional(MustBeLessThan, t.c.typeIdx, x)
+        return t
+}</span>
+
+func (t *TypeNumber) MustBeMultipleOf(x int) *TypeNumber <span class="cov8" title="1">{
+        t.c.createConditional(MustBeMultipleOf, t.c.typeIdx, x)
+        return t
+}</span>
+
+func (t *TypeNumber) MustBeSquareRootOf(x int) *TypeNumber <span class="cov8" title="1">{
+        t.c.createConditional(MustBeSquareRootOf, t.c.typeIdx, x)
+        return t
+}</span>
+
+func (t *TypeNumber) MustBeBetween(min, max int) *TypeNumber <span class="cov8" title="1">{
+        var values []int
+        values = (append(values, min, max))
+        t.c.createConditional(MustBeBetween, t.c.typeIdx, values)
+        return t
+}</span>
+
+func (t *TypeNumber) End() *conditionalsBuilder <span class="cov8" title="1">{
+        t.c.Set()
+        return t.c
+}</span>
+</pre>
+		
+		<pre class="file" id="file9" style="display: none">package command
+
+const (
+>>>>>>> dev
         MustPlayerConnected = iota
         MustNickIs
 )
@@ -646,25 +1078,37 @@ type TypePlayer struct {
         c *conditionalsBuilder
 }
 
+<<<<<<< HEAD
 func (c *conditionalsBuilder) TypePlayer() *TypePlayer <span class="cov0" title="0">{
         c.typeIdx = typePlayer
         tPlayer := new(TypePlayer)
         tPlayer.c = c
 
+=======
+func (c *conditionalsBuilder) TypePlayer() *TypePlayer <span class="cov8" title="1">{
+        c.typeIdx = typePlayer
+        tPlayer := new(TypePlayer)
+        tPlayer.c = c
+>>>>>>> dev
         return tPlayer
 }</span>
 
 func (t *TypePlayer) MustConnected() *TypePlayer <span class="cov0" title="0">{
+<<<<<<< HEAD
         cond := condition{
                 cond:    MustPlayerConnected,
                 typeIdx: t.c.index,
         }
 
         t.c.conditions = append(t.c.conditions, cond)
+=======
+        t.c.createConditional(MustPlayerConnected, t.c.typeIdx, nil)
+>>>>>>> dev
         return t
 }</span>
 
 func (t *TypePlayer) MustNickIs(nick string) *TypePlayer <span class="cov0" title="0">{
+<<<<<<< HEAD
         cond := condition{
                 cond:    MustNickIs,
                 typeIdx: t.c.index,
@@ -672,6 +1116,9 @@ func (t *TypePlayer) MustNickIs(nick string) *TypePlayer <span class="cov0" titl
         }
 
         t.c.conditions = append(t.c.conditions, cond)
+=======
+        t.c.createConditional(MustNickIs, t.c.typeIdx, nick)
+>>>>>>> dev
         return t
 }</span>
 
@@ -681,7 +1128,63 @@ func (t *TypePlayer) End() *conditionalsBuilder <span class="cov0" title="0">{
 }</span>
 </pre>
 		
+<<<<<<< HEAD
 		<pre class="file" id="file9" style="display: none">/*
+=======
+		<pre class="file" id="file10" style="display: none">package command
+
+const (
+        MustBeUppercase = iota
+        MustBeLowercase
+        MustHavePrefix
+        MustHaveSufix
+        MustCompileRegex
+)
+
+type TypeText struct {
+        c *conditionalsBuilder
+}
+
+func (c *conditionalsBuilder) TypeText() *TypeText <span class="cov8" title="1">{
+        c.typeIdx = typeText
+        tText := new(TypeText)
+        tText.c = c
+        return tText
+}</span>
+
+func (t *TypeText) MustBeUppercase() *TypeText <span class="cov8" title="1">{
+        t.c.createConditional(MustBeUppercase, t.c.typeIdx, nil)
+        return t
+}</span>
+
+func (t *TypeText) MustBeLowercase() *TypeText <span class="cov8" title="1">{
+        t.c.createConditional(MustBeLowercase, t.c.typeIdx, nil)
+        return t
+}</span>
+
+func (t *TypeText) MustHavePrefix(preffix string) *TypeText <span class="cov8" title="1">{
+        t.c.createConditional(MustHavePrefix, t.c.typeIdx, preffix)
+        return t
+}</span>
+
+func (t *TypeText) MustHaveSufix(sufix string) *TypeText <span class="cov8" title="1">{
+        t.c.createConditional(MustHaveSufix, t.c.typeIdx, sufix)
+        return t
+}</span>
+
+func (t *TypeText) MustCompileRegex(regex string) *TypeText <span class="cov8" title="1">{
+        t.c.createConditional(MustCompileRegex, t.c.typeIdx, regex)
+        return t
+}</span>
+
+func (t *TypeText) End() *conditionalsBuilder <span class="cov8" title="1">{
+        t.c.Set()
+        return t.c
+}</span>
+</pre>
+		
+		<pre class="file" id="file11" style="display: none">/*
+>>>>>>> dev
 Este pacote oferece o sistema Advanced Vehicle Engine, permitindo
 a criação e simulação avançada do comportamento de veículos,
 inspirados no mundo real. Com este pacote, os desenvolvedores
@@ -749,7 +1252,11 @@ func (v *vehicleBuilder) Select(id int) *vehicleBuilder <span class="cov0" title
 }</span>
 </pre>
 		
+<<<<<<< HEAD
 		<pre class="file" id="file10" style="display: none">package vehicles
+=======
+		<pre class="file" id="file12" style="display: none">package vehicles
+>>>>>>> dev
 
 import (
         "math/rand"
@@ -832,7 +1339,11 @@ func verifyFuel(v *vehicleBuilder) <span class="cov0" title="0">{
 // }
 </pre>
 		
+<<<<<<< HEAD
 		<pre class="file" id="file11" style="display: none">package vehicles
+=======
+		<pre class="file" id="file13" style="display: none">package vehicles
+>>>>>>> dev
 
 import "github.com/goseventh/rakstar/internal/natives"
 import "math/rand"
@@ -948,7 +1459,11 @@ func (e *eletricsBuilder) IntroduceElectricalDrain() <span class="cov0" title="0
 }
 </pre>
 		
+<<<<<<< HEAD
 		<pre class="file" id="file12" style="display: none">package vehicles
+=======
+		<pre class="file" id="file14" style="display: none">package vehicles
+>>>>>>> dev
 
 import (
         "math"
@@ -1100,7 +1615,11 @@ func (e *engineBuilder) TurnOff() *engineBuilder <span class="cov0" title="0">{
 }</span>
 </pre>
 		
+<<<<<<< HEAD
 		<pre class="file" id="file13" style="display: none">package vehicles
+=======
+		<pre class="file" id="file15" style="display: none">package vehicles
+>>>>>>> dev
 
 import (
         "github.com/goseventh/rakstar/internal/natives"

@@ -12,7 +12,7 @@ func TestFuelMinMax(t *testing.T) {
 	veh := Builder()
 	for i := 0; i < 483_647; i++ {
 		veh.Engine().
-			Fuel(float32(rand.Intn(math.MaxInt16 - (math.MinInt16) + math.MaxInt16)))
+			SetFuel(float32(rand.Intn(math.MaxInt16 - (math.MinInt16) + math.MaxInt16)))
 
 		if veh.engine.fuel > 100 {
 			t.Errorf("expected: 100; got: %v", veh.engine.fuel)
@@ -27,7 +27,7 @@ func TestFuelEconomyMinMax(t *testing.T) {
 	veh := Builder()
 	for i := 0; i < 483_647; i++ {
 		veh.Engine().
-			FuelEconomy(float32(rand.Intn(math.MaxInt16 - (math.MinInt16) + math.MaxInt16)))
+			SetFuelEconomy(float32(rand.Intn(math.MaxInt16 - (math.MinInt16) + math.MaxInt16)))
 
 		if veh.engine.fuelEconomy > 100 {
 			t.Errorf("expected: 100; got: %v", veh.engine.fuelEconomy)
@@ -41,8 +41,8 @@ func TestFuelEconomyMinMax(t *testing.T) {
 func TestSetGetFuel(t *testing.T) {
 	veh := Builder()
 	for f := 0; f < 100; f++ {
-		veh.Engine().Fuel(float32(f))
-		if veh.Engine().GetFuel() == float32(f) {
+		veh.Engine().SetFuel(float32(f))
+		if veh.Engine().Fuel() == float32(f) {
 			continue
 		}
 		t.Errorf("expected: %v; got: %v", f, veh.engine.fuel)
@@ -54,8 +54,8 @@ func TestSetGetFuelEconomy(t *testing.T) {
 	veh := Builder()
 	var f float32
 	for f = 0; f < 100; f++ {
-		veh.Engine().FuelEconomy(f)
-		if veh.Engine().GetFuelEconomy() == f {
+		veh.Engine().SetFuelEconomy(f)
+		if veh.Engine().FuelEconomy() == f {
 			continue
 		}
 		t.Errorf("expected: %v; got: %v", f, veh.engine.fuelEconomy)
@@ -65,12 +65,12 @@ func TestSetGetFuelEconomy(t *testing.T) {
 
 func TestSetGetBatteryCharger(t *testing.T) {
 	veh := Builder()
-	veh.Eletrics().BatteryCharger(7)
+	veh.Eletrics().SetBatteryCharger(7)
 
 	for f := 0; f < 100; f++ {
-		veh.Eletrics().BatteryCharger(float32(f))
+		veh.Eletrics().SetBatteryCharger(float32(f))
 
-		if veh.Eletrics().GetBatteryCharger() == float32(f) {
+		if veh.Eletrics().BatteryCharger() == float32(f) {
 			continue
 		}
 		t.Errorf("expected: %v; got: %v", f, veh.eletrics.batteryCharger)
@@ -87,8 +87,8 @@ func TestSortIgnite(t *testing.T) {
 			igniteCount := 0
 
 			for i := 0; i < rounds; i++ {
-				veh.Eletrics().BatteryCharger(charger)
-				veh.Engine().Fuel(fuel)
+				veh.Eletrics().SetBatteryCharger(charger)
+				veh.Engine().SetFuel(fuel)
 
 				canIgnite := veh.Engine().canIgniteEngine()
 
@@ -101,8 +101,8 @@ func TestSortIgnite(t *testing.T) {
 
 			successAverage := float32(igniteCount) / float32(rounds) * 100
 			minFuelCharger := math.Min(
-				float64(veh.Engine().GetFuel()),
-				float64(veh.Eletrics().GetBatteryCharger()),
+				float64(veh.Engine().Fuel()),
+				float64(veh.Eletrics().BatteryCharger()),
 			)
 
 			if minFuelCharger == 90 {

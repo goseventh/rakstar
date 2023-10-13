@@ -38,7 +38,7 @@ func (c *conditionalsBuilder) createConditional(typeCond, typeIdx int, value int
 	c.conditions = append(c.conditions, cond)
 }
 
-// registra as condicionais para cada indice(index)
+// Set registra as condicionais para cada indice(index)
 func (c *conditionalsBuilder) Set() *conditionalsBuilder {
 	if c.index < 0 {
 		return c
@@ -53,16 +53,19 @@ func (c *conditionalsBuilder) Set() *conditionalsBuilder {
 	return c
 }
 
+//EndConditionals encerra o bloco lógico atual.
 func (t *TypePlayer) EndConditionals() *commandBuilder {
 	t.End()
 	return t.c.c
 }
 
+//EndConditionals encerra o bloco lógico atual.
 func (t *TypeNumber) EndConditionals() *commandBuilder {
 	t.End()
 	return t.c.c
 }
 
+//EndConditionals encerra o bloco lógico atual.
 func (t *TypeText) EndConditionals() *commandBuilder {
 	t.End()
 	return t.c.c

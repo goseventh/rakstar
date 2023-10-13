@@ -8,11 +8,11 @@ import (
 	"strings"
 
 	"github.com/goseventh/rakstar/chat"
+	"github.com/goseventh/rakstar/goroutines"
 	"github.com/goseventh/rakstar/internal/natives"
 	"github.com/goseventh/rakstar/internal/utils/common"
 	"github.com/goseventh/rakstar/internal/utils/constants/playerConst"
 	"github.com/goseventh/rakstar/internal/utils/sampstr"
-	"github.com/goseventh/rakstar/server"
 )
 
 var NotFoundChat *chat.ChatBuilder
@@ -24,27 +24,26 @@ type rawCommand struct {
 }
 
 /*
-seta as mensagens que são executadas qunado um comando similar é encontrado, ou quando nenhum é encontrado.
+SetConfig configura as mensagens que são exibidas qunado um comando
+similar do SA-MP é encontrado ou desconhecido.
 
-# Exemplo:
+Exemplo:
 
-cb := chat.builder()
+		func init(){
+	    cb := chat.builder()
+	    cb.Message("nenhum comando encontrado")
+	    msgSimilar := "comando similar"
+	    SetConfig(cb, msgSimilar)
+		}
 
-cb.Message("nenhum comando encontrado")
+# Resultado:
 
-similarFound := "comando similar"
-
-SetConfig(cb, similarFound)
-
-# # Resultado:
-
-  - *Jogador digita "/command", mas não existe:
-
-    > chat: nenhum comando foi encontrado
-
-  - *Jogador digita "/aujad", e similar foi encontrado: "ajuda"
-
-    > chat: comando similar: ajuda
+ 1. Player envia o comando "/command" dentro do jogo,
+    mas ele não existe
+ 2. Chat para Player: "nenhum comando foi encontrado"
+ 3. Player envia o "/aujad", mas o comando mais próximo
+    registrado é "ajuda"
+ 4. Chat para Player: "comando similar: ajuda"
 */
 func SetConfig(notFoundChat *chat.ChatBuilder, similarFoundMsg string) {
 	NotFoundChat = notFoundChat
@@ -52,11 +51,16 @@ func SetConfig(notFoundChat *chat.ChatBuilder, similarFoundMsg string) {
 }
 
 /*
-Função que deve ser chamada na callback "OnPlayerCommand"
+HandlePlayerCommandText é um registrador de eventos do servidor,
+responsável pela manipulação dos comandos enviados pelo Player.
+
+Quando um Player envia um comando, ele é transmitido atravéz da
+callback "OnPlayerCommand". HandlePlayerCommandText deve ser
+invocada em "OnPlayerCommand" para que os comandos funcionem
+corretamente.
 */
 func HandlePlayerCommandText(player natives.Player, cmdtext string) bool {
-	server.Builder().
-		Goroutine().
+	goroutines.Builder().
 		Submit(func() {
 			processCommand(player, cmdtext)
 		})
@@ -88,7 +92,7 @@ func parseArgHandler(args []string) ArgHandler {
 	return argHandler
 }
 
-func getIDfromName(nick string) int {
+func IDfromName(nick string) int {
 	var id int = -1
 	var err error
 	id, err = strconv.Atoi(nick)
@@ -108,7 +112,7 @@ func compareNicks(nick, nick2 string) bool {
 	return nick == nick2
 }
 
-func getNickFromID(id int) string {
+func NickFromID(id int) string {
 	nick := ""
 	natives.GetPlayerName(id, &nick, playerConst.MaxPlayerName)
 	return nick
@@ -119,7 +123,7 @@ func isConnected(id int) bool {
 }
 
 func verifyTypePlayer(cond condition, idx int, arg string) bool {
-	id := getIDfromName(arg)
+	id := IDfromName(arg)
 	switch cond.cond {
 	case MustPlayerConnected:
 		if !isConnected(id) {
@@ -128,7 +132,7 @@ func verifyTypePlayer(cond condition, idx int, arg string) bool {
 		}
 
 	case MustNickIs:
-		nick := getNickFromID(id)
+		nick := NickFromID(id)
 		if !compareNicks(nick, cond.value.(string)) {
 			log.Printf("[rakstar-cmd idx(%v)] falha na comparação de nicks entre %v:%v",
 				idx, nick, cond.value)
@@ -138,18 +142,14 @@ func verifyTypePlayer(cond condition, idx int, arg string) bool {
 	return true
 }
 
-func valueStrBeBetween(xStr string, lessGreater []int) bool {
+func valueStrBeBetween(xStr string, min, max int) bool {
 	x, err := strconv.Atoi(xStr)
+
 	if err != nil {
 		return false
 	}
-	if len(lessGreater) == 0 {
-		return false
-	}
-	if len(lessGreater) > 2 {
-		return false
-	}
-	return x < lessGreater[0] && x > lessGreater[1]
+
+	return x >= min && x <= max
 }
 
 func valueStrBeGreeter(xStr string, y int) bool {
@@ -192,10 +192,10 @@ func valueStrSquareRootOf(xStr string, y int) bool {
 	return x*x == y
 }
 
-func verifyTypeNumber(cond condition, idx int, arg string) bool {
+func verifyTypeNumber(cond condition, _ int, arg string) bool {
 	switch cond.cond {
 	case MustBeBetween:
-		if !valueStrBeBetween(arg, cond.value.([]int)) {
+		if !valueStrBeBetween(arg, cond.value.([]int)[0], cond.value.([]int)[1]) {
 			return false
 		}
 	case MustBeGreaterThan:
@@ -242,7 +242,7 @@ func textIsSuffix(text, prefix string) bool {
 	return strings.HasSuffix(text, prefix)
 }
 
-func textIsRegMath(text, regex string) bool {
+func textIsRegMatch(text, regex string) bool {
 	ok, err := regexp.Match(regex, []byte(text))
 	if err != nil {
 		return false
@@ -250,7 +250,7 @@ func textIsRegMath(text, regex string) bool {
 	return ok
 }
 
-func verifyTypeText(cond condition, idx int, arg string) bool {
+func verifyTypeText(cond condition, _ int, arg string) bool {
 	switch cond.cond {
 	case MustBeUppercase:
 		if !textIsUpper(arg) {
@@ -269,7 +269,7 @@ func verifyTypeText(cond condition, idx int, arg string) bool {
 			return false
 		}
 	case MustCompileRegex:
-		if !textIsRegMath(arg, cond.value.(string)) {
+		if !textIsRegMatch(arg, cond.value.(string)) {
 			return false
 		}
 	}
@@ -284,14 +284,14 @@ func validateConditions(command *Command, idx int, arg string) bool {
 			ok := verifyTypePlayer(cond, idx, arg)
 			log.Printf("[validateConditions] typePlayer is valid? %v", ok)
 			if !ok {
-        status = false
+				status = false
 				// return false
 			}
 		case typeNumber:
 			ok := verifyTypeNumber(cond, idx, arg)
 			log.Printf("[validateConditions] typeNumber is valid? %v", ok)
 			if !ok {
-        status = false
+				status = false
 				// return false
 			}
 		case typeText:
