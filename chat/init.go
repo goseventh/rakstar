@@ -1,5 +1,4 @@
 package chat
-//teste com lunarvim
 import (
 	"github.com/goseventh/rakstar/internal/callbacks"
 	"github.com/goseventh/rakstar/internal/natives"

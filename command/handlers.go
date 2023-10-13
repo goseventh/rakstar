@@ -24,7 +24,8 @@ type rawCommand struct {
 }
 
 /*
-seta as mensagens que são executadas qunado um comando similar é encontrado, ou quando nenhum é encontrado.
+SetConfig configura as mensagens que são exibidas qunado um comando 
+similar do SA-MP é encontrado ou desconhecido.
 
 # Exemplo:
 

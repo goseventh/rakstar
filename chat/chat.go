@@ -53,7 +53,7 @@ func (chat *ChatBuilder) Message(msg string) *ChatBuilder {
 	return chat
 }
 
-// Invocar esta função ativará a codificação necessária
+// EnableEncodding ativará a codificação necessária
 // para converter seu texto em um texto compatível com acentuações
 // samp. Tentar codificar uma mensagem recebida diretamente do samp
 // causará comportamentos estranhos, use somente se você utilizar uma
@@ -66,7 +66,7 @@ func (chat *ChatBuilder) EnableEncodding() *ChatBuilder {
 	return chat
 }
 
-// Invocar esta função desativará codificação necessária
+// DisableEncodding desativará codificação necessária
 // para converter seu texto em um texto compatível com acentuações
 //
 // OBS: Esta função deve ser invocada antes de invocar
