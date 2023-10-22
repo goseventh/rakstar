@@ -2,8 +2,7 @@ package goroutines
 
 import "github.com/panjf2000/ants"
 import "time"
-import "log" 
-
+import "log"
 
 type goroutine struct {
 	runtimes int
@@ -19,7 +18,9 @@ func init() {
 			log.Println("[rakstar] a panic occurred in the server manager:", i)
 		},
 	}))
-  panic (err)
+	if err != nil {
+		panic(err)
+	}
 }
 
 func Builder() *goroutine {
