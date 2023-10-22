@@ -8,7 +8,7 @@ import "log"
 // normalmente na porta 7777.
 func handlerServerData(receiverChan <-chan interface{}, writerChan chan<- interface{}, ln *net.UDPConn) {
 	defer ln.Close()
-	buffer := make([]byte, 1200)
+	buffer := make([]byte, 1500)
 	go func() {
 		for {
 			n, err := ln.Read(buffer)

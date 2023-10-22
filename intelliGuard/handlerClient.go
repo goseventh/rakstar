@@ -10,14 +10,13 @@ import "slices"
 // criar uma conexão na porta 3000.
 func handlerClientData(receiverChan <-chan interface{}, writerChan chan<- interface{}, conn net.Conn) {
 	defer conn.Close()
-	buffer := make([]byte, 1200)
+	buffer := make([]byte, 1500)
 	var lastPackage []byte
 	go func() {
 		for {
 			n, err := conn.Read(buffer)
 			if err != nil {
 				panic(err)
-				log.Println(err)
 			}
       fmt.Printf("package: %v\n", buffer[:n])
       log.Println("handler client enviou dados para handler server")
