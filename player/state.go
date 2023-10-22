@@ -51,7 +51,7 @@ func stateCoordinate(pb *PlayerBuilder) {
 	if !ok {
 		return
 	}
-	pb.Coordinate = []float32{posX, posY, posZ}
+	pb.State.Coordinate = []float32{posX, posY, posZ}
 }
 
 func stateLife(pb *PlayerBuilder) {
