@@ -183,7 +183,7 @@ dentro de uma certa distância.
   - Nota: Se a distância fornecida for menor que 0, ela será definida como 5.0.
 */
 func (v *vehicleBuilder) DeleteInRange(player player.PlayerBuilder, distance float64) {
-	requestX, requestY, requestZ, _, err := player.GetCoordinate()
+	requestX, requestY, requestZ, _, err := player.Coordinate()
 	if err != nil {
 		return
 	}

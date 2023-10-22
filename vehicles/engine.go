@@ -108,8 +108,8 @@ func (e *engineBuilder) Ignite(status *bool) *engineBuilder {
 }
 
 func (e *engineBuilder) canIgniteEngine() bool {
-	charger := e.v.Eletrics().GetBatteryCharger()
-	fuel := e.GetFuel()
+	charger := e.v.Eletrics().BatteryCharger()
+	fuel := e.Fuel()
 
 	rand.New(rand.NewSource(0))
 
