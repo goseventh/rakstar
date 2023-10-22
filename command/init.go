@@ -13,5 +13,7 @@ func init() {
 	SetConfig(chat, "Comando errado, similar")
 
 	err := callbacks.On("playerCommandText", HandlePlayerCommandText)
-  panic(err)
+  if err != nil{
+    panic(err)
+  }
 }
