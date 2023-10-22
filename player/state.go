@@ -84,7 +84,10 @@ func setStateCoordinate(pb *PlayerBuilder) bool {
 	// if len(pb.Coordinate) < 3 {
 	// 	return false
 	// }
-  x, y, z := pb.Coordinate()
+  x, y, z, _, err := pb.Coordinate()
+  if err != nil{
+    return false
+  }
 	ok := natives.SetPlayerPos(pb.ID, x, y, z)
 	return ok
 }
