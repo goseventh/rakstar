@@ -1,7 +1,7 @@
 package dialog
 
 import (
-	"main/pkg/utils/sampstr"
+	"github.com/goseventh/rakstar/internal/utils/sampstr"
 )
 
 /*
